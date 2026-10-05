@@ -1,0 +1,269 @@
+[
+{
+"action": "drop",
+"role": "lion-nose",
+"layer": "ink",
+"at": [
+375.0,
+347.4
+],
+"why": "fill piece thinner than HAIRLINE"
+},
+{
+"action": "drop",
+"role": "fill",
+"layer": "jade",
+"at": [
+580.3,
+460.4
+],
+"why": "fill piece thinner than HAIRLINE"
+},
+{
+"action": "drop",
+"role": "fill",
+"layer": "jade",
+"at": [
+564.7,
+485.4
+],
+"why": "fill piece thinner than HAIRLINE"
+},
+{
+"action": "fill-hole",
+"role": "fill",
+"layer": "red",
+"at": [
+228.1,
+494.8
+],
+"why": "knockout hole < 3 px from an edge"
+},
+{
+"action": "fill-hole",
+"role": "fill",
+"layer": "red",
+"at": [
+516.9,
+349.6
+],
+"why": "knockout hole < 3 px from an edge"
+},
+{
+"action": "fill-hole",
+"role": "fill",
+"layer": "red",
+"at": [
+519.0,
+348.0
+],
+"why": "knockout hole < 3 px from an edge"
+},
+{
+"action": "fill-hole",
+"role": "fill",
+"layer": "red",
+"at": [
+519.0,
+492.0
+],
+"why": "knockout hole < 3 px from an edge"
+},
+{
+"action": "trim",
+"role": "fill",
+"layer": "red",
+"at": [
+500.8,
+382.4
+],
+"why": "fill 1.96 px from a neighbour (needs 2.5)",
+"near": [
+"fill"
+]
+},
+{
+"action": "trim",
+"role": "fill",
+"layer": "red",
+"at": [
+195.9,
+456.4
+],
+"why": "fill 2.57 px from a neighbour (needs 3.0)",
+"near": [
+"outline"
+]
+},
+{
+"action": "trim",
+"role": "fill",
+"layer": "red",
+"at": [
+497.6,
+455.2
+],
+"why": "fill 0.08 px from a neighbour (needs 3.0)",
+"near": [
+"fill"
+]
+},
+{
+"action": "delete",
+"role": "outline",
+"layer": "ink",
+"at": [
+306.1,
+132.5
+],
+"why": "stub 0.6 px, 2.62 px from a neighbour",
+"near": [
+"fill"
+]
+},
+{
+"action": "delete",
+"role": "scale",
+"layer": "ink",
+"at": [
+323.2,
+277.5
+],
+"why": "stub 6.0 px, 1.51 px from a neighbour",
+"near": [
+"fill"
+]
+},
+{
+"action": "delete",
+"role": "scale",
+"layer": "ink",
+"at": [
+426.8,
+277.5
+],
+"why": "stub 6.0 px, 1.51 px from a neighbour",
+"near": [
+"fill"
+]
+},
+{
+"action": "delete",
+"role": "scale",
+"layer": "ink",
+"at": [
+323.2,
+277.5
+],
+"why": "stub 0.0 px, 2.21 px from a neighbour",
+"near": [
+"scale"
+]
+},
+{
+"action": "delete",
+"role": "scale",
+"layer": "ink",
+"at": [
+426.8,
+277.5
+],
+"why": "stub 0.0 px, 2.21 px from a neighbour",
+"near": [
+"scale"
+]
+},
+{
+"action": "trim",
+"role": "nose",
+"layer": "ink",
+"at": [
+368.9,
+225.5
+],
+"why": "stroke 1.75 px from a neighbour (needs 3.0)",
+"near": [
+"outline"
+]
+},
+{
+"action": "trim",
+"role": "nose",
+"layer": "ink",
+"at": [
+381.1,
+225.5
+],
+"why": "stroke 1.75 px from a neighbour (needs 3.0)",
+"near": [
+"outline"
+]
+},
+{
+"action": "trim",
+"role": "lip",
+"layer": "ink",
+"at": [
+370.7,
+264.3
+],
+"why": "stroke 3.03 px from a neighbour (needs 4.2)",
+"near": [
+"mouth"
+]
+},
+{
+"action": "trim",
+"role": "outline",
+"layer": "ink",
+"at": [
+314.8,
+126.1
+],
+"why": "stroke 1.50 px from a neighbour (needs 3.0)",
+"near": [
+"contour"
+]
+},
+{
+"action": "trim",
+"role": "fill",
+"layer": "red",
+"at": [
+497.6,
+455.2
+],
+"why": "fill 1.50 px from a neighbour (needs 3.0)",
+"near": [
+"binding",
+"outline",
+"wrap"
+]
+},
+{
+"action": "trim",
+"role": "fill",
+"layer": "red",
+"at": [
+516.7,
+487.7
+],
+"why": "fill 0.38 px from a neighbour (needs 3.0)",
+"near": [
+"scale"
+]
+},
+{
+"action": "trim",
+"role": "outline",
+"layer": "ink",
+"at": [
+301.4,
+126.1
+],
+"why": "stroke 3.10 px from a neighbour (needs 4.2)",
+"near": [
+"contour"
+]
+}
+]
