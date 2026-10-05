@@ -1,0 +1,316 @@
+{
+ "generated": "2026-09-24 16:07:31",
+ "seconds": 54.9,
+ "thresholds": {
+  "gap_parallel": 4.2,
+  "gap_mark": 3.0,
+  "ko_line_min": 2.5,
+  "ko_line_min_back": 1.6,
+  "parallel_run": 12.0,
+  "raster_line_min": 1.5,
+  "raster_gap_min": 2.5,
+  "raster_scale": 3,
+  "render_diff_max": 0.002,
+  "sym_cluster_px2": 4.0
+ },
+ "deck": {
+  "index_overlay": {
+   "ok": true,
+   "worst_px": 0,
+   "detail": []
+  },
+  "e2_clearances": {
+   "S": {
+    "field_pip_vs_10_index": 35.01,
+    "centre_vs_side": 37.0
+   },
+   "H": {
+    "field_pip_vs_10_index": 32.69,
+    "centre_vs_side": 32.36
+   },
+   "C": {
+    "field_pip_vs_10_index": 32.69,
+    "centre_vs_side": 32.36
+   },
+   "D": {
+    "field_pip_vs_10_index": 46.61,
+    "centre_vs_side": 60.2
+   }
+  }
+ },
+ "pieces": [
+  {
+   "id": "BACK",
+   "stem": "BACK",
+   "kind": "back",
+   "status": "art",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "jade"
+    ],
+    "budget": [
+     "jade"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": true,
+    "knockout": 0.1822,
+    "emblem": {
+     "rot180_clusters": [],
+     "mirror_lr": 0.21336,
+     "mirror_ud": 0.21337
+    },
+    "frame_mirror_clusters": [],
+    "detail": []
+   },
+   "12": {
+    "ok": "warn",
+    "vector": [],
+    "raster": {
+     "jade": {
+      "thin": [
+       {
+        "bbox": [
+         93.3,
+         519.3,
+         94.7,
+         530.7
+        ],
+        "area": 14.4
+       },
+       {
+        "bbox": [
+         655.3,
+         519.3,
+         656.7,
+         530.7
+        ],
+        "area": 14.4
+       },
+       {
+        "bbox": [
+         102.0,
+         288.7,
+         107.3,
+         297.3
+        ],
+        "area": 13.3
+       },
+       {
+        "bbox": [
+         642.7,
+         288.7,
+         648.0,
+         297.3
+        ],
+        "area": 13.3
+       },
+       {
+        "bbox": [
+         102.0,
+         752.7,
+         107.0,
+         760.7
+        ],
+        "area": 12.2
+       },
+       {
+        "bbox": [
+         643.0,
+         752.7,
+         648.0,
+         760.7
+        ],
+        "area": 12.2
+       },
+       {
+        "bbox": [
+         196.7,
+         144.3,
+         200.3,
+         148.3
+        ],
+        "area": 5.6
+       },
+       {
+        "bbox": [
+         549.7,
+         144.3,
+         553.3,
+         148.3
+        ],
+        "area": 5.6
+       },
+       {
+        "bbox": [
+         187.7,
+         153.3,
+         191.7,
+         157.0
+        ],
+        "area": 5.6
+       },
+       {
+        "bbox": [
+         526.3,
+         167.7,
+         530.0,
+         171.7
+        ],
+        "area": 5.6
+       },
+       {
+        "bbox": [
+         220.0,
+         878.3,
+         223.7,
+         882.3
+        ],
+        "area": 5.6
+       },
+       {
+        "bbox": [
+         526.3,
+         878.3,
+         530.0,
+         882.3
+        ],
+        "area": 5.6
+       }
+      ],
+      "gaps": [
+       {
+        "bbox": [
+         93.3,
+         519.3,
+         94.7,
+         530.7
+        ],
+        "area": 14.4
+       },
+       {
+        "bbox": [
+         655.3,
+         519.3,
+         656.7,
+         530.7
+        ],
+        "area": 14.4
+       },
+       {
+        "bbox": [
+         102.0,
+         288.7,
+         107.3,
+         297.3
+        ],
+        "area": 13.3
+       },
+       {
+        "bbox": [
+         642.7,
+         288.7,
+         648.0,
+         297.3
+        ],
+        "area": 13.3
+       },
+       {
+        "bbox": [
+         102.0,
+         752.7,
+         107.0,
+         760.7
+        ],
+        "area": 12.2
+       },
+       {
+        "bbox": [
+         643.0,
+         752.7,
+         648.0,
+         760.7
+        ],
+        "area": 12.2
+       }
+      ]
+     }
+    },
+    "pieces": 573,
+    "detail": [
+     "jade: 12 thin, 6 narrow-gap region(s) (raster)"
+    ]
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "limestone_blobs": 0,
+    "detail": []
+   },
+   "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/review/corr-verify-wheels-1-1/before/build/qa/flags/BACK.png",
+   "seconds": 34.51
+  }
+ ]
+}

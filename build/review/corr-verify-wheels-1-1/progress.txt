@@ -1,0 +1,9 @@
+corr-verify-wheels-1-1 (verifier, read-only on project)
+- sandboxes: proj/ (current files) and before/ (fixer's orig backups) rebuilt BACK (+white), deck.qa BACK, tuck --no-mock
+- project cards/BACK.svg, white BACK.svg, tuck/*.svg byte-identical to sandbox rebuilds; before == gallery
+- raster clearances: back 4/10 -> 7/7 (all 4 corners); tuck front 26/32 -> 29/29; tuck back 51/57 -> 54/54; flat same
+- deck.qa BACK: 10 pass 1 warn (12 raster, same regions as before), KO 18.22 -> 18.21, D2 frame ok, emblem C2 ok
+- tuck QA all pass with NEW build_tuck; ORIGINAL foil_gaps flags 2x parallel 3.1 px at (37.6,534.5)/(731.4,534.5) on the new front (medallion geometry identical)
+- DEFECT: band rail ends now staggered (back side 100.47/102.65, top 100.47/96.63; front 84.97/87.15, 84.97/81.13), before flush
+- crops: m/issue-band-rail-stagger-*.png, m/cmp-*.png, m/full-before-after-white.png, m/small-188.png
+- verdict: FAIL (rail stagger), notes: QA tool edit needs sign-off; brief/contract not updated; print/ gallery stale

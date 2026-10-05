@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="750" height="1050" viewBox="0 0 750 1050">
+<title>emblem — foil plate</title>
+<defs>
+<linearGradient id="foil" x1="-123.3" y1="176.09" x2="873.3" y2="873.91" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7E653E"/><stop offset="0.22" stop-color="#CBB491"/><stop offset="0.4" stop-color="#A18150"/><stop offset="0.55" stop-color="#BEA175"/><stop offset="0.72" stop-color="#7B623C"/><stop offset="0.88" stop-color="#C7AF89"/><stop offset="1" stop-color="#957749"/></linearGradient>
+</defs>
+<g id="layer-foil" inkscape:groupmode="layer" inkscape:label="foil">
+<g fill="#000000"><path d="M374.2 473.86l.8 -2.27 2.86 8.11 3.88 11.02 20.28 .5 -.29 .22 -15.82 12.1 5.79 19.44 -12.6 -8.68 -4.1 -2.83 -14.72 10.15 -1.98 1.36 5.79 -19.44 -16.11 -12.32 14.87 -.37 5.41 -.13zM395.03 492.65l-13.46 -.33 -4.48 6.16zM388.18 516.78l-3.84 -12.9 -7.25 -2.36zM363.11 517.72l11.09 -7.64 0 -7.62zM354.47 494.17l10.7 8.18 7.24 -2.35zM374.2 478.68l-4.48 12.7 4.48 6.16z" /></g>
+</g>
+</svg>

@@ -1,0 +1,162 @@
+{
+ "id": "JS",
+ "stem": "JS",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    58.56,
+    46.0,
+    109.44,
+    143.1
+   ],
+   "index-rank/br": [
+    640.56,
+    906.9,
+    691.44,
+    1004.0
+   ],
+   "index-pip/tl": [
+    53.0,
+    164.0,
+    115.0,
+    239.64
+   ],
+   "index-pip/br": [
+    635.0,
+    810.36,
+    697.0,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 102.61,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 5e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 7.8,
+  "balance": {
+   "ink": 17.1,
+   "gold": 7.8,
+   "red": 11.5,
+   "jade": 14.6,
+   "paper": 49.0
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: jade 14.6% (target 15-20); red 11.5% (target 12-16); gold 7.8% (target 10-15); ink 17.1% (target 8-16)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     332.7,
+     159.3,
+     336.3,
+     165.0
+    ],
+    "area": 13.1,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     413.7,
+     885.0,
+     417.3,
+     890.7
+    ],
+    "area": 13.1,
+    "layer": "jade",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "jade hidden under the ink solid at [332.7, 159.3, 336.3, 165.0]",
+   "jade hidden under the ink solid at [413.7, 885.0, 417.3, 890.7]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": true,
+  "vector": [],
+  "raster": {},
+  "pieces": 392,
+  "detail": []
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/JS.png",
+ "seconds": 10.48
+}
