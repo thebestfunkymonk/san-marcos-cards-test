@@ -1,0 +1,8 @@
+deck.motifs specimen report
+cells: 27
+back-test knockout coverage (paper lines / flood): 10.9% (frame + lens + rosette only; darters, wild rice, comb sprays not yet placed)
+paper slivers thinner than 1.5 px (opening test): 0.52% of line area
+jade gaps narrower than 3 px: 0.21% of flood area
+issues:
+  Source Rosette — back: running_wave_ring: height reduced 20.0 → 17.3 to clear r_limit
+  Ripple rings: ripple_rings: minor-axis clear gap 1.9 < 4.2

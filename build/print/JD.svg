@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="825" height="1125" viewBox="-37.5 -37.5 825 1125">
+<title>HEADWATERS JD</title>
+<defs><clipPath id="card" clipPathUnits="userSpaceOnUse"><path d="M37.5 0l675 0c20.71 0 37.5 16.79 37.5 37.5l0 975c0 20.71 -16.79 37.5 -37.5 37.5l-675 0c-20.71 0 -37.5 -16.79 -37.5 -37.5l0 -975c0 -20.71 16.79 -37.5 37.5 -37.5z"/></clipPath></defs>
+<g id="paper">
+<path d="M-37.5 -37.5h825v1125h-825z" fill="#F4EFE3" class="stock bleed"/>
+</g>
+<g id="jade" clip-path="url(#card)"></g>
+<g id="red" clip-path="url(#card)">
+<path d="M190 62c9.72 17.78 21.54 34.32 35.2 49.28 -13.66 14.96 -25.48 31.5 -35.2 49.28 -9.72 -17.78 -21.54 -34.32 -35.2 -49.28 13.66 -14.96 25.48 -31.5 35.2 -49.28z" fill="#AE2F2B" class="corner-pip" data-corner="tl"/>
+<path d="M560 988c-9.72 -17.78 -21.54 -34.32 -35.2 -49.28 13.66 -14.96 25.48 -31.5 35.2 -49.28 9.72 17.78 21.54 34.32 35.2 49.28 -13.66 14.96 -25.48 31.5 -35.2 49.28z" fill="#AE2F2B" class="corner-pip" data-corner="br"/>
+<path d="M58.56 118.27l0 -10.14q0 -.69 .48 -1.17 .48 -.48 1.17 -.48l12.61 0q.69 0 1.17 .48 .48 .48 .48 1.17l0 10.42q0 4.8 2.61 7.82 2.6 3.01 6.85 3.01 4.25 0 6.93 -3.01 2.67 -3.02 2.67 -7.82l0 -70.9q0 -.69 .48 -1.17 .48 -.48 1.17 -.48l12.61 0q.69 0 1.17 .48 .48 .48 .48 1.17l0 70.62q0 11.25 -7.06 18.04 -7.07 6.79 -18.45 6.79 -11.38 0 -18.37 -6.79 -7 -6.79 -7 -18.04z" fill="#AE2F2B" class="index-rank" data-corner="tl"/>
+<path d="M691.44 931.73l0 10.14q0 .69 -.48 1.17 -.48 .48 -1.17 .48l-12.61 0q-.69 0 -1.17 -.48 -.48 -.48 -.48 -1.17l0 -10.42q0 -4.8 -2.61 -7.82 -2.6 -3.01 -6.85 -3.01 -4.25 0 -6.93 3.01 -2.67 3.02 -2.67 7.82l0 70.9q0 .69 -.48 1.17 -.48 .48 -1.17 .48l-12.61 0q-.69 0 -1.17 -.48 -.48 -.48 -.48 -1.17l0 -70.62q0 -11.25 7.06 -18.04 7.07 -6.79 18.45 -6.79 11.38 0 18.37 6.79 7 6.79 7 18.04z" fill="#AE2F2B" class="index-rank" data-corner="br"/>
+<path d="M84 164c6.85 12.52 15.17 24.18 24.8 34.72 -9.63 10.54 -17.95 22.2 -24.8 34.72 -6.85 -12.52 -15.17 -24.18 -24.8 -34.72 9.63 -10.54 17.95 -22.2 24.8 -34.72z" fill="#AE2F2B" class="index-pip" data-corner="tl"/>
+<path d="M666 886c-6.85 -12.52 -15.17 -24.18 -24.8 -34.72 9.63 -10.54 17.95 -22.2 24.8 -34.72 6.85 12.52 15.17 24.18 24.8 34.72 -9.63 10.54 -17.95 22.2 -24.8 34.72z" fill="#AE2F2B" class="index-pip" data-corner="br"/>
+</g>
+<g id="gold" clip-path="url(#card)">
+<path d="M148.9 51l452.2 0 13.9 13.9 0 920.2 -13.9 13.9 -452.2 0 -13.9 -13.9 0 -920.2z" fill="none" stroke="#B08D57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="frame-inner"/>
+</g>
+<g id="ink" clip-path="url(#card)">
+<path d="M146 44l458 0 18 18 0 926 -18 18 -458 0 -18 -18 0 -926z" fill="none" stroke="#15242B" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="frame"/>
+<path d="M135 511l480 0M135 539l480 0" fill="none" stroke="#15242B" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="band-rule"/>
+<path d="M143 520l464 0M143 530l464 0" fill="none" stroke="#15242B" stroke-width="3.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="partition"/>
+<path d="M175 520l6 5 -6 5 -6 -5zM215 520l6 5 -6 5 -6 -5zM255 520l6 5 -6 5 -6 -5zM295 520l6 5 -6 5 -6 -5zM335 520l6 5 -6 5 -6 -5zM375 520l6 5 -6 5 -6 -5zM415 520l6 5 -6 5 -6 -5zM455 520l6 5 -6 5 -6 -5zM495 520l6 5 -6 5 -6 -5zM535 520l6 5 -6 5 -6 -5zM575 520l6 5 -6 5 -6 -5z" fill="#15242B" class="partition"/>
+</g>
+</svg>

@@ -1,0 +1,34 @@
+deck.motifs figurative specimen report
+
+Lion in moleca — fitted to the Ace of Spades (Track A pip) [§G.2 / H.13]: marks 56, rule issues 0, ground narrower than 4.2 px: 2379 px²
+   ~ moleca_wing: only 4 of 5 primaries fit this silhouette (the band between the mane and the edge is too narrow)
+   ~ spring_vent: minor-axis ring clearance 2.4 < 4.2 (brief's rx 80 / ry 16 with 3 rings)
+Lion in moleca — refitted to a §H.13-table spade [§G.2 fit]: marks 62, rule issues 0, ground narrower than 4.2 px: 2731 px²
+   ~ spring_vent: minor-axis ring clearance 2.4 < 4.2 (brief's rx 80 / ry 16 with 3 rings)
+Lion Mark — line [§G.2 simplified]: marks 62, rule issues 0, ground narrower than 4.2 px: 755 px²
+   ~ lion_mark: 10 mane scallops at 32 px (12 cannot keep 4.2 px clear below 40 px)
+   ~ lion_mark: 8 mane scallops at 24 px (12 cannot keep 4.2 px clear below 40 px)
+Lion Mark — solid clasp on Gill Red [§G.2 / §C rule 4]: marks 44, rule issues 0, ground narrower than 4.2 px: 383 px²
+   ~ lion_mark: 10 mane scallops at 32 px (12 cannot keep 4.2 px clear below 40 px)
+   ~ lion_mark: 8 mane scallops at 24 px (12 cannot keep 4.2 px clear below 40 px)
+Lion andante in the 330 × 440 lens (gold on Deep Hole) [§G.3 / H.20]: marks 77, rule issues 0, ground narrower than 4.2 px: 2259 px²
+Wild-rice ribbon leaves [§G.4]: marks 9, rule issues 0, ground narrower than 4.2 px: 853 px²
+Wild-rice flowering stalk [§G.5]: marks 58, rule issues 0, ground narrower than 4.2 px: 819 px²
+Wild-rice wreath (Ace of Clubs half-arc, 4 to 8 o'clock) [§G.6 / H.15]: marks 89, rule issues 0, ground narrower than 4.2 px: 3715 px²
+Gill plumes (Gill Red) [§G.15]: marks 26, rule issues 0, ground narrower than 4.2 px: 111 px²
+Current lines (hair, beards, plumes) [§G.24]: marks 35, rule issues 0, ground narrower than 4.2 px: 92 px²
+Tuck lens: andante + wild-rice wreath on the lens contour [§H.20 items 4–5]: marks 158, rule issues 0, ground narrower than 4.2 px: 5036 px²
+   ~ ribbon_leaf: width 9.2 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 8.6 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 8.1 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 7.6 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 7.2 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 6.7 < 12.6 — plain vesica (no midrib/hatch)
+   ~ ribbon_leaf: width 6.3 < 12.6 — plain vesica (no midrib/hatch)
+Fountain darter [§G.25]: marks 42, rule issues 0, ground narrower than 4.2 px: 1347 px²
+Texas blind salamander (seal, gold on Gill Red) [§H.20 seal]: marks 96, rule issues 0, ground narrower than 4.2 px: 777 px²
+Lion Mark 60 px: 15 strokes (full), width 59.0 px
+Lion Mark 48 px: 15 strokes (full), width 47.1 px
+Lion Mark 40 px: 12 strokes (badge), width 39.2 px
+Lion Mark 32 px: 10 strokes (tiny), width 31.4 px
+Lion Mark 24 px: 10 strokes (tiny), width 23.6 px

@@ -1,0 +1,157 @@
+{
+ "piece": "SEAL",
+ "17_svg": {
+  "ok": true,
+  "banned": [],
+  "plates": [
+   "board",
+   "emboss",
+   "foil",
+   "dieline"
+  ]
+ },
+ "1_strk": {
+  "ok": true,
+  "widths": [
+   2.1,
+   4.2
+  ],
+  "illegal": [],
+  "transforms": 0,
+  "motif_check": []
+ },
+ "4_pal": {
+  "ok": true,
+  "foil_colours": [
+   "#b08d57"
+  ],
+  "board": [
+   "#ae2f2b"
+  ]
+ },
+ "8_safe": {
+  "ok": true,
+  "foil_to_die_trough": 10.84,
+  "type_band": [
+   119.62,
+   138.19
+  ],
+  "type_clear_in": 5.67,
+  "type_clear_out": 5.71,
+  "salamander_clear_to_ring": 12.85
+ },
+ "12_gaps": {
+  "ok": true,
+  "n": 0,
+  "worst": [],
+  "s": 2.2,
+  "raster_tight_board_warn": 6,
+  "raster_tight_board": [
+   {
+    "at": [
+     194.5,
+     124.1
+    ],
+    "area": 26.6
+   },
+   {
+    "at": [
+     213.1,
+     157.0
+    ],
+    "area": 24.0
+   },
+   {
+    "at": [
+     187.2,
+     131.2
+    ],
+    "area": 23.9
+   },
+   {
+    "at": [
+     178.4,
+     73.4
+    ],
+    "area": 23.4
+   },
+   {
+    "at": [
+     203.6,
+     160.8
+    ],
+    "area": 22.7
+   },
+   {
+    "at": [
+     133.2,
+     91.1
+    ],
+    "area": 22.5
+   }
+  ],
+  "raster_thin_foil_warn": 0,
+  "raster_thin_foil": [],
+  "type_counters_warn": [
+   [
+    2.33,
+    [
+     103.3,
+     289.6
+    ]
+   ],
+   [
+    2.33,
+    [
+     154.1,
+     325.3
+    ]
+   ],
+   [
+    2.34,
+    [
+     238.1,
+     79.5
+    ]
+   ],
+   [
+    2.34,
+    [
+     302.0,
+     289.2
+    ]
+   ],
+   [
+    2.35,
+    [
+     194.8,
+     74.7
+    ]
+   ]
+  ]
+ },
+ "25_rndr": {
+  "ok": true,
+  "diff_frac": 0.0
+ },
+ "copy_J2": {
+  "ok": true,
+  "used": [
+   "NUSQUAM ALIBI",
+   "SAN MARCOS \u00b7 TEXAS"
+  ]
+ },
+ "facts": {
+  "hatch_lines": {
+   "groove": 12,
+   "fin": 13
+  },
+  "split_end_s": 351.7,
+  "spine_turn_deg": -302.1,
+  "salamander_r_max": 101.1,
+  "font_size": 22.857,
+  "span_top_deg": 83.8,
+  "span_bot_deg": 115.8,
+  "outer_rule_to_die_trough": 10.9
+ }
+}

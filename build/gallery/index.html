@@ -1,0 +1,294 @@
+<title>HEADWATERS Playing Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:ital,wght@0,400;0,500;1,400&family=Roboto+Slab:wght@500;700&display=swap">
+<style>
+:root {
+  --ground: #F4EFE3; --ground-2: #ECE5D5; --text: #15242B; --muted: #55625F; --rule: rgba(21,36,43,.16);
+  --gold: #8F7040; --jade: #1D5A55; --red: #AE2F2B; --board: #0F2B29; --board-text: #EFE7D4; --board-gold: #C9A66A;
+  --shadow: 0 1px 2px rgba(15,43,41,.10), 0 8px 24px -8px rgba(15,43,41,.28);
+  --slab: "Roboto Slab", Rockwell, "Courier New", Georgia, serif;
+  --cond: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0C1F1E; --ground-2: #102826; --text: #E9E2D1; --muted: #A2B1AB; --rule: rgba(233,226,209,.14);
+    --gold: #C9A66A; --jade: #6FA79F; --red: #E07A73; --board: #081716; --board-text: #EFE7D4; --board-gold: #C9A66A;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -10px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0C1F1E; --ground-2: #102826; --text: #E9E2D1; --muted: #A2B1AB; --rule: rgba(233,226,209,.14);
+  --gold: #C9A66A; --jade: #6FA79F; --red: #E07A73; --board: #081716; --board-text: #EFE7D4; --board-gold: #C9A66A;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 28px -10px rgba(0,0,0,.7);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--ground); color: var(--text); font: 400 16px/1.55 var(--body); padding-inline: 0; }
+.wrap { max-width: 1180px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+.label, .eyebrow { font: 600 13px/1.2 var(--cond); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* hero: the box world */
+.hero { background: var(--board); color: var(--board-text); padding-block: clamp(40px, 7vw, 88px); overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+.kicker { font: 600 13px/1 var(--cond); letter-spacing: .3em; text-transform: uppercase; color: var(--board-gold); margin: 0 0 18px; }
+.wordmark { font: 700 clamp(36px, 4.4vw, 60px)/1 var(--slab); letter-spacing: .06em; color: var(--board-gold); overflow-wrap: anywhere; }
+.subline { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font: 600 clamp(12px, 1.5vw, 15px)/1.3 var(--cond);
+  letter-spacing: .24em; text-transform: uppercase; color: var(--board-text); }
+.subline::before, .subline::after { content: ""; flex: 0 0 28px; height: 1.5px; background: var(--board-gold); }
+.tagline { font: italic 400 clamp(20px, 2.4vw, 26px)/1.3 var(--body); margin: 26px 0 0; color: var(--board-text); }
+.story { margin: 22px 0 0; max-width: 58ch; color: color-mix(in srgb, var(--board-text) 82%, transparent); }
+.fan { position: relative; aspect-ratio: 1.12; max-width: 560px; justify-self: center; width: 100%; }
+.fan .card { position: absolute; width: 46%; margin: 0; }
+.fan .card img { border-radius: 5.4% / 3.9%; box-shadow: 0 20px 40px -16px rgba(0,0,0,.65); }
+.fan .c1 { left: 2%; top: 9%; transform: rotate(-9deg); }
+.fan .c2 { left: 27%; top: 2%; z-index: 2; }
+.fan .c3 { left: 52%; top: 9%; transform: rotate(9deg); }
+.hero-shot { margin: 0; }
+.hero-shot img { border-radius: 8px; box-shadow: 0 24px 60px -24px rgba(0,0,0,.7); }
+
+/* sections */
+.section { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--rule); }
+.section-head { display: grid; gap: 10px; margin-bottom: clamp(24px, 3.5vw, 40px); max-width: 68ch; }
+.section-head h2 { font: 700 clamp(28px, 3.6vw, 40px)/1.1 var(--slab); letter-spacing: .01em; }
+.lede { margin: 0; color: var(--muted); font-size: 17px; }
+
+.card { margin: 0; }
+.card-btn { all: unset; display: block; cursor: zoom-in; border-radius: 5.4% / 3.9%; }
+.card-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.card-btn img { border-radius: 5.4% / 3.9%; box-shadow: var(--shadow); transition: transform .25s ease; }
+@media (hover: hover) { .card-btn:hover img { transform: translateY(-3px); } }
+figcaption { display: grid; gap: 1px; margin-top: 10px; }
+.cap-rank { font: 600 13px/1.2 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.cap-name { font: 500 15px/1.3 var(--body); }
+
+.houses { display: grid; gap: clamp(36px, 5vw, 56px); }
+.house-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 18px; }
+.house-suit { font: 400 40px/1 var(--body); width: 44px; text-align: center; }
+.suit-red { color: var(--red); } .suit-ink { color: var(--text); }
+.house-head h3 { font: 700 22px/1.2 var(--slab); }
+.house-head p { margin: 4px 0 0; color: var(--muted); max-width: 60ch; }
+.row-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2.4vw, 28px); }
+
+.suit-row { margin-bottom: 28px; }
+.suit-row .label { margin-bottom: 12px; }
+.grid-13 { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 8px; }
+.extras { display: grid; grid-template-columns: repeat(3, minmax(0, 170px)); gap: 20px; margin-top: 12px; }
+
+.tuck-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 3vw, 32px); }
+.tuck-fig { margin: 0; }
+.tuck-fig img { border-radius: 6px; background: var(--ground-2); }
+.tuck-fig figcaption { color: var(--muted); font-size: 14px; }
+
+.system { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 48px); }
+.swatches, .weights { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.swatch { display: grid; grid-template-columns: 44px 1fr auto; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
+.chip { grid-row: span 2; width: 44px; height: 44px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--rule); }
+.sw-name { font: 600 16px/1.2 var(--body); }
+.sw-hex { font: 500 14px/1 var(--cond); letter-spacing: .08em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.sw-role { grid-column: 2 / 4; color: var(--muted); font-size: 14px; }
+.weight { display: grid; grid-template-columns: 90px 1fr; grid-template-rows: auto auto; column-gap: 16px; align-items: center; }
+.bar { grid-row: span 2; display: block; width: 90px; background: var(--text); border-radius: 1px; }
+.w-name { font: 600 16px/1.2 var(--body); }
+.w-val { font: 500 14px/1.2 var(--cond); letter-spacing: .06em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.w-role { display: none; }
+.type-spec { margin-top: 14px; display: grid; gap: 14px; }
+.spec-index { font: 600 64px/1 var(--cond); letter-spacing: -.01em; }
+.spec-slab { font: 700 30px/1 var(--slab); letter-spacing: .12em; color: var(--gold); }
+.spec-micro { font: 600 13px/1 var(--cond); letter-spacing: .24em; text-transform: uppercase; }
+.sheet { margin: clamp(28px, 4vw, 44px) 0 0; }
+.sheet img { border-radius: 6px; }
+.sheet figcaption { color: var(--muted); font-size: 14px; }
+
+.specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 1px solid var(--rule); }
+.specs div { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--rule); }
+.specs dt { font: 600 13px/1.2 var(--cond); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+.specs dd { margin: 6px 0 0; font-variant-numeric: tabular-nums; }
+footer { padding-block: 40px 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); }
+footer .wordmark-sm { font: 700 18px/1 var(--slab); letter-spacing: .12em; color: var(--gold); }
+
+/* lightbox */
+.lb { position: fixed; inset: 0; z-index: 50; background: rgba(8,20,19,.92); display: grid; grid-template-rows: 1fr auto;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.lb-stage { display: grid; place-items: center; min-height: 0; }
+.lb-stage img { max-height: 100%; max-width: 100%; width: auto; height: 100%; object-fit: contain; border-radius: 3.6% / 2.6%; }
+.lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #EFE7D4; padding-top: 12px; }
+.lb-title { font: 600 15px/1.3 var(--cond); letter-spacing: .16em; text-transform: uppercase; }
+.lb-title em { font: italic 400 16px var(--body); letter-spacing: 0; text-transform: none; color: #C9A66A; margin-left: 8px; }
+.lb button { font: 600 13px/1 var(--cond); letter-spacing: .16em; text-transform: uppercase; color: #EFE7D4;
+  background: transparent; border: 1px solid rgba(239,231,212,.35); border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+.lb button:focus-visible { outline: 2px solid #C9A66A; outline-offset: 2px; }
+.lb-nav { display: flex; gap: 8px; }
+
+@media (max-width: 900px) {
+  .hero-grid, .system { grid-template-columns: 1fr; }
+  .grid-13 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .row-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-13 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tuck-grid { grid-template-columns: 1fr; }
+  .extras { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .specs { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .card-btn img { transition: none; } }
+</style>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="kicker">Named for St. Mark · 1689</p>
+      <h1 class="wordmark">HEADWATERS</h1>
+      <p class="subline">Playing cards of the San Marcos springs</p>
+      <p class="tagline">Long may it flow.</p>
+      <p class="story">Where the Balcones fault splits Hill Country from plain, the Edwards Aquifer rises through more
+      than two hundred spring openings at seventy-two degrees, every day of the year. HEADWATERS deals the springs’
+      imagined court in four houses: the Deep, the Fount, the Reed and the Ford. Every royal wears two faces, the
+      figure and its reflection.</p>
+    </div>
+    <figure class="hero-shot"><img src="tuck/presentation.png" alt="The HEADWATERS tuck box in gold foil on dark green board, sealed with a red salamander seal, beside the Ace of Spades and the card back"></figure>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section" id="houses" aria-labelledby="houses-h" style="border-top:0">
+    <div class="section-head"><p class="eyebrow">The courts</p><h2 id="houses-h">Four houses of the springs</h2>
+    <p class="lede">Twelve bespoke two-headed courts, drawn in one monoline hand: a bold contour, flat fills in three
+    inks and metallic gold, and half-hatching for tone. Each house has its own divider line through the centre. The
+    Deep has a fault-step, the Fount a ripple, the Reed a reed and the Ford a row of stepping stones.</p></div>
+    <div class="houses">
+<article class="house">
+  <header class="house-head">
+    <span class="house-suit suit-ink" aria-hidden="true">♠</span>
+    <div><h3>House of the Deep</h3><p>The Edwards Aquifer, limestone, the Balcones fault and the blind salamander.</p></div>
+  </header>
+  <div class="row-cards"><figure class="card "><button type="button" class="card-btn" data-stem="KS" aria-label="Enlarge K♠ — The King Beneath"><img src="png/KS.png" alt="K♠ — The King Beneath" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">K♠</span><span class=cap-name>The King Beneath</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="QS" aria-label="Enlarge Q♠ — The Blind Oracle"><img src="png/QS.png" alt="Q♠ — The Blind Oracle" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Q♠</span><span class=cap-name>The Blind Oracle</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="JS" aria-label="Enlarge J♠ — The Lantern Page"><img src="png/JS.png" alt="J♠ — The Lantern Page" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">J♠</span><span class=cap-name>The Lantern Page</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="AS" aria-label="Enlarge A♠ — The Lion of the Source"><img src="png/AS.png" alt="A♠ — The Lion of the Source" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">A♠</span><span class=cap-name>The Lion of the Source</span></figcaption></figure></div>
+</article>
+<article class="house">
+  <header class="house-head">
+    <span class="house-suit suit-red" aria-hidden="true">♥</span>
+    <div><h3>House of the Fount</h3><p>Spring Lake’s surface: the vents, the glass-bottom boats, Aquamaid heritage and song.</p></div>
+  </header>
+  <div class="row-cards"><figure class="card "><button type="button" class="card-btn" data-stem="KH" aria-label="Enlarge K♥ — The Ferryman King"><img src="png/KH.png" alt="K♥ — The Ferryman King" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">K♥</span><span class=cap-name>The Ferryman King</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="QH" aria-label="Enlarge Q♥ — The Aquamaid Queen"><img src="png/QH.png" alt="Q♥ — The Aquamaid Queen" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Q♥</span><span class=cap-name>The Aquamaid Queen</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="JH" aria-label="Enlarge J♥ — The Spring Minstrel"><img src="png/JH.png" alt="J♥ — The Spring Minstrel" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">J♥</span><span class=cap-name>The Spring Minstrel</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="AH" aria-label="Enlarge A♥ — The Fount"><img src="png/AH.png" alt="A♥ — The Fount" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">A♥</span><span class=cap-name>The Fount</span></figcaption></figure></div>
+</article>
+<article class="house">
+  <header class="house-head">
+    <span class="house-suit suit-ink" aria-hidden="true">♣</span>
+    <div><h3>House of the Reed</h3><p>The riverbanks: Texas wild-rice, bald cypress, heron and kingfisher, pecan.</p></div>
+  </header>
+  <div class="row-cards"><figure class="card "><button type="button" class="card-btn" data-stem="KC" aria-label="Enlarge K♣ — The Cypress King"><img src="png/KC.png" alt="K♣ — The Cypress King" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">K♣</span><span class=cap-name>The Cypress King</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="QC" aria-label="Enlarge Q♣ — The Wild-Rice Queen"><img src="png/QC.png" alt="Q♣ — The Wild-Rice Queen" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Q♣</span><span class=cap-name>The Wild-Rice Queen</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="JC" aria-label="Enlarge J♣ — The River Squire"><img src="png/JC.png" alt="J♣ — The River Squire" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">J♣</span><span class=cap-name>The River Squire</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="AC" aria-label="Enlarge A♣ — The Reed"><img src="png/AC.png" alt="A♣ — The Reed" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">A♣</span><span class=cap-name>The Reed</span></figcaption></figure></div>
+</article>
+<article class="house">
+  <header class="house-head">
+    <span class="house-suit suit-red" aria-hidden="true">♦</span>
+    <div><h3>House of the Ford</h3><p>El Camino Real’s river crossing and the town: the courthouse dome, Justice, the road.</p></div>
+  </header>
+  <div class="row-cards"><figure class="card "><button type="button" class="card-btn" data-stem="KD" aria-label="Enlarge K♦ — The Warden of the Ford"><img src="png/KD.png" alt="K♦ — The Warden of the Ford" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">K♦</span><span class=cap-name>The Warden of the Ford</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="QD" aria-label="Enlarge Q♦ — The Queen of Scales"><img src="png/QD.png" alt="Q♦ — The Queen of Scales" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Q♦</span><span class=cap-name>The Queen of Scales</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="JD" aria-label="Enlarge J♦ — The Herald of the Road"><img src="png/JD.png" alt="J♦ — The Herald of the Road" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">J♦</span><span class=cap-name>The Herald of the Road</span></figcaption></figure><figure class="card "><button type="button" class="card-btn" data-stem="AD" aria-label="Enlarge A♦ — The Ford"><img src="png/AD.png" alt="A♦ — The Ford" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">A♦</span><span class=cap-name>The Ford</span></figcaption></figure></div>
+</article></div>
+  </section>
+
+  <section class="section" id="deck" aria-labelledby="deck-h">
+    <div class="section-head"><p class="eyebrow">Fifty-five cards</p><h2 id="deck-h">The full deck</h2>
+    <p class="lede">Number cards are kept deliberately quiet: one ink, generous paper, and pips drawn from circles and
+    straight lines. The spade and club stand on a small fault-step plinth, a nod to the Balcones escarpment. Select any
+    card to see it full size.</p></div>
+    <div class="suit-row"><h3 class="label">♠ the Deep</h3><div class="grid-13"><figure class="card mini"><button type="button" class="card-btn" data-stem="AS" aria-label="Enlarge A♠ — The Lion of the Source"><img src="png/AS.png" alt="A♠ — The Lion of the Source" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="2S" aria-label="Enlarge 2♠"><img src="png/2S.png" alt="2♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="3S" aria-label="Enlarge 3♠"><img src="png/3S.png" alt="3♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="4S" aria-label="Enlarge 4♠"><img src="png/4S.png" alt="4♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="5S" aria-label="Enlarge 5♠"><img src="png/5S.png" alt="5♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="6S" aria-label="Enlarge 6♠"><img src="png/6S.png" alt="6♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="7S" aria-label="Enlarge 7♠"><img src="png/7S.png" alt="7♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="8S" aria-label="Enlarge 8♠"><img src="png/8S.png" alt="8♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="9S" aria-label="Enlarge 9♠"><img src="png/9S.png" alt="9♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="10S" aria-label="Enlarge 10♠"><img src="png/10S.png" alt="10♠" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="JS" aria-label="Enlarge J♠ — The Lantern Page"><img src="png/JS.png" alt="J♠ — The Lantern Page" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="QS" aria-label="Enlarge Q♠ — The Blind Oracle"><img src="png/QS.png" alt="Q♠ — The Blind Oracle" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="KS" aria-label="Enlarge K♠ — The King Beneath"><img src="png/KS.png" alt="K♠ — The King Beneath" loading="lazy" width="750" height="1050"></button></figure></div></div><div class="suit-row"><h3 class="label">♥ the Fount</h3><div class="grid-13"><figure class="card mini"><button type="button" class="card-btn" data-stem="AH" aria-label="Enlarge A♥ — The Fount"><img src="png/AH.png" alt="A♥ — The Fount" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="2H" aria-label="Enlarge 2♥"><img src="png/2H.png" alt="2♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="3H" aria-label="Enlarge 3♥"><img src="png/3H.png" alt="3♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="4H" aria-label="Enlarge 4♥"><img src="png/4H.png" alt="4♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="5H" aria-label="Enlarge 5♥"><img src="png/5H.png" alt="5♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="6H" aria-label="Enlarge 6♥"><img src="png/6H.png" alt="6♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="7H" aria-label="Enlarge 7♥"><img src="png/7H.png" alt="7♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="8H" aria-label="Enlarge 8♥"><img src="png/8H.png" alt="8♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="9H" aria-label="Enlarge 9♥"><img src="png/9H.png" alt="9♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="10H" aria-label="Enlarge 10♥"><img src="png/10H.png" alt="10♥" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="JH" aria-label="Enlarge J♥ — The Spring Minstrel"><img src="png/JH.png" alt="J♥ — The Spring Minstrel" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="QH" aria-label="Enlarge Q♥ — The Aquamaid Queen"><img src="png/QH.png" alt="Q♥ — The Aquamaid Queen" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="KH" aria-label="Enlarge K♥ — The Ferryman King"><img src="png/KH.png" alt="K♥ — The Ferryman King" loading="lazy" width="750" height="1050"></button></figure></div></div><div class="suit-row"><h3 class="label">♣ the Reed</h3><div class="grid-13"><figure class="card mini"><button type="button" class="card-btn" data-stem="AC" aria-label="Enlarge A♣ — The Reed"><img src="png/AC.png" alt="A♣ — The Reed" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="2C" aria-label="Enlarge 2♣"><img src="png/2C.png" alt="2♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="3C" aria-label="Enlarge 3♣"><img src="png/3C.png" alt="3♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="4C" aria-label="Enlarge 4♣"><img src="png/4C.png" alt="4♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="5C" aria-label="Enlarge 5♣"><img src="png/5C.png" alt="5♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="6C" aria-label="Enlarge 6♣"><img src="png/6C.png" alt="6♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="7C" aria-label="Enlarge 7♣"><img src="png/7C.png" alt="7♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="8C" aria-label="Enlarge 8♣"><img src="png/8C.png" alt="8♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="9C" aria-label="Enlarge 9♣"><img src="png/9C.png" alt="9♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="10C" aria-label="Enlarge 10♣"><img src="png/10C.png" alt="10♣" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="JC" aria-label="Enlarge J♣ — The River Squire"><img src="png/JC.png" alt="J♣ — The River Squire" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="QC" aria-label="Enlarge Q♣ — The Wild-Rice Queen"><img src="png/QC.png" alt="Q♣ — The Wild-Rice Queen" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="KC" aria-label="Enlarge K♣ — The Cypress King"><img src="png/KC.png" alt="K♣ — The Cypress King" loading="lazy" width="750" height="1050"></button></figure></div></div><div class="suit-row"><h3 class="label">♦ the Ford</h3><div class="grid-13"><figure class="card mini"><button type="button" class="card-btn" data-stem="AD" aria-label="Enlarge A♦ — The Ford"><img src="png/AD.png" alt="A♦ — The Ford" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="2D" aria-label="Enlarge 2♦"><img src="png/2D.png" alt="2♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="3D" aria-label="Enlarge 3♦"><img src="png/3D.png" alt="3♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="4D" aria-label="Enlarge 4♦"><img src="png/4D.png" alt="4♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="5D" aria-label="Enlarge 5♦"><img src="png/5D.png" alt="5♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="6D" aria-label="Enlarge 6♦"><img src="png/6D.png" alt="6♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="7D" aria-label="Enlarge 7♦"><img src="png/7D.png" alt="7♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="8D" aria-label="Enlarge 8♦"><img src="png/8D.png" alt="8♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="9D" aria-label="Enlarge 9♦"><img src="png/9D.png" alt="9♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="10D" aria-label="Enlarge 10♦"><img src="png/10D.png" alt="10♦" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="JD" aria-label="Enlarge J♦ — The Herald of the Road"><img src="png/JD.png" alt="J♦ — The Herald of the Road" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="QD" aria-label="Enlarge Q♦ — The Queen of Scales"><img src="png/QD.png" alt="Q♦ — The Queen of Scales" loading="lazy" width="750" height="1050"></button></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="KD" aria-label="Enlarge K♦ — The Warden of the Ford"><img src="png/KD.png" alt="K♦ — The Warden of the Ford" loading="lazy" width="750" height="1050"></button></figure></div></div>
+    <h3 class="label" style="margin-top:8px">Jokers and back</h3>
+    <div class="extras"><figure class="card mini"><button type="button" class="card-btn" data-stem="JOKER-RED" aria-label="Enlarge Big Joker — The Fool"><img src="png/JOKER-RED.png" alt="Big Joker — The Fool" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Big Joker</span><span class=cap-name>The Fool</span></figcaption></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="JOKER-BLACK" aria-label="Enlarge Little Joker — The Trickster"><img src="png/JOKER-BLACK.png" alt="Little Joker — The Trickster" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Little Joker</span><span class=cap-name>The Trickster</span></figcaption></figure><figure class="card mini"><button type="button" class="card-btn" data-stem="BACK" aria-label="Enlarge Card back — The Source"><img src="png/BACK.png" alt="Card back — The Source" loading="lazy" width="750" height="1050"></button><figcaption><span class="cap-rank">Card back</span><span class=cap-name>The Source</span></figcaption></figure></div>
+  </section>
+
+  
+<section class="section" id="box" aria-labelledby="box-h">
+  <div class="section-head"><p class="eyebrow">The box</p><h2 id="box-h">Board, foil and a seal</h2>
+  <p class="lede">Deep Hole board — named for Spring Lake’s deepest vent — with one gold foil and blind emboss. The
+  seal carries the Texas blind salamander, which lives nowhere else on Earth.</p></div>
+  <div class="tuck-grid"><figure class="tuck-fig"><img src="tuck/TUCK-FRONT-mock.png" alt="Tuck front — gold foil and blind emboss on Deep Hole board" loading="lazy"><figcaption>Tuck front — gold foil and blind emboss on Deep Hole board</figcaption></figure><figure class="tuck-fig"><img src="tuck/TUCK-BACK-mock.png" alt="Tuck back — the card back redrawn in foil" loading="lazy"><figcaption>Tuck back — the card back redrawn in foil</figcaption></figure><figure class="tuck-fig"><img src="tuck/SEAL-mock.png" alt="Seal — the Texas blind salamander, NUSQUAM ALIBI" loading="lazy"><figcaption>Seal — the Texas blind salamander, NUSQUAM ALIBI</figcaption></figure><figure class="tuck-fig"><img src="tuck/TUCK-FLAT.png" alt="Flat — every panel on the tuck dieline" loading="lazy"><figcaption>Flat — every panel on the tuck dieline</figcaption></figure></div>
+</section>
+
+  <section class="section" id="system" aria-labelledby="system-h">
+    <div class="section-head"><p class="eyebrow">Design system</p><h2 id="system-h">Four inks, five line weights</h2>
+    <p class="lede">Every stroke in the deck is one of five widths, and every colour is one of these tokens. Paper
+    marks are cut as geometry, so each ink separates cleanly onto its own plate.</p></div>
+    <div class="system">
+      <div><h3 class="label">Palette</h3><ul class="swatches"><li class="swatch"><span class="chip" style="background:#F4EFE3"></span><span class="sw-name">Limestone</span><span class="sw-hex">#F4EFE3</span><span class="sw-role">Paper · the face ground</span></li><li class="swatch"><span class="chip" style="background:#15242B"></span><span class="sw-name">Aquifer</span><span class="sw-hex">#15242B</span><span class="sw-role">Ink 1 · ♠ ♣ and every key line</span></li><li class="swatch"><span class="chip" style="background:#AE2F2B"></span><span class="sw-name">Gill Red</span><span class="sw-hex">#AE2F2B</span><span class="sw-role">Ink 2 · ♥ ♦ and court red</span></li><li class="swatch"><span class="chip" style="background:#1D5A55"></span><span class="sw-name">Spring Jade</span><span class="sw-hex">#1D5A55</span><span class="sw-role">Ink 3 · court fills, card-back flood</span></li><li class="swatch"><span class="chip" style="background:#B08D57"></span><span class="sw-name">Lion Gold</span><span class="sw-hex">#B08D57</span><span class="sw-role">Metallic ink · foil on the box</span></li><li class="swatch"><span class="chip" style="background:#0F2B29"></span><span class="sw-name">Deep Hole</span><span class="sw-hex">#0F2B29</span><span class="sw-role">Tuck board</span></li></ul></div>
+      <div>
+        <h3 class="label">Line weights at 300 ppi</h3><ul class="weights"><li class="weight"><span class="bar" style="height:1.92px"></span><span class="w-name">Hairline</span><span class="w-val">1.6 px · 0.38 pt</span><span class="w-role">awns, caption rules</span></li><li class="weight"><span class="bar" style="height:2.52px"></span><span class="w-name">Fine</span><span class="w-val">2.1 px · 0.50 pt</span><span class="w-role">the monoline · all ornament and hatching</span></li><li class="weight"><span class="bar" style="height:3.72px"></span><span class="w-name">Medium</span><span class="w-val">3.1 px · 0.74 pt</span><span class="w-role">court detail, knockout lines</span></li><li class="weight"><span class="bar" style="height:5.04px"></span><span class="w-name">Rule</span><span class="w-val">4.2 px · 1.01 pt</span><span class="w-role">frames, upper eyelids</span></li><li class="weight"><span class="bar" style="height:7.50px"></span><span class="w-name">Contour</span><span class="w-val">6.25 px · 1.50 pt</span><span class="w-role">court silhouettes</span></li></ul>
+        <h3 class="label" style="margin-top:28px">Type</h3>
+        <div class="type-spec">
+          <div class="spec-index" aria-label="Index figures in Barlow Condensed SemiBold">A 10 K Q J</div>
+          <div class="spec-slab">HEADWATERS</div>
+          <div class="spec-micro">— Never known to cease —</div>
+        </div>
+      </div>
+    </div>
+    <figure class="sheet"><img src="sheets/motifs-geometric.png" alt="Ornament library specimen sheet" loading="lazy"><figcaption>The ornament library: Source Rosette, running wave, strata, reed ladder, karst voids, stalactites, vent roundels — each drawn on paper and reversed out of jade.</figcaption></figure>
+  </section>
+
+  <section class="section" id="print" aria-labelledby="print-h">
+    <div class="section-head"><p class="eyebrow">Production</p><h2 id="print-h">Ready for the press</h2></div>
+    <dl class="specs">
+      <div><dt>Format</dt><dd>Poker, 2.5 × 3.5 in, 1/8 in corner radius</dd></div>
+      <div><dt>Artwork</dt><dd>Vector SVG at 750 × 1050 (300 ppi); no live type</dd></div>
+      <div><dt>Bleed</dt><dd>0.125 in each side (825 × 1125); stock only crosses trim</dd></div>
+      <div><dt>Inks</dt><dd>Aquifer, Gill Red, Spring Jade + metallic gold (spot)</dd></div>
+      <div><dt>Separations</dt><dd>One black plate per ink, from geometric knockouts</dd></div>
+      <div><dt>Box</dt><dd>Deep Hole board, gold foil, blind emboss; seal on red paper</dd></div>
+    </dl>
+  </section>
+</main>
+<footer><div class="wrap"><span class="wordmark-sm">HEADWATERS</span> · Playing cards of the San Marcos springs.
+Drawn in the spirit of Curtis Jinkins’ Monarchs and Drifters; all artwork is original.</div></footer>
+
+<div class="lb" id="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lb-title">
+  <div class="lb-stage"><img id="lb-img" alt=""></div>
+  <div class="lb-bar">
+    <div class="lb-title" id="lb-title"></div>
+    <div class="lb-nav">
+      <button type="button" id="lb-prev" aria-label="Previous card">Prev</button>
+      <button type="button" id="lb-next" aria-label="Next card">Next</button>
+      <button type="button" id="lb-close">Close</button>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  const cards = [{"stem": "AS", "label": "A\u2660", "name": "The Lion of the Source"}, {"stem": "2S", "label": "2\u2660", "name": ""}, {"stem": "3S", "label": "3\u2660", "name": ""}, {"stem": "4S", "label": "4\u2660", "name": ""}, {"stem": "5S", "label": "5\u2660", "name": ""}, {"stem": "6S", "label": "6\u2660", "name": ""}, {"stem": "7S", "label": "7\u2660", "name": ""}, {"stem": "8S", "label": "8\u2660", "name": ""}, {"stem": "9S", "label": "9\u2660", "name": ""}, {"stem": "10S", "label": "10\u2660", "name": ""}, {"stem": "JS", "label": "J\u2660", "name": "The Lantern Page"}, {"stem": "QS", "label": "Q\u2660", "name": "The Blind Oracle"}, {"stem": "KS", "label": "K\u2660", "name": "The King Beneath"}, {"stem": "AH", "label": "A\u2665", "name": "The Fount"}, {"stem": "2H", "label": "2\u2665", "name": ""}, {"stem": "3H", "label": "3\u2665", "name": ""}, {"stem": "4H", "label": "4\u2665", "name": ""}, {"stem": "5H", "label": "5\u2665", "name": ""}, {"stem": "6H", "label": "6\u2665", "name": ""}, {"stem": "7H", "label": "7\u2665", "name": ""}, {"stem": "8H", "label": "8\u2665", "name": ""}, {"stem": "9H", "label": "9\u2665", "name": ""}, {"stem": "10H", "label": "10\u2665", "name": ""}, {"stem": "JH", "label": "J\u2665", "name": "The Spring Minstrel"}, {"stem": "QH", "label": "Q\u2665", "name": "The Aquamaid Queen"}, {"stem": "KH", "label": "K\u2665", "name": "The Ferryman King"}, {"stem": "AC", "label": "A\u2663", "name": "The Reed"}, {"stem": "2C", "label": "2\u2663", "name": ""}, {"stem": "3C", "label": "3\u2663", "name": ""}, {"stem": "4C", "label": "4\u2663", "name": ""}, {"stem": "5C", "label": "5\u2663", "name": ""}, {"stem": "6C", "label": "6\u2663", "name": ""}, {"stem": "7C", "label": "7\u2663", "name": ""}, {"stem": "8C", "label": "8\u2663", "name": ""}, {"stem": "9C", "label": "9\u2663", "name": ""}, {"stem": "10C", "label": "10\u2663", "name": ""}, {"stem": "JC", "label": "J\u2663", "name": "The River Squire"}, {"stem": "QC", "label": "Q\u2663", "name": "The Wild-Rice Queen"}, {"stem": "KC", "label": "K\u2663", "name": "The Cypress King"}, {"stem": "AD", "label": "A\u2666", "name": "The Ford"}, {"stem": "2D", "label": "2\u2666", "name": ""}, {"stem": "3D", "label": "3\u2666", "name": ""}, {"stem": "4D", "label": "4\u2666", "name": ""}, {"stem": "5D", "label": "5\u2666", "name": ""}, {"stem": "6D", "label": "6\u2666", "name": ""}, {"stem": "7D", "label": "7\u2666", "name": ""}, {"stem": "8D", "label": "8\u2666", "name": ""}, {"stem": "9D", "label": "9\u2666", "name": ""}, {"stem": "10D", "label": "10\u2666", "name": ""}, {"stem": "JD", "label": "J\u2666", "name": "The Herald of the Road"}, {"stem": "QD", "label": "Q\u2666", "name": "The Queen of Scales"}, {"stem": "KD", "label": "K\u2666", "name": "The Warden of the Ford"}, {"stem": "JOKER-RED", "label": "Big Joker", "name": "The Fool"}, {"stem": "JOKER-BLACK", "label": "Little Joker", "name": "The Trickster"}, {"stem": "BACK", "label": "Card back", "name": "The Source"}];
+  const lb = document.getElementById('lightbox'), img = document.getElementById('lb-img'),
+        title = document.getElementById('lb-title');
+  let i = 0, opener = null;
+  const show = (k) => {
+    i = (k + cards.length) % cards.length;
+    const c = cards[i];
+    img.src = 'svg/' + c.stem + '.svg';
+    img.alt = c.label + (c.name ? ' — ' + c.name : '');
+    title.innerHTML = '';
+    title.append(c.label);
+    if (c.name) { const em = document.createElement('em'); em.textContent = c.name; title.append(em); }
+  };
+  const open = (stem, btn) => {
+    opener = btn; show(Math.max(0, cards.findIndex(c => c.stem === stem)));
+    lb.hidden = false; document.body.style.overflow = 'hidden';
+    document.getElementById('lb-close').focus();
+  };
+  const close = () => { lb.hidden = true; document.body.style.overflow = ''; if (opener) opener.focus(); };
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.card-btn'); if (b) open(b.dataset.stem, b);
+  });
+  document.getElementById('lb-prev').onclick = () => show(i - 1);
+  document.getElementById('lb-next').onclick = () => show(i + 1);
+  document.getElementById('lb-close').onclick = close;
+  lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-stage')) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(i - 1);
+    else if (e.key === 'ArrowRight') show(i + 1);
+  });
+})();
+</script>
