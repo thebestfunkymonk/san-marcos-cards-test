@@ -103,7 +103,7 @@ so every interior edge is automatically MEDIUM (§B.2's 2 : 1).
 standing collar  ->  mantle / torso  ->  tunic  ->  lapels / trims
 long hair (hair_fall)  ->  neck  ->  head (face)  ->  hair cap / hair back
 beard  ->  moustache  ->  crown / diadem / cap  ->  clasp (Lion Mark)
-sleeves  ->  attributes (sceptre, orb, staff …)  ->  cuffs  ->  hands (hand, then thumb)
+sleeves  ->  attributes (sceptre, orb, staff …)  ->  cuffs  ->  one hand5 Part
 band_guard (last, Kings and Queens)
 ```
 
@@ -111,18 +111,13 @@ Rules that fall out of it:
 
 * A **collar that stands behind the head** goes before the mantle: its foot
   hides under the neckline.
-* **Cuffs go after the attribute** they sit next to, **hands after cuffs**.
-  A kit hand runs 7 px past its wrist point; `Hand.add_to` cuts that run
-  with the arm already in the scene (items named cuff / sleeve / forearm /
-  arm / gauntlet / bracelet / wrist), re-aims the wrist along the forearm
-  the cuff line implies, and lets the hand cover the kit sleeve's 2.5 px lip
-  above the cuff and cuts it exactly on the cuff's own edge (sagged gauntlet
-  tops included) — so the cuff edge is the only line at the junction and the
-  wrist goes *into* the cuff. Kit thumbs are part of the hand (no separate
-  thumb item); hands that keep a separate thumb still get it stacked after.
-  A **bracelet** of beads goes *after* the hand (the wrist runs on under the
-  beads); a forearm hidden behind an attribute (the J♥ fiddle) takes
-  `fist(..., hidden_wrist=True)`.
+* **One hand per half-figure.** It holds the tall attribute on the viewer's
+  right. Re-home a secondary object in the clothing without a second hand, or
+  omit it. Add the sleeve and tall attribute first, then add the hand.
+  `Hand.add_to` tucks the wrist into an arm or cuff already in the scene.
+  Alternatively, `hand5(..., sleeve=sleeve)` or
+  `hand.with_sleeve(sleeve)` makes the hand and sleeve one Part with one
+  outside contour; the cuff is a colour edge, not a second outline.
 * **Knockouts near a hand** (lapel bubbles, lining drops, belt nodes, chain
   stones) are whole or hidden, never a paper crescent on the hand's contour:
   `K.clear_of_hand(holes, hand.hand.shape)` fills back the ones that would
@@ -181,60 +176,46 @@ tip, notch_dy, lines, stagger), mo=moustache)` · `moustache(fc,
 MoustacheSpec(root, tip, arch, under))`. Pass the moustache to the beard so
 its upper edge tucks under it; the chin stays paper round the mouth.
 
-**Hands (§H.0: mitten, 3 finger lines, separate thumb).** Place, never scale.
-One hand language (`tools/hand_specimen.py` draws every call the courts make,
-`--before` beside the pre-review kit): a paper mitten, CONTOUR silhouette,
-MEDIUM interior; four fingers with rounded tip lobes and three finger lines
-from the notches (≥ 8 px bands, i.e. 4.9 px of paper between lines); a
-tapered thumb whose root is merged into the back of the hand (no line across
-it); a wrist ≈ 0.7 × the knuckle breadth that tapers out of the back of the
-hand and goes into the cuff. Sizes follow the face, not the object.
+**Hands (§H.0: one five-finger hand per half-figure).** Use the shared
+`K.hand5(at, angle, pose, *, size, hand, view, curl, spread, grip_w,
+sleeve=None)` primitive. It returns the existing `Hand` dataclass and builds
+one smoothed silhouette from a palm quad and five digit centrelines. All
+sizes come from the face (`K.hand_size(fc)`), never from the attribute.
 
-* `fist(at, axis_deg, shaft_w=, back=±1, wrist=, h=, hand=, view=, arm=)`
-  closed round any cylinder whose UP end points `axis_deg` (−90 vertical
-  sceptre; −63 the J♦ trumpet). The finger block is `max(0.92 h, 32)` tall
-  and 1.15 × as long **whatever the shaft width**; the fingertips show ≤ 5 px
-  past the shaft's far edge; the thumb stands on top of the index finger
-  (0.2 × the block above it at its root), its tip on the shaft's centre
-  line, finger line 1 running into its underside; the whole fist
-  (thumb + block) is centred on `at`. `back` = the side the back of the hand
-  (the knuckles) faces. The back of the hand is the rounded knuckle end; the
-  wrist is a tapered sweep that arrives at `wrist` along the forearm, and
-  the heel never comes within 7.3 px of the shaft below the fist (the inner
-  wrist edge narrows instead). On a haloed shaft the ground left between the
-  heel, the cuff and the shaft's paper channel turns to paper wherever it is
-  narrower than 16 px (`HEEL_CLOSE`), closing on a round arc — no 1–3 px
-  sliver, no acute wedge.
-  **Place the wrist out along the hand axis**: `K.fist_wrist(at, axis,
-  bend=, dist=, **same kw as fist)` gives the point `dist` × the block height
-  from the back of the hand, `bend`° off the knuckle direction toward the
-  shaft's lower end (35–55° reads; route the forearm on along that line —
-  `fist_geom` gives the frame). A wrist straight under the fist or inside the
-  knuckle line makes a boot or a post, and `HandWarning` (also
-  `K.HAND_LOG`) says so. Handedness: the
-  construction is a back-of-hand view — a LEFT hand with `back=+1`, a RIGHT
-  hand with `back=−1`. Pass `hand='L'|'R'` (the figure's hand); a mismatch
-  (e.g. the figure's left hand gripping with `back=−1` because the forearm
-  rises from the body side) is drawn as the palm view: fingertips curled
-  back to the heel.
-* `cup(c, r, side=±1, wrist=)` a sphere held from below, back of the hand
-  to the viewer: finger columns from a knuckle row 1.14 r below the centre,
-  tips ≈ (grip − 0.05)·r below it on a curve following the sphere, the thumb
-  up the wrist-side rim (72° → `thumb_to` 30° below the equator) centred ON
-  the sphere's contour (both its edges clear of it; the contour leaves square
-  from under the round tip; the K♠ uses 24° so the tip crosses the orb's
-  lowest latitude decisively), a finger's width, its base webbed into a full,
-  rounded back. Best wrist ≈ 1.3–1.5 r below the centre (further down is a
-  long bare back: move the cuff up).
-* `flat(at, angle, side=, length=56, width=30)` a hand laid flat (chest,
-  bodice, belt, hilt): tapered back, four capsule fingers (`tips` sets their
-  stagger, `curl` closes them softly), the thumb diverging `thumb_deg`° with
-  a web notch; `stub=K.HAND_STUB` runs the wrist on into the cuff. It has
-  replaced the court-local `lady_hand` (Q♥) and `belt_hand` (J♣).
-* `Hand.add_to(sc, name, cuff=)` stacks the hand (wrist tucked into the arm,
-  see §3); a kit fist on a haloed attribute also carries that attribute's
-  paper channel round its fingertips, so the lobes end in paper, not 1–3 px
-  short of a pattern.
+```python
+size = K.hand_size(fc)
+grip = K.hand5((540, 419), -90, "wrap", size=size,
+               hand="R", view="back", grip_w=22, curl=10)
+grip.add_to(sc, "handR", halo=0)
+```
+
+* `wrap`: `at` is the shaft centre; `angle` is the shaft's up-axis in screen
+  degrees (−90 vertical, any angle works). `grip_w` is shaft width. Back and
+  palm views share one outline; the thumb leaves the palm side on an open V
+  and its short tip sits beside the index tip, never across the finger band.
+  Put the shaft in the Scene before the hand; use `halo=0` so its lines run
+  under the grip without paper rings.
+* `cup`: `at` is the wrist; `angle` points wrist-to-fingers. `grip_w` is the
+  orb/chalice rim diameter. Finger tips scallop along the lower rim. Place the
+  orb from `hand.hand.meta["object_center"]` when an exact shared anchor is
+  useful; it is a rim contact, not a hand drawn over the orb face.
+* `rest`, `hold_flat` and `open`: `at` is the wrist and `angle` points toward
+  the fingertips. `curl` softly shortens/bends digits; `spread` fans them.
+  For `hold_flat`, set `grip_w` to the held object's width and draw that
+  object behind the fingers.
+* `hand="L"|"R"` is anatomical handedness. `view="back"|"palm"` is the
+  visible side. The thumb side follows both, so don't flip the geometry by
+  hand. The hand has four tapered fingers with a small knuckle rhythm and one
+  opposing thumb; use at most three short MEDIUM inner lines, each beginning
+  at least 7.3 px clear of a fingertip notch.
+* `hand5(..., sleeve=sleeve)` and `hand.with_sleeve(sleeve)` return a single
+  hand+sleeve Part and a shared outer contour; the cuff is only a colour edge.
+  Without a pre-composed sleeve, add the sleeve/cuff first and use
+  `Hand.add_to(sc, name, halo=0)` to tuck the wrist into it.
+
+The legacy `fist`, `cup`, `flat` and `open_hand` builders remain available so
+unmigrated cards retain byte-identical outputs. Do not use them for new court
+hands; migrate a card to `hand5` as part of its own court feature.
 
 **Garments.** `mantle(MantleSpec, border=, pattern_kind=, **kw)` bilateral
 arc-chain mantle with a plain border band + FINE seam and the house pattern
@@ -402,7 +383,7 @@ Also check `sc.heal_log` (and its `near` field) after every change, and that
 | fingerprint beard, a row of terminal "buttons" | concentric fan lines ending together | converging current lines, `stagger` 13 |
 | orb vent read as a smile | a thin FINE ellipse at the pole | no mark at the pole; the bubble floats free, 4.2 px clear |
 | orb hand a white slab | wrist almost level with the sphere, or so far below it that the back is longer than the fingers | `cup` fingers from 1.14 r to ≈ 0.45 r, wrist ≈ 1.3–1.5 r below the centre (move the cuff up), tapered back |
-| fist a box with a sausage thumb; a boot-shaped palm; the wrist line doubled on the cuff | finger length set by the shaft, a capsule thumb over finger line 1, a hull from the knuckles to the wrist, the hand stacked on the cuff | `fist` v2: fixed finger block, thumb on top of the index finger, tapered wrist sweep + heel clear of the shaft, wrist tucked into the cuff; put the wrist out along the hand axis |
+| thumb laid over the finger band; cup reads as a hand over the orb; doubled cuff outline | stacked thumb construction, upright cup fingers, sleeve and hand outlined separately | use one `hand5` silhouette: an open V web from the palm side, rim-following cup tips, and one shared hand+sleeve contour |
 | red forearms merging with red lapels | same colour touching | route the arms over the jade panels, jade cuffs |
 | jade arms invisible on a jade mantle | no contrast | red arms (or plain arms on a patterned panel) |
 | the Lion Mark reading as a sheep / owl / bat / horned mask | round fleece scallops with droopy wing tufts; raised wings at 40 px | level wings with stepped primaries behind a scalloped mane; paper face; every face mark touches the gold rim |
@@ -419,13 +400,13 @@ have exercised; everything else is parameters.
 
 | court | head | hair / headwear | body | hands / attributes |
 |---|---|---|---|---|
-| Q♠ | `face(…, '3/4-left', sex='f', lids='closed', vestigial=True)` | `hair_fall` behind + `hair_cap`; `diadem(kind='stalactite', n=5–7, fc=)` | `standing_collar` (ruff) behind `torso(turn=-1)`; `gill_plume` ×6 on the ruff | `cup`-like hold on the mirror frame (a `staff` ring), `flat` at the breast |
-| J♠ | `face(…, 'profile-right', age='young', lids='raised')` | `cap(kind='hood')` + `lion_clasp(…, 40)` badge | `torso(turn=+1, pattern_kind=…)` | `fist` on the lantern chain (axis −90) |
-| K♥, K♣ | frontal, `age='elder'` | `crown_band` + merlons re-parameterised / `diadem(kind='knee')` | `mantle` + `lapel`/`tunic` or `torso` | `fist` on the tall attribute at x ≈ 540 |
-| K♦ | `'profile-left'`, `age='elder'` | `hair_back` + beard adapted to profile | `torso(turn=-1)` | `fist` on the staff |
-| Q♥ Q♣ Q♦ | 3/4, `sex='f'` | `hair_cap` + `hair_fall`; `diadem(kind='point'|'bead')` | `torso(turn=±1, pattern_kind='scales'|…)` | `cup` for bowls, `fist` for stems |
-| J♥ | `'profile-left'`, young | `hair_back` | `torso(turn=-1)` | `fist` on the fiddle neck |
-| J♣ J♦ | 3/4, young | `hair_cap(parting=…)` + `cap(kind='flat')` | `torso(turn=±1, pattern_kind='rowels_solid'…)` | `fist(axis_deg=-63)` on a diagonal `staff` |
+| Q♠ | `face(…, '3/4-left', sex='f', lids='closed', vestigial=True)` | `hair_fall` behind + `hair_cap`; `diadem(kind='stalactite', n=5–7, fc=)` | `standing_collar` (ruff) behind `torso(turn=-1)`; `gill_plume` ×6 on the ruff | one `hand5("hold_flat")` on the mirror frame; re-home the laurel |
+| J♠ | `face(…, 'profile-right', age='young', lids='raised')` | `cap(kind='hood')` + `lion_clasp(…, 40)` badge | `torso(turn=+1, pattern_kind=…)` | one `hand5("wrap")` on the lantern chain |
+| K♥, K♣ | frontal, `age='elder'` | `crown_band` + merlons re-parameterised / `diadem(kind='knee')` | `mantle` + `lapel`/`tunic` or `torso` | one `hand5("wrap")` on the tall attribute; re-home or drop the orb |
+| K♦ | `'profile-left'`, `age='elder'` | `hair_back` + beard adapted to profile | `torso(turn=-1)` | one `hand5("wrap")` on the key/staff |
+| Q♥ Q♣ Q♦ | 3/4, `sex='f'` | `hair_cap` + `hair_fall`; `diadem(kind='point'|'bead')` | `torso(turn=±1, pattern_kind='scales'|…)` | one `hand5("cup")` for a rim or `hand5("wrap")` for a stem |
+| J♥ | `'profile-left'`, young | `hair_back` | `torso(turn=-1)` | one `hand5("wrap")` on the fiddle neck; re-home the bow |
+| J♣ J♦ | 3/4, young | `hair_cap(parting=…)` + `cap(kind='flat')` | `torso(turn=±1, pattern_kind='rowels_solid'…)` | one `hand5("wrap")` on the tall attribute |
 
 Keep the K♠ conventions: CONTOUR silhouette, MEDIUM interiors, FINE patterns;
 gold only on regalia and hair; paper halos only on hands and attributes; the

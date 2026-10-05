@@ -44,9 +44,9 @@ Sections
                                 profile-left | profile-right, sex, age, lids, **overrides)
     6  hair and beards          HairSpec, hair_fall, hair_cap, hair_back, neck, BeardSpec, beard,
                                 MoustacheSpec, moustache
-    7  hands (v3: one silhouette, five fingers)
-                                Hand (add_to tucks the wrist into the cuff; silhouette / with_sleeve:
-                                hand + arm as one outline), hand(pose, ...), hand_size(face),
+    7  hands                    Hand (add_to tucks the wrist into the cuff; silhouette / with_sleeve:
+                                hand + arm as one outline), hand5(at, angle, pose, ...),
+                                hand_size(face),
                                 fist (any cylinder, any angle, back or palm view), pinch (stem, key,
                                 ring), fist_geom / fist_wrist (where the wrist reads), cup (orb from
                                 below), flat / open_hand (chest, gesture), clear_of_hand, HandWarning,
@@ -1845,49 +1845,16 @@ def moustache(fc: "Face", m: MoustacheSpec = MoustacheSpec()) -> Part:
 
 
 # =============================================================================
-# 7  hands (v3: ONE silhouette, FIVE fingers — four fingers and an opposable thumb)
+# 7  hands — existing court hands and the new shared five-finger primitive
 # =============================================================================
 #
-# One hand language for every kit hand (COURT_GUIDE §4 "Hands"; client
-# direction v3: "integrate, don't stack"):
-#
-# * ONE paper silhouette per hand. Palm, four fingers and the thumb are merged
-#   into a single region and drawn as one contour (MEDIUM, CONTOUR where it is
-#   the figure's edge). Nothing is laid over the hand: no separate thumb piece,
-#   no block of bands with a digit stacked on top, no halo of its own.
-# * a FEW open MEDIUM interior lines: each finger separation leaves the
-#   notch between two fingertips where the two outline strokes' inner edges
-#   meet (no round cap sitting in the notch as a bead) and stops short of the
-#   knuckles (staggered); the thumb has at most one line, its underside, open
-#   and never wrapping round its tip; the palm view adds one thenar crease.
-#   Lines keep ≥ 7.3 px centre to centre (4.2 px of paper, §I.12).
-# * no step, no cap: a grip's thumb IS the fist's top edge (back view: a
-#   wedge flush with the index top, rising to the back of the hand; palm
-#   view: the top band, its tip in the column of fingertips); the underside
-#   of a fist is one curve from the little fingertip into the wrist.
-# * nothing behind caps against the hand: with ``add_to(halo=0)`` the lines
-#   of the objects behind end under the hand's outline stroke (LINE_TUCK).
-# * five digits with character: tapered fingers with round tips, the middle
-#   finger longest, the little finger shortest and narrowest, a slight fan; a
-#   thumb of believable length rooted low in the palm (the thenar mound flows
-#   into the back of the hand with no line across it); a real wrist taper.
-# * sizes follow the FACE, not the object held: ``size`` is the hand length
-#   (wrist crease → middle fingertip, open) ≈ the face's chin-to-hairline
-#   (``hand_size(face)``); the knuckle breadth (= a fist's height) is
-#   ``HAND_K × size``. The old ``h`` (fist height ≈ max(0.92 h, 32)) still works.
-# * wrists merge into sleeves: ``Hand.add_to`` cuts the wrist run with the cuff
-#   it finds (the cuff edge is the one line at the junction); for a sleeve
-#   with no cuff, ``Hand.silhouette(run)`` / ``Hand.with_sleeve(sleeve)`` give
-#   hand + forearm as ONE outline.
-#
-# Poses: ``fist`` (grip a staff / sceptre / rod / stem at any angle; back or
-# palm view; a bar held from above with axis 180, from below with 0),
-# ``pinch`` (a small object — flower stem, key, chalice stem — between the
-# thumb and index tips, the other fingers curled and stepped back), ``cup``
-# (an orb held from below: the palm under it, the fingertips over its lower
-# rim, the thumb on its rim), ``flat`` / ``open_hand``
-# (an open hand or gesture, palm or back, fingers together or spread).
-# ``hand(pose, ...)`` dispatches to them.
+# The older ``fist``, ``pinch``, ``cup``, ``flat`` and ``open_hand`` functions
+# remain below for existing court modules, whose outputs must stay unchanged
+# until their individual migrations. New/reworked courts use the shared
+# ``hand5`` primitive below: one five-digit silhouette, face-scaled, with the
+# thumb leaving the palm side on an open V (never across the finger band).
+# Its strokes stay clear of the three fingertip notches, and ``with_sleeve``
+# makes the hand and sleeve share one outer contour.
 
 FIST_H_MIN = 32.0        # fist height floor: four fingers at ≥ 8 px pitch
 FIST_H_K = 0.92          # fist height per unit of the caller's (old) h
@@ -1899,6 +1866,7 @@ PARALLEL_MIN = GAP + MEDIUM          # 7.3: centre distance of two parallel MEDI
 HEEL_CLOSE = 8.0         # ground between a heel and a haloed shaft narrower than 2 × this turns to paper
 ARM_WORDS = ("cuff", "sleeve", "forearm", "arm", "gauntlet", "bracelet", "wrist")
 CUFF_WORDS = ("cuff", "gauntlet", "bracelet", "wrist")
+_DEFAULT_HAND_HALO = object()
 LINE_TUCK = 1e-3         # the 'halo' of an unhaloed hand: lines behind stop under its outline stroke
 HAND_LOG: list = []      # construction warnings, newest last (also issued as HandWarning)
 
@@ -2151,12 +2119,13 @@ class Hand:
                        tuple(W + u * run - n * w / 2), tuple(W - u * back - n * w / 2)])
         return _biggest(shapely.union(self.hand.shape, arm).buffer(0.6, quad_segs=8).buffer(-0.6, quad_segs=8))
 
-    def with_sleeve(self, sleeve, *, color=None, cuff_line=True) -> Part:
+    def with_sleeve(self, sleeve, *, color=None, cuff_line=False) -> Part:
         """Hand + sleeve as ONE Part with one continuous outline: ``sleeve`` is a
         Part (its fills keep its colour) or a region (filled ``color``). The
-        hand's wrist runs into the sleeve; the colour edge between paper and
-        sleeve is a MEDIUM line (``cuff_line``), the outer contour runs on
-        from the sleeve into the hand without a corner or a T."""
+        hand's wrist runs into the sleeve; by default the cuff is a colour
+        edge without an extra stroke, and the outer contour runs on from the
+        sleeve into the hand without a corner or a T. Set ``cuff_line=True``
+        only for an explicitly inked cuff."""
         if isinstance(sleeve, Part):
             sr, sf, sl = sleeve.shape, sleeve.fills, sleeve.lines
         else:
@@ -2258,12 +2227,17 @@ class Hand:
         return Part(shape, hp.fills, outline(shape) + inner,
                     {**hp.meta, "inner": inner, "tucked": True, "cutline": (W, u, max(lip, self.stub - 1.0))})
 
-    def add_to(self, sc: "Scene", name: str, *, halo=HALO, halo_skip=(), halo_only=None, cuff=None):
+    def add_to(self, sc: "Scene", name: str, *, halo=_DEFAULT_HAND_HALO, halo_skip=(), halo_only=None, cuff=None):
         """Stack the hand in front (wrist tucked into the arm, see ``tucked``)
         as ONE item. With ``halo=0`` (the v3 default for a held attribute: the
         shaft runs under the fingers, sharing their contour) a hand closed on a
         HALOED attribute still carries that attribute's paper channel round
-        its fingertips and heel, so the lobes end in paper."""
+        its fingertips and heel, so the lobes end in paper. New ``hand5`` grips
+        default to no halo; the established court hands retain their old halo."""
+        if halo is _DEFAULT_HAND_HALO:
+            halo = 0.0 if str(self.hand.meta.get("kind", "")).startswith("hand5") else HALO
+        elif halo is None:
+            halo = 0.0
         hp = self.tucked(sc, cuff)
         if "inner" in hp.meta and not halo:
             tips = hp.meta.get("tipzone")
@@ -3191,6 +3165,343 @@ def open_hand(at, angle=-90.0, *, size, hand="R", view="back", spread=0.0, curl=
     closing. A thin front door to ``flat``."""
     return flat(at, angle, size=size, hand=hand, view=view, spread=spread, curl=curl, thumb_deg=thumb_deg,
                 thumb_len=thumb_len, stub=stub, wrist_w=wrist_w, **kw)
+
+
+def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0, spread=0.0,
+          grip_w=22.0, sleeve=None, wrist_w=None, stub=HAND_STUB) -> Hand:
+    """The shared five-digit court hand: one smoothed silhouette, either hand
+    and either view, sized from the face (pass ``hand_size(face)``).
+
+    ``pose`` is ``wrap`` (a cylindrical shaft centred on ``at``), ``cup``
+    (fingers scallop around the lower rim of an orb whose diameter is
+    ``grip_w``; the rim has a small proportional minimum for an open thumb
+    web), ``rest`` (flat against the body), ``hold_flat`` (thumb
+    lightly opposed to a flat object of width ``grip_w``), or ``open``.
+    ``angle`` is the shaft axis for ``wrap`` and the wrist-to-fingertip
+    direction for the other poses. For non-wrap poses ``at`` is the wrist;
+    for wrap it is the centre of the shaft at the grip.
+
+    ``curl`` adjusts finger bend/wrap (0–60°); ``spread`` fans them and opens
+    the cup scallop (0–18°). ``grip_w`` is shaft width for wrap and the
+    held-object diameter/width for cup/hold_flat; cup uses a minimum rim
+    diameter of 0.72 × ``size`` to keep the thumb web open. ``view`` is ``back`` or
+    ``palm``; ``hand`` is the figure's anatomical ``L`` or ``R``. The thumb
+    leaves from the palm edge on an open V and ends beside the index tip,
+    never across the four-finger band. At most three short MEDIUM lines are
+    drawn, with the finger lines starting clear of the tip notches.
+
+    When ``sleeve`` is a Part or region, the returned Hand carries the merged
+    hand+sleeve Part and one continuous outer outline; its cuff is a colour
+    edge. Otherwise call ``result.with_sleeve(sleeve)`` to create that Part.
+    The hand stores its inner lines, fingertip/notch zones, and a rebuild
+    callback in the established Hand contract. Grips default to ``halo=0``
+    in ``Hand.add_to`` so held shafts run under the fingers without paper
+    rings.
+    """
+    pose = str(pose).lower()
+    if pose not in {"wrap", "cup", "rest", "hold_flat", "open"}:
+        raise ValueError("hand5 pose must be wrap, cup, rest, hold_flat, or open")
+    view = str(view).lower()
+    if view not in {"back", "palm"}:
+        raise ValueError("hand5 view must be back or palm")
+    hand = str(hand).upper()[:1]
+    if hand not in {"L", "R"}:
+        raise ValueError("hand5 hand must be L or R")
+    size = float(size)
+    if size <= 0:
+        raise ValueError("hand5 size must be positive")
+    curl = min(max(float(curl), 0.0), 60.0)
+    spread = min(max(float(spread), 0.0), 18.0)
+    grip_w = max(float(grip_w), 0.0)
+    if pose in {"wrap", "cup", "hold_flat"} and grip_w <= 0.0:
+        raise ValueError(f"hand5 {pose} needs positive grip_w")
+    hb = HAND_K * size
+    object_radius = grip_w / 2.0
+    object_width = min(grip_w, 0.50 * size) if pose == "hold_flat" else grip_w
+    object_height = min(22.0, 0.28 * size) if pose == "hold_flat" else 0.0
+    thumb_side = -1.0 if (hand == "R") == (view == "back") else 1.0
+    is_wrap = pose == "wrap"
+    rot = float(angle) + (90.0 if is_wrap else 0.0)
+    M, Mf = _rigid(at, rot, mirror_x=False)
+    ys = np.linspace(-0.3375 * hb, 0.3375 * hb, 4)
+    ys = list(ys[::-1] if thumb_side > 0 else ys)
+    widths = (0.19, 0.205, 0.20, 0.18)
+    lengths = (0.94, 0.99, 1.0, 0.87)
+    centerlines = []
+    digits = []
+    tips = []
+    tip_radii = []
+
+    if is_wrap:
+        a = grip_w / 2.0
+        # The palm quad is behind the staff; four separate tapered centrelines
+        # cross the shaft and turn only a little around its far edge.
+        for i, y in enumerate(ys):
+            fw = widths[i] * hb
+            y_shift = (i - 1.5) * (spread / 18.0) * 0.035 * hb
+            root = P(0.43 * hb + (i in (0, 3)) * 0.025 * hb, y + y_shift)
+            tip_y = y + y_shift + thumb_side * (i - 1.5) * (0.012 + 0.03 * spread / 18.0) * hb
+            tip = P(-a - (0.055 + 0.025 * math.sin(math.radians(curl))) * hb
+                    - 0.012 * hb * lengths[i], tip_y)
+            ctrl = P(-a - (0.19 + 0.10 * math.sin(math.radians(curl))) * hb,
+                     y + y_shift + thumb_side * (i - 1.5) * 0.018 * hb)
+            cen = _qbez(root, ctrl, tip, 18)
+            # A small additional bend gives the fingertips a wrapped, not
+            # ruler-straight, rhythm around a cylinder.
+            cen[-4:, 0] += np.linspace(0.0, 0.035 * hb, 4)
+            digit = _digit(cen, np.linspace(fw * 0.88, fw * 0.80, len(cen)))
+            digits.append(digit)
+            centerlines.append(cen)
+            tips.append(cen[-1])
+            tip_radii.append(fw * 0.40)
+
+        # A tapered palm quad joins the four bases. Its heel grows into a real
+        # wrist on the forearm side, not a boxed-off finger block.
+        palm = Polygon([
+            (0.26 * hb, -0.405 * hb), (0.72 * hb, -0.43 * hb),
+            (1.10 * hb, -0.30 * hb), (1.18 * hb, 0.12 * hb),
+            (0.89 * hb, 0.43 * hb), (0.29 * hb, 0.405 * hb),
+        ]).buffer(1.3, quad_segs=10).buffer(-1.3, quad_segs=10)
+        thumb_root = P(0.39 * hb, thumb_side * 0.50 * hb)
+        thumb_mcp = P(0.02 * hb, thumb_side * 0.70 * hb)
+        thumb_tip = P(-a - 0.075 * hb, thumb_side * 0.56 * hb)
+        thumb_cen = np.vstack([
+            _qbez(thumb_root, P(0.22 * hb, thumb_side * 0.63 * hb), thumb_mcp, 12)[:-1],
+            _qbez(thumb_mcp, P(-0.20 * hb, thumb_side * 0.64 * hb), thumb_tip, 14),
+        ])
+        thumb = _digit(thumb_cen, np.linspace(0.18 * hb, 0.12 * hb, len(thumb_cen)))
+        wrist = P(0.96 * hb, 0.16 * hb)
+        wrist_dir = P(1.0, 0.45)
+        width_default = 0.95 * hb
+        # The thumb lobe is kept on the palm side, outside the four-finger band.
+        thumb_distal = thumb.difference(palm.buffer(-0.1))
+        finger_band = shapely.union_all(digits)
+        # Three shallow V webs at the roots, never a separate digit drawn on top.
+        web_lines = []
+        for i in range(3):
+            gap_y = (ys[i] + ys[i + 1]) / 2.0
+            start_x = 0.22 * hb
+            end_x = 0.45 * hb
+            if end_x > start_x + 4.0:
+                web_lines.append(LineString([(start_x, gap_y), (end_x, gap_y)]))
+        object_center = P(0.0, 0.0)
+    else:
+        # Open-family poses share one palm quad and the same four anatomical
+        # finger centrelines. Cup tips use a true circular lower-rim profile.
+        x_kn = 0.48 * size
+        wrist = P(0.0, 0.0)
+        wrist_dir = P(-1.0, 0.0)
+        width_default = 0.95 * hb
+        object_center = (P(0.88 * size, thumb_side * (0.55 * hb - object_height / 2.0))
+                         if pose == "hold_flat" else P(1.08 * size, 0.0))
+        base_spread = math.radians(spread)
+        curl_rad = math.radians(curl)
+        for i, y in enumerate(ys):
+            side_from_mid = (i - 1.5) / 1.5
+            fw = widths[i] * hb
+            root = P(x_kn - (0.014 * hb if i in (0, 3) else 0.0), y * 0.94)
+            # A slight anatomical fan remains at spread=0; explicit spread
+            # adds to it while leaving room between the fingertip lobes.
+            fan = side_from_mid * (base_spread / 2.0 + math.radians(2.0))
+            direction = P(math.cos(fan), math.sin(fan))
+            if pose == "cup":
+                radius = max(object_radius, 0.36 * size)
+                object_radius = radius
+                object_center = P(1.08 * size, 0.0)
+                tip_y = min(max(y * (1.08 + 0.12 * spread / 18.0), -0.82 * radius), 0.82 * radius)
+                # Let each tapered tip overlap the orb just enough that its
+                # outline meets the rim without a paper sliver at the contact.
+                tip_x = (object_center[0] - math.sqrt(max(radius * radius - tip_y * tip_y, 0.0)) - 5.0
+                         - 0.10 * hb * math.sin(math.radians(curl)))
+                tip = P(tip_x, tip_y)
+                ctrl = P(root[0] + 0.68 * (tip_x - root[0]), (root[1] + tip_y) / 2)
+                cen = _qbez(root, ctrl, tip, 18)
+            else:
+                palm_to_tip = size * max(lengths[i] - 0.48, 0.36)
+                palm_to_tip *= 1.0 - 0.16 * math.sin(curl_rad)
+                end = root + direction * palm_to_tip
+                bend = -thumb_side * curl * (0.22 + 0.12 * i / 3.0)
+                cen = _bend(root, direction, float(np.hypot(*(end - root))), bend, n=18)
+            # Light knuckle rhythm: middle/index extend farther than the little
+            # finger; every digit tapers into a rounded fingertip.
+            taper = np.linspace(fw * 0.92, fw * 0.78, len(cen))
+            digit = _digit(cen, taper)
+            digits.append(digit)
+            centerlines.append(cen)
+            tips.append(cen[-1])
+            tip_radii.append(fw * 0.39)
+        if pose == "cup":
+            palm_half = 0.455 * hb
+            # The hand contacts only the orb's lower edge: scallops follow its
+            # circle instead of standing up like a picket fence over its face.
+            palm = Polygon([
+                (-stub, -0.22 * hb), (0.12 * size, -palm_half),
+                (x_kn - 0.04 * size, -palm_half), (x_kn + 0.04 * size, 0.0),
+                (x_kn - 0.04 * size, palm_half), (0.12 * size, palm_half),
+                (-stub, 0.22 * hb),
+            ]).buffer(2.0, quad_segs=10).buffer(-2.0, quad_segs=10)
+            root = P(0.24 * size, thumb_side * 0.42 * hb)
+            mcp = P(0.42 * size, thumb_side * 0.57 * hb)
+            thumb_tip_y = thumb_side * 0.66 * radius
+            thumb_tip = P(object_center[0] - math.sqrt(max(radius * radius - thumb_tip_y * thumb_tip_y, 0.0)) - 1.2,
+                          thumb_tip_y)
+            thumb_controls = (P(0.32 * size, thumb_side * 0.50 * hb),
+                              P(object_center[0] - 0.10 * radius, thumb_side * 0.64 * radius))
+        else:
+            palm_half = 0.45 * hb
+            palm = Polygon([
+                (-stub, -0.23 * hb), (0.22 * size, -0.43 * hb),
+                (x_kn - 0.02 * size, -palm_half), (x_kn + 0.035 * size, -0.31 * hb),
+                (x_kn + 0.05 * size, 0.31 * hb), (x_kn - 0.02 * size, palm_half),
+                (0.22 * size, 0.43 * hb), (-stub, 0.23 * hb),
+            ]).buffer(2.0, quad_segs=10).buffer(-2.0, quad_segs=10)
+            if pose == "hold_flat":
+                root = P(0.18 * size, thumb_side * 0.55 * hb)
+                thumb_tip_x = object_center[0] - object_width / 2.0 + 1.2
+                thumb_tip_y = object_center[1] + thumb_side * object_height / 2.0
+                mcp = P(0.5 * (root[0] + thumb_tip_x), thumb_side * 0.57 * hb)
+                thumb_tip = P(thumb_tip_x, thumb_tip_y)
+                thumb_controls = (P(0.29 * size, thumb_side * 0.56 * hb),
+                                  P(0.75 * (mcp[0] + thumb_tip_x),
+                                    object_center[1] + thumb_side * 0.78 * object_height))
+            else:
+                root = P(0.16 * size, thumb_side * 0.16 * hb)
+                mcp = P(0.27 * size, thumb_side * 0.25 * size)
+                thumb_tip = P(0.37 * size, thumb_side * 0.31 * size)
+                thumb_controls = (P(0.23 * size, thumb_side * 0.21 * size),
+                                  P(0.36 * size, thumb_side * 0.30 * size))
+        thumb_cen = np.vstack([
+            _qbez(root, thumb_controls[0], mcp, 12)[:-1],
+            _qbez(mcp, thumb_controls[1], thumb_tip, 14),
+        ])
+        thumb = _digit(thumb_cen, np.linspace(0.24 * hb, 0.135 * hb, len(thumb_cen)))
+        thumb_distal = thumb.difference(palm.buffer(-0.1))
+        finger_band = shapely.union_all(digits)
+        if pose not in {"cup", "hold_flat"}:
+            object_center = P(0.0, 0.0)
+        web_lines = []
+        for i in range(0 if pose == "cup" else 3):
+            pa, pb = tips[i], tips[i + 1]
+            # Interior lines approach each notch from the palm and stop at least
+            # 7.3 px clear, so no rounded line cap sits in the web.
+            mid = (ys[i] + ys[i + 1]) / 2.0
+            start_x = 0.56 * size
+            end_x = 0.72 * size
+            if end_x - start_x >= 5.0:
+                web_lines.append(LineString([(start_x, mid), (end_x, mid)]))
+            elif pose != "cup":
+                # The ordinary poses have room for short palm-side creases.
+                start = P(0.54 * size, mid)
+                end = P(0.69 * size, mid)
+                web_lines.append(LineString([start, end]))
+        if view == "palm" and pose != "cup":
+            # The thenar crease replaces the outermost finger separation so
+            # palm views stay within the three-line maximum.
+            web_lines = web_lines[:2]
+            if is_wrap:
+                web_lines.append(LineString([
+                    (0.34 * hb, thumb_side * 0.39 * hb),
+                    (0.15 * hb, thumb_side * 0.19 * hb),
+                ]))
+            else:
+                web_lines.append(LineString([
+                    (0.20 * size, thumb_side * 0.13 * hb),
+                    (0.39 * size, thumb_side * 0.22 * hb),
+                ]))
+
+    # The palm joins the four digit roots; the thumb is a distinct centreline
+    # from the palm edge, then all five digit masses become one closed region.
+    raw = shapely.union_all([palm, *digits, thumb])
+    tip_keepout = shapely.union_all([
+        Point(*tip).buffer(radius * 1.5 + 1.0, quad_segs=12)
+        for tip, radius in zip(tips, tip_radii)
+    ] + [Point(*thumb_cen[-1]).buffer(0.075 * hb + 2.0, quad_segs=12)])
+    softened = raw.buffer(1.25, quad_segs=10).buffer(-1.25, quad_segs=10)
+    local_shape = _clean(raw.union(softened.difference(tip_keepout)), r_open=0.35, r_close=0.35)
+    if local_shape.geom_type != "Polygon":
+        local_shape = _biggest(local_shape)
+
+    # Keep interior marks wholly inside the silhouette with generous paper
+    # clearance; lines are short MEDIUM strokes and never enter a fingertip web.
+    inner_lines = []
+    inner_zone = local_shape.buffer(-MEDIUM / 2 - GAP_MARK - 0.4)
+    for candidate in web_lines:
+        clipped = candidate.intersection(inner_zone)
+        pieces = [g for g in _lines_of(clipped) if g.length >= 5.0]
+        if pieces:
+            piece = max(pieces, key=lambda g: g.length)
+            # On wrap the start is the palmward endpoint. On the other poses
+            # the line enters from the finger web and is trimmed away from it.
+            if is_wrap:
+                coords = np.asarray(piece.coords)
+                if coords[0, 0] < coords[-1, 0]:
+                    coords = coords[::-1]
+                line_g = LineString(coords)
+            else:
+                line_g = piece
+            inner_lines.append(line_g)
+    inner = C.Frag()
+    if view == "palm" and pose != "cup" and len(inner_lines) > 3:
+        inner_lines = inner_lines[:3]
+    for ln in inner_lines[:3]:
+        inner += line(C.polyline_d(np.asarray(ln.coords)), MEDIUM, role="finger")
+
+    shape = _xf(local_shape, M)
+    inner_s = inner.transformed(Mf)
+    thumb_s = _xf(thumb, M)
+    distal_s = _xf(thumb_distal, M)
+    band_s = _xf(finger_band, M)
+    tips_s = [_xf(Point(*tip), M).coords[0] for tip in tips] + [_xf(Point(*thumb_cen[-1]), M).coords[0]]
+    notches_local = []
+    for i in range(3):
+        # The open valleys between the four fingertip lobes.
+        notches_local.append((tips[i] + tips[i + 1]) / 2)
+    notches_s = [_xf(Point(*p), M) for p in notches_local]
+    transformed_lines = [_xf(ln, M) for ln in inner_lines[:3]]
+    W = P(at) if not is_wrap else _xf(Point(*wrist), M).coords[0]
+    u = _unit(_vec(M, wrist_dir))
+    ww = float(wrist_w) if wrist_w is not None else width_default
+    meta = {
+        "kind": "hand5", "pose": pose, "hand": hand, "view": view, "size": size,
+        "curl": curl, "spread": spread, "grip_w": grip_w, "thumb_side": thumb_side,
+        "inner": inner_s, "digit_centerlines": [_xf(LineString(cen), M) for cen in centerlines]
+        + [_xf(LineString(thumb_cen), M)],
+        "digit_tips": tips_s, "digit_tip_radii": tip_radii + [0.075 * hb],
+        "notch_points": notches_s, "inner_lines": transformed_lines,
+        "thumb_centerline": _xf(LineString(thumb_cen), M), "thumb_distal": distal_s,
+        "finger_band": band_s, "tipzone": shapely.union_all([
+            Point(*point).buffer(1.5 * radius, quad_segs=12)
+            for point, radius in zip(tips_s[:4], tip_radii)
+        ]), "heelzone": shape.buffer(0.01),
+        "object_center": _xf(Point(*object_center), M).coords[0],
+        "object_radius": object_radius,
+        "object_width": object_width,
+        "object_height": object_height,
+    }
+    # Use a common wrist direction and a rebuild closure so Hand.tucked can
+    # preserve the pose if it needs to follow a sleeve's cuff edge.
+    def build_part(direction):
+        nonlocal wrist_dir
+        wrist_dir = _unit(_to_local(P(at) + P(direction), at, rot, False))
+        current_u = _unit(_vec(M, wrist_dir))
+        part_meta = {**meta, "rebuild": rebuild, "wrist_dir": current_u}
+        base = Part(shape, C.Frag(), outline(shape) + inner_s, part_meta)
+        return base, current_u
+
+    def rebuild(direction):
+        base, _u = build_part(direction)
+        if sleeve is not None:
+            base = Hand(base, Part(thumb_s, C.Frag(), C.Frag(), {"merged": True}),
+                        W, ww, _u, float(stub)).with_sleeve(sleeve)
+        return base
+
+    part, u = build_part(_vec(M, wrist_dir))
+    hand_obj = Hand(part, Part(thumb_s, C.Frag(), C.Frag(), {"merged": True}),
+                    W, ww, u, float(stub))
+    if sleeve is not None:
+        hand_obj = Hand(hand_obj.with_sleeve(sleeve), hand_obj.thumb,
+                        W, ww, u, float(stub))
+    return hand_obj
 
 
 def hand(pose, *args, **kw) -> Hand:

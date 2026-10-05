@@ -492,7 +492,7 @@ All motifs are monoline FINE unless noted, and built from circles, arcs and stra
 
 **Hair and beards:** current lines (G.24).
 
-**Hands:** mitten shapes with 3 finger lines and a separate thumb, closed around cylindrical attributes. Keep open hands to a minimum.
+**Hands:** each half-figure has one five-finger hand holding its tall attribute. Build it as one continuous paper silhouette: four tapered fingers with slight curl and stagger, plus a thumb that leaves the palm side on an open V web. Never lay the thumb across the fingers. Use no more than three short MEDIUM finger/palm lines, clear of the fingertip notches. The same hand language covers a staff grip, a cupped object, a resting or flat-object hold, and an open gesture; size it from the face, not the object. Integrate the wrist into the sleeve with one shared outside contour and a cuff colour edge. Re-home any secondary object without a second hand, or omit it.
 
 **Body geometry** in the art window:
 

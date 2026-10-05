@@ -1,8 +1,9 @@
-"""Hand specimen sheet (v3 hands: one silhouette, five fingers).
+"""Hand specimen sheet (legacy hands and the shared five-digit hand).
 
     .venv/bin/python tools/hand_specimen.py [--out build/review/v3-hands] [--courts] [--only ROW ...]
 
-Draws every kit pose — grip (back and palm view, at several shaft angles, the
+Draws the established kit poses and the shared ``hand5`` poses — grip (back
+and palm view, at several shaft angles, the
 'behind' thumb, a bar held from above and below), pinch (stems at several
 angles), cup (orb from below), open hand (back,
 palm, spread, curled) and the hand merged into its sleeve — for BOTH
@@ -10,8 +11,8 @@ chiralities and THREE sizes (hand length 70 / 85 / 100 px: ``size`` =
 ``courtkit.hand_size(face)``, a face's chin-to-hairline). Each cell is a
 stand-alone scene on a jade ground (so every hand edge is an interior MEDIUM
 edge, as on the card), with a gold stand-in for what the hand holds (no halo:
-the attribute's contour runs under the fingers) and a red sleeve with a jade
-cuff the wrist is tucked into (``Hand.add_to``).
+the attribute's contour runs under the fingers) and a red sleeve with a
+coloured cuff the wrist is tucked into (``Hand.add_to`` or one merged Part).
 
 Writes <out>/specimen.png (per cell: 3× on top, card size below),
 <out>/specimen_1x.png (card size only, one row per pose) and
@@ -31,6 +32,7 @@ import tempfile
 import warnings
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import shapely.affinity  # noqa: E402
 sys.path.insert(0, ROOT)
 
 import numpy as np  # noqa: E402
@@ -85,6 +87,20 @@ def _open(size, chir, *, view="back", angle=-60.0, spread=0.0, curl=0.0):
             "obj": None}
 
 
+def _hand5(size, chir, pose, *, view="back", angle=-90.0, curl=0.0, spread=0.0, grip_w=22.0):
+    if pose == "wrap":
+        at = (0.0, 0.0)
+        obj = ("staff", angle, grip_w)
+    else:
+        at = (0.0, 0.0)
+        obj = ("orb-meta", grip_w) if pose == "cup" else (
+            ("flat-meta", grip_w, 22.0) if pose == "hold_flat" else None)
+    return {"fn": "hand5", "args": (at, angle, pose),
+            "kw": {"size": size, "hand": chir, "view": view, "curl": curl, "spread": spread,
+                   "grip_w": grip_w},
+            "obj": obj}
+
+
 def rows():
     """[(row title, [call, ...])] — every pose, both chiralities, three sizes."""
     R = []
@@ -113,6 +129,45 @@ def rows():
               [dict(_grip(85.0, c), label=f"{c} grip + sleeve", merge=True) for c in ("L", "R")]
               + [dict(_open(85.0, c, angle=-70.0), label=f"{c} open + sleeve", merge=True) for c in ("L", "R")]
               + [dict(_cup(85.0, c), label=f"{c} cup + sleeve", merge=True) for c in ("L", "R")]))
+
+    def hand5_row(title, pose, *, view="back", angle=-90.0, curl=0.0, spread=0.0, grip_w=22.0,
+                  sizes=SIZES):
+        angles = angle if isinstance(angle, (tuple, list)) else (angle,)
+        R.append((title, [dict(_hand5(s, c, pose, view=view, angle=a, curl=curl, spread=spread, grip_w=grip_w),
+                               label=f"{c} size {s:g} · {a:g}°")
+                         for c in ("L", "R") for s in sizes for a in angles]))
+
+    hand5_row("hand5 wrap · back · vertical staff · five fingers + side thumb", "wrap", view="back",
+              grip_w=18.0, sizes=SIZES)
+    hand5_row("hand5 wrap · palm · vertical staff · short thumb beside index", "wrap", view="palm",
+              grip_w=18.0, sizes=SIZES)
+    hand5_row("hand5 wrap · back · staff at six angles", "wrap", view="back",
+              angle=(-60.0, -90.0, -120.0, 0.0, 75.0, 180.0), grip_w=18.0, sizes=(85.0,))
+    hand5_row("hand5 wrap · palm · horizontal and inverted staff", "wrap", view="palm",
+              angle=(0.0, 180.0), grip_w=18.0, sizes=(85.0,))
+    hand5_row("hand5 cup · palm · scalloped fingers follow orb rim", "cup", view="palm",
+              grip_w=62.0)
+    hand5_row("hand5 cup · back · scalloped fingers follow orb rim", "cup", view="back",
+              grip_w=62.0)
+    hand5_row("hand5 rest · back · relaxed fingers laid across the body", "rest", view="back",
+              angle=0.0, curl=10.0)
+    hand5_row("hand5 rest · palm · relaxed fingers laid across the body", "rest", view="palm",
+              angle=0.0, curl=10.0)
+    hand5_row("hand5 hold_flat · palm · scroll held under the fingers", "hold_flat", view="palm",
+              angle=-75.0, curl=8.0, grip_w=28.0)
+    hand5_row("hand5 hold_flat · back · scroll held under the fingers", "hold_flat", view="back",
+              angle=-75.0, curl=8.0, grip_w=28.0)
+    hand5_row("hand5 open · back · fingers together", "open", view="back", spread=2.0)
+    hand5_row("hand5 open · palm · fingers spread", "open", view="palm", spread=12.0, curl=4.0)
+    R.append(("hand5 + sleeve · one merged outer outline and cuff colour edge",
+              [dict(_hand5(85.0, c, pose, view=v,
+                           angle={"wrap": -90.0, "cup": -90.0, "rest": 0.0,
+                                  "hold_flat": -75.0, "open": -90.0}[pose],
+                           curl=8.0, grip_w=18.0),
+                    label=f"{pose} · {c} · {v}", merge=True)
+               for pose, v in (("wrap", "back"), ("cup", "palm"), ("rest", "back"),
+                               ("hold_flat", "palm"), ("open", "back"))
+               for c in ("L", "R")]))
     return R
 
 
@@ -179,20 +234,37 @@ def _scene(c):
         sc.part("shaft", K.staff(tuple(at - d * lo), tuple(at + d * 75.0), obj[2]))
     elif obj and obj[0] == "orb":
         sc.part("orb", K.orb(tuple(at), obj[1]))
+    elif obj and obj[0] == "orb-meta":
+        sc.part("orb", K.orb(tuple(hand.hand.meta["object_center"]), hand.hand.meta["object_radius"]))
+    elif obj and obj[0] == "flat-meta":
+        center = tuple(hand.hand.meta["object_center"])
+        slab = K.box(center[0] - obj[1] / 2, center[1] - obj[2] / 2,
+                     center[0] + obj[1] / 2, center[1] + obj[2] / 2)
+        slab = shapely.affinity.rotate(slab, float(a[1]), origin=center)
+        sc.part("scroll", K.Part(slab, K.fill(slab, K.GOLD), K.outline(slab)))
     W = _pt(hand.wrist)
     u = _unit(hand.wrist_dir if hand.wrist_dir is not None else np.array([0.0, 1.0]))
     spec = K.SleeveSpec(base=tuple(W + u * 95.0), wrist=tuple(W), sag=0.0, width=1.5 * hand.wrist_w + 14.0,
                         wrist_w=hand.wrist_w + 10.0, cuff=11.0, folds=0, color=K.RED, cuff_color=K.JADE)
     if c.get("merge"):
-        sl, _cf = K.sleeve(K.SleeveSpec(**{**spec.__dict__, "wrist": tuple(W + u * 6.0),
-                                           "wrist_w": hand.wrist_w + 2.0, "width": hand.wrist_w + 12.0}))
-        sc.part("arm+hand", hand.with_sleeve(sl))
+        sl, cf = K.sleeve(K.SleeveSpec(**{**spec.__dict__, "wrist": tuple(W + u * 13.0),
+                                          "cuff": 26.0, "cuff_color": K.GOLD, "wrist_w": hand.wrist_w + 6.0,
+                                          "width": hand.wrist_w + 16.0}))
+        cuff_edge = cf.shape.buffer(1.5).intersection(sl.shape)
+        sleeve_fills = K.fill(sl.shape.difference(cuff_edge), K.RED) + K.fill(cuff_edge, K.GOLD)
+        sleeve = K.Part(sl.shape.union(cf.shape), sleeve_fills,
+                        sl.lines.select(lambda mark: mark.role != "outline"))
+        sc.part("arm+hand", hand.with_sleeve(sleeve))
     else:
         sl, cf = K.sleeve(spec)
         sc.part("sleeve", sl)
         sc.part("cuff", cf)
         hand.add_to(sc, "hand", halo=0.0)
-    b = hand.hand.shape.bounds
+    focus = hand.hand.shape
+    for item in sc.items:
+        if item.name in {"orb", "scroll"} and item.occ is not None:
+            focus = focus.union(item.occ)
+    b = focus.bounds
     ctr = ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2)
     return sc, ctr
 
