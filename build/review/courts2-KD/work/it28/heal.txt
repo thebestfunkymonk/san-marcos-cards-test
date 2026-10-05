@@ -1,0 +1,14 @@
+HAND_LOG []
+heal entries 12
+{"action": "drop", "role": "fill", "layer": "gold", "at": [368.4, 256.4], "why": "fill piece thinner than HAIRLINE"}
+{"action": "drop", "role": "lion-nose", "layer": "ink", "at": [379.2, 354.3], "why": "fill piece thinner than HAIRLINE"}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [421.9, 436.3], "why": "stroke 1.85 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [454.2, 485.9], "why": "stroke 1.86 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [353.7, 444.8], "why": "stroke 2.07 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [494.0, 447.8], "why": "stub 3.5 px, 2.06 px from a neighbour", "near": ["fill"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [509.2, 367.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [564.8, 422.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [226.6, 432.1], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [583.3, 507.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["seam"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [411.4, 298.9], "why": "stub 3.2 px, 1.43 px from a neighbour", "near": ["outline", "parting"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [390.9, 96.8], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["contour"]}

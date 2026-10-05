@@ -1,0 +1,34 @@
+HAND_LOG []
+heal entries 42
+{"action": "drop", "role": "fill", "layer": "gold", "at": [368.4, 256.4], "why": "fill piece thinner than HAIRLINE"}
+{"action": "drop", "role": "lion-nose", "layer": "ink", "at": [379.2, 354.3], "why": "fill piece thinner than HAIRLINE"}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [421.9, 436.3], "why": "stroke 1.85 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [454.2, 485.9], "why": "stroke 1.86 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "fill", "layer": "jade", "at": [459.7, 488.7], "why": "fill 2.13 px from a neighbour (needs 2.5)", "near": ["fill"]}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [459.6, 489.1], "why": "stroke 2.46 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "fill", "layer": "jade", "at": [459.7, 488.7], "why": "fill 1.88 px from a neighbour (needs 3.0)", "near": ["rowel"]}
+{"action": "trim", "role": "fill", "layer": "jade", "at": [459.7, 488.7], "why": "fill 2.68 px from a neighbour (needs 3.0)", "near": ["rowel"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [445.6, 295.6], "why": "fill 0.99 px from a neighbour (needs 2.5)", "near": ["fill"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [386.6, 456.1], "why": "fill 0.40 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [516.9, 453.2], "why": "fill 0.89 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [409.9, 299.2], "why": "stub 3.5 px, 1.34 px from a neighbour", "near": ["fill"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [516.9, 453.2], "why": "fill 0.61 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [526.8, 471.9], "why": "stroke 1.65 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "delete", "role": "rowel", "layer": "ink", "at": [459.6, 489.1], "why": "stub 0.0 px, 2.42 px from a neighbour", "near": ["rowel"]}
+{"action": "delete", "role": "rowel", "layer": "ink", "at": [459.6, 489.1], "why": "stub 0.0 px, 2.98 px from a neighbour", "near": ["rowel"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [465.3, 353.0], "why": "stroke 2.75 px from a neighbour (needs 3.0)", "near": ["finger", "fingertip", "outline", "thumb"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [509.6, 366.2], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [564.8, 422.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [234.7, 430.6], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "delete", "role": "seam", "layer": "ink", "at": [527.8, 435.8], "why": "stub 3.7 px, 2.90 px from a neighbour", "near": ["chain"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [583.3, 507.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["seam"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [526.8, 471.9], "why": "stroke 0.10 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [411.4, 298.9], "why": "stub 3.2 px, 1.43 px from a neighbour", "near": ["outline", "parting"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [390.9, 96.8], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["contour"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [394.0, 179.9], "why": "fill 2.65 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [353.0, 179.9], "why": "fill 1.58 px from a neighbour (needs 3.0)", "near": ["contour"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [435.0, 179.9], "why": "fill 2.72 px from a neighbour (needs 3.0)", "near": ["contour"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [387.2, 456.1], "why": "fill 1.55 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [517.5, 454.3], "why": "fill 1.55 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "stone", "layer": "ink", "at": [517.5, 454.3], "why": "fill 1.52 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [368.2, 460.6], "why": "stroke 1.62 px from a neighbour (needs 3.0)", "near": ["fill"]}

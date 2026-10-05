@@ -1,0 +1,17 @@
+HAND_LOG []
+heal entries 25
+{"action": "drop", "role": "fill", "layer": "gold", "at": [368.4, 256.4], "why": "fill piece thinner than HAIRLINE"}
+{"action": "drop", "role": "lion-nose", "layer": "ink", "at": [379.2, 354.3], "why": "fill piece thinner than HAIRLINE"}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [421.9, 436.3], "why": "stroke 1.85 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [454.2, 485.9], "why": "stroke 1.86 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [318.9, 499.8], "why": "fill 1.09 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [318.9, 499.8], "why": "fill 2.64 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [488.9, 408.8], "why": "stub 5.4 px, 2.00 px from a neighbour", "near": ["fill"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [488.9, 408.8], "why": "stub 0.0 px, 1.75 px from a neighbour", "near": ["outline"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [505.0, 367.1], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [564.8, 422.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [234.7, 430.6], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [583.3, 507.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["seam"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [411.4, 298.9], "why": "stub 3.2 px, 1.43 px from a neighbour", "near": ["outline", "parting"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [390.9, 96.8], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["contour"]}
+{"action": "delete", "role": "seam", "layer": "ink", "at": [223.2, 505.2], "why": "stub 3.6 px, 1.20 px from a neighbour", "near": ["_band"]}

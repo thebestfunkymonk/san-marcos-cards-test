@@ -1,0 +1,17 @@
+HAND_LOG []
+heal entries 15
+{"action": "drop", "role": "fill", "layer": "gold", "at": [368.4, 256.4], "why": "fill piece thinner than HAIRLINE"}
+{"action": "drop", "role": "lion-nose", "layer": "ink", "at": [379.2, 354.3], "why": "fill piece thinner than HAIRLINE"}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [421.9, 436.3], "why": "stroke 1.85 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "rowel", "layer": "ink", "at": [454.2, 485.9], "why": "stroke 1.86 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [278.9, 456.5], "why": "fill 2.13 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [369.3, 473.4], "why": "fill 1.37 px from a neighbour (needs 3.0)", "near": ["finger", "outline", "thumb"]}
+{"action": "trim", "role": "fill", "layer": "red", "at": [380.4, 455.9], "why": "fill 2.19 px from a neighbour (needs 3.0)", "near": ["outline"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [358.2, 462.8], "why": "stroke 0.82 px from a neighbour (needs 3.0)", "near": ["fill"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [502.5, 368.4], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [564.8, 422.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "seam", "layer": "ink", "at": [226.6, 432.1], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["chain"]}
+{"action": "trim", "role": "chain", "layer": "ink", "at": [583.3, 507.5], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["seam"]}
+{"action": "delete", "role": "outline", "layer": "ink", "at": [411.4, 298.9], "why": "stub 3.2 px, 1.43 px from a neighbour", "near": ["outline", "parting"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [390.9, 96.8], "why": "stroke 2.89 px from a neighbour (needs 3.0)", "near": ["contour"]}
+{"action": "trim", "role": "outline", "layer": "ink", "at": [359.2, 466.5], "why": "stroke 1.34 px from a neighbour (needs 3.0)", "near": ["finger", "outline", "thumb"]}
