@@ -1,0 +1,7 @@
+import sys, os
+sys.path.insert(0, '/home/luke/Projects/design/san-marcos-deck/art')
+import JC
+from deck import courtkit as K
+JC.BELT_RISE=(2.0, 8.0); JC.FIST=(548.0, 410.0); JC.WR = tuple(K.fist_wrist(JC.FIST, -90.0, bend=40.0, dist=1.1, **JC.FIST_KW))
+build = JC.build
+figure = JC.figure

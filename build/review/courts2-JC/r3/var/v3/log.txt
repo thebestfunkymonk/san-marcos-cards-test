@@ -1,0 +1,1 @@
+[preview] JC: status=art -> /home/luke/Projects/design/san-marcos-deck/build/review/courts2-JC/r3/var/v3/JC{.svg,.png,-188.png,-1500.png,-white.png}

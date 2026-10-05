@@ -1,0 +1,17 @@
+[preview] JC: status=art -> /home/luke/Projects/design/san-marcos-deck/build/review/courts2-JC/r3/it1/JC{.svg,.png,-188.png,-1500.png,-white.png}
+    17 ✓ 
+     1 ✓ 
+     4 ✓ 
+    4b ✓ 
+     6 ✓ 
+     9 n/a n/a
+   10c ✓ 
+    25 ✓ 
+   10a ✓ 
+     8 ✓ 
+     5 ✓ balance: red 11.7% (target 12-16); gold 7.8% (target 10-15); ink 16.6% (target 8-16)
+    5r ✓ 
+    4c ✓ 
+    11 n/a n/a
+    12 ✓ 
+    24 ✗ white-stock build missing
