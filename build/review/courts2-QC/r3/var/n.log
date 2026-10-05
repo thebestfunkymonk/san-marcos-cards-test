@@ -1,0 +1,17 @@
+[preview] QC: status=art -> /home/luke/Projects/design/san-marcos-deck/build/review/courts2-QC/r3/var/n/QC{.svg,.png,-188.png,-1500.png,-white.png}
+    17 ✓ 
+     1 ✓ 
+     4 ✓ 
+    4b ✓ 
+     6 ✓ 
+     9 n/a n/a
+   10c ✓ 
+    25 ✓ 
+   10a ✓ 
+     8 ✓ 
+     5 ✓ balance: paper 44.1% (target 45-50); jade 14.9% (target 15-20); red 11.7% (target 12-16); ink 19.0% (target 8-16)
+    5r ✓ 
+    4c ✓ 
+    11 n/a n/a
+    12 ✗ ink: 2 thin, 12 narrow-gap region(s) (raster)
+    24 ✓ 
