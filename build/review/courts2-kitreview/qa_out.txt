@@ -1,0 +1,115 @@
+/home/luke/Projects/design/san-marcos-deck/art/JC.py:134: HandWarning: fist at (548, 408): wrist bent 75° off the hand axis (≤ 65° reads)
+  handR = K.fist(FIST, -90.0, shaft_w=22.0, back=-1, wrist=WR, wrist_w=26.0, h=36.0)
+/home/luke/Projects/design/san-marcos-deck/art/JS.py:77: HandWarning: fist at (298, 418): wrist 25 px inside the knuckle line (move it out along the hand axis)
+  handL = K.fist(FIST_L, -96.0, shaft_w=30.0, back=+1, wrist=WRIST_L, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JS.py:77: HandWarning: fist at (298, 418): wrist bent 125° off the hand axis (≤ 65° reads)
+  handL = K.fist(FIST_L, -96.0, shaft_w=30.0, back=+1, wrist=WRIST_L, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:102: HandWarning: fist at (267, 424): wrist bent 83° off the hand axis (≤ 65° reads)
+  handL = K.fist((BX + 5.0, 424.0), -90.0, shaft_w=20.0, back=-1, wrist=WL, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:102: HandWarning: fist at (267, 424): wrist 43 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  handL = K.fist((BX + 5.0, 424.0), -90.0, shaft_w=20.0, back=-1, wrist=WL, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KS.py:112: HandWarning: fist at (540, 419): wrist bent 71° off the hand axis (≤ 65° reads)
+  K.fist(FIST, -90.0, back=-1, wrist=WR, wrist_w=28.0, h=38.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:107: HandWarning: fist at (530, 281): wrist bent 83° off the hand axis (≤ 65° reads)
+  handR = K.fist((FX, 281.0), -90.0, shaft_w=18.0, back=+1, wrist=(552.0, 330.0), wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:107: HandWarning: fist at (530, 281): wrist 46 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  handR = K.fist((FX, 281.0), -90.0, shaft_w=18.0, back=+1, wrist=(552.0, 330.0), wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KD.py:102: HandWarning: fist at (546, 384): wrist bent 78° off the hand axis (≤ 65° reads)
+  K.fist((KEY_X, 384.0), -90.0, shaft_w=22.0, back=-1, wrist=WR, wrist_w=28.0, h=38.0).add_to(sc, "handR",
+/home/luke/Projects/design/san-marcos-deck/art/QC.py:188: HandWarning: fist at (541, 428): wrist 6 px inside the knuckle line (move it out along the hand axis)
+  handR = K.fist(FIST_R, -90.0, shaft_w=17.0, back=-1, wrist=WR, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/QC.py:188: HandWarning: fist at (541, 428): wrist bent 90° off the hand axis (≤ 65° reads)
+  handR = K.fist(FIST_R, -90.0, shaft_w=17.0, back=-1, wrist=WR, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:90: HandWarning: fist at (236, 393): wrist bent 72° off the hand axis (≤ 65° reads)
+  hL = K.fist((CHAL_X, (g0 + g1) / 2), -90.0, shaft_w=10.4, back=-1, wrist=WL, wrist_w=26.0, h=min(32.0, g1 - g0))
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist 11 px inside the knuckle line (move it out along the hand axis)
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist bent 96° off the hand axis (≤ 65° reads)
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist 47 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/QD.py:133: HandWarning: fist at (236, 432): wrist bent 68° off the hand axis (≤ 65° reads)
+  K.fist(_on_stem(FIST_L_Y), ang, shaft_w=9.0, back=-1, wrist=WL, wrist_w=22.0, h=30.0, knuckle=10.0, reach=6.0,
+/home/luke/Projects/design/san-marcos-deck/art/QD.py:135: HandWarning: fist at (528, 408): wrist bent 74° off the hand axis (≤ 65° reads)
+  K.fist(FIST_R, -90.0, shaft_w=16.0, back=-1, wrist=WR, wrist_w=24.0, h=33.0, knuckle=10.0, reach=6.0,
+/home/luke/Projects/design/san-marcos-deck/art/KC.py:153: HandWarning: fist at (540, 404): wrist bent 68° off the hand axis (≤ 65° reads)
+  K.fist(FIST, -90.0, back=-1, wrist=WR, wrist_w=28.0, h=FIST_H).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:187: HandWarning: fist at (326, 424): wrist 9 px inside the knuckle line (move it out along the hand axis)
+  K.fist(FIST_L, POSY["axis_deg"], shaft_w=9.0, back=-1, wrist=WRIST_L, wrist_w=24.0, h=30.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:187: HandWarning: fist at (326, 424): wrist bent 96° off the hand axis (≤ 65° reads)
+  K.fist(FIST_L, POSY["axis_deg"], shaft_w=9.0, back=-1, wrist=WRIST_L, wrist_w=24.0, h=30.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:189: HandWarning: fist at (512, 452): wrist 6 px inside the knuckle line (move it out along the hand axis)
+  K.fist(FIST_R, -90.0, shaft_w=12.0, back=+1, wrist=WRIST_R, wrist_w=26.0, h=34.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:189: HandWarning: fist at (512, 452): wrist bent 89° off the hand axis (≤ 65° reads)
+  K.fist(FIST_R, -90.0, shaft_w=12.0, back=+1, wrist=WRIST_R, wrist_w=26.0, h=34.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QH.py:226: HandWarning: fist at (546, 434): wrist 8 px inside the knuckle line (move it out along the hand axis)
+  K.fist((546.0, 434.0), -90.0, shaft_w=19.0, back=-1, wrist=(530.0, 472.0), wrist_w=30.0, h=36.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QH.py:226: HandWarning: fist at (546, 434): wrist bent 92° off the hand axis (≤ 65° reads)
+  K.fist((546.0, 434.0), -90.0, shaft_w=19.0, back=-1, wrist=(530.0, 472.0), wrist_w=30.0, h=36.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/JC.py:134: HandWarning: fist at (548, 408): wrist bent 75° off the hand axis (≤ 65° reads)
+  handR = K.fist(FIST, -90.0, shaft_w=22.0, back=-1, wrist=WR, wrist_w=26.0, h=36.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:102: HandWarning: fist at (267, 424): wrist bent 83° off the hand axis (≤ 65° reads)
+  handL = K.fist((BX + 5.0, 424.0), -90.0, shaft_w=20.0, back=-1, wrist=WL, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:102: HandWarning: fist at (267, 424): wrist 43 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  handL = K.fist((BX + 5.0, 424.0), -90.0, shaft_w=20.0, back=-1, wrist=WL, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KS.py:112: HandWarning: fist at (540, 419): wrist bent 71° off the hand axis (≤ 65° reads)
+  K.fist(FIST, -90.0, back=-1, wrist=WR, wrist_w=28.0, h=38.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:107: HandWarning: fist at (530, 281): wrist bent 83° off the hand axis (≤ 65° reads)
+  handR = K.fist((FX, 281.0), -90.0, shaft_w=18.0, back=+1, wrist=(552.0, 330.0), wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JH.py:107: HandWarning: fist at (530, 281): wrist 46 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  handR = K.fist((FX, 281.0), -90.0, shaft_w=18.0, back=+1, wrist=(552.0, 330.0), wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JS.py:77: HandWarning: fist at (298, 418): wrist 25 px inside the knuckle line (move it out along the hand axis)
+  handL = K.fist(FIST_L, -96.0, shaft_w=30.0, back=+1, wrist=WRIST_L, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/JS.py:77: HandWarning: fist at (298, 418): wrist bent 125° off the hand axis (≤ 65° reads)
+  handL = K.fist(FIST_L, -96.0, shaft_w=30.0, back=+1, wrist=WRIST_L, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KD.py:102: HandWarning: fist at (546, 384): wrist bent 78° off the hand axis (≤ 65° reads)
+  K.fist((KEY_X, 384.0), -90.0, shaft_w=22.0, back=-1, wrist=WR, wrist_w=28.0, h=38.0).add_to(sc, "handR",
+/home/luke/Projects/design/san-marcos-deck/art/QC.py:188: HandWarning: fist at (541, 428): wrist 6 px inside the knuckle line (move it out along the hand axis)
+  handR = K.fist(FIST_R, -90.0, shaft_w=17.0, back=-1, wrist=WR, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/QC.py:188: HandWarning: fist at (541, 428): wrist bent 90° off the hand axis (≤ 65° reads)
+  handR = K.fist(FIST_R, -90.0, shaft_w=17.0, back=-1, wrist=WR, wrist_w=26.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:90: HandWarning: fist at (236, 393): wrist bent 72° off the hand axis (≤ 65° reads)
+  hL = K.fist((CHAL_X, (g0 + g1) / 2), -90.0, shaft_w=10.4, back=-1, wrist=WL, wrist_w=26.0, h=min(32.0, g1 - g0))
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist 11 px inside the knuckle line (move it out along the hand axis)
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist bent 96° off the hand axis (≤ 65° reads)
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/KH.py:91: HandWarning: fist at (520, 456): wrist 47 px from the knuckles (> 1.3 × 32): a long bare wrist; move the cuff up the forearm
+  hR = K.fist(FIST, POLE_DEG, shaft_w=17.0, back=HAND_R_BACK, wrist=WR, wrist_w=27.0, h=34.0)
+/home/luke/Projects/design/san-marcos-deck/art/QD.py:133: HandWarning: fist at (236, 432): wrist bent 68° off the hand axis (≤ 65° reads)
+  K.fist(_on_stem(FIST_L_Y), ang, shaft_w=9.0, back=-1, wrist=WL, wrist_w=22.0, h=30.0, knuckle=10.0, reach=6.0,
+/home/luke/Projects/design/san-marcos-deck/art/QD.py:135: HandWarning: fist at (528, 408): wrist bent 74° off the hand axis (≤ 65° reads)
+  K.fist(FIST_R, -90.0, shaft_w=16.0, back=-1, wrist=WR, wrist_w=24.0, h=33.0, knuckle=10.0, reach=6.0,
+/home/luke/Projects/design/san-marcos-deck/art/KC.py:153: HandWarning: fist at (540, 404): wrist bent 68° off the hand axis (≤ 65° reads)
+  K.fist(FIST, -90.0, back=-1, wrist=WR, wrist_w=28.0, h=FIST_H).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:187: HandWarning: fist at (326, 424): wrist 9 px inside the knuckle line (move it out along the hand axis)
+  K.fist(FIST_L, POSY["axis_deg"], shaft_w=9.0, back=-1, wrist=WRIST_L, wrist_w=24.0, h=30.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:187: HandWarning: fist at (326, 424): wrist bent 96° off the hand axis (≤ 65° reads)
+  K.fist(FIST_L, POSY["axis_deg"], shaft_w=9.0, back=-1, wrist=WRIST_L, wrist_w=24.0, h=30.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:189: HandWarning: fist at (512, 452): wrist 6 px inside the knuckle line (move it out along the hand axis)
+  K.fist(FIST_R, -90.0, shaft_w=12.0, back=+1, wrist=WRIST_R, wrist_w=26.0, h=34.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QS.py:189: HandWarning: fist at (512, 452): wrist bent 89° off the hand axis (≤ 65° reads)
+  K.fist(FIST_R, -90.0, shaft_w=12.0, back=+1, wrist=WRIST_R, wrist_w=26.0, h=34.0).add_to(sc, "handR", halo=0.0)
+/home/luke/Projects/design/san-marcos-deck/art/QH.py:226: HandWarning: fist at (546, 434): wrist 8 px inside the knuckle line (move it out along the hand axis)
+  K.fist((546.0, 434.0), -90.0, shaft_w=19.0, back=-1, wrist=(530.0, 472.0), wrist_w=30.0, h=36.0).add_to(
+/home/luke/Projects/design/san-marcos-deck/art/QH.py:226: HandWarning: fist at (546, 434): wrist bent 92° off the hand axis (≤ 65° reads)
+  K.fist((546.0, 434.0), -90.0, shaft_w=19.0, back=-1, wrist=(530.0, 472.0), wrist_w=30.0, h=36.0).add_to(
+piece        status      strk  pal budg hide gold  g/r  idx safe pips   c2  clr back gaps  svg rndr  wht  notes
+---------------------------------------------------------------------------------------------------------------
+KS           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 10.3% | [12] ink: 0 thin, 8 narrow-gap region(s) (raster)
+QS           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 8.8% | [12] red: 0 thin, 2 narrow-gap region(s) (raster); ink: 0 thin, 6 narrow-gap region(s) (raster)
+JS           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 7.5% | [12] ink: 0 thin, 8 narrow-gap region(s) (raster)
+KH           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 10.1% | [12] ink: 0 thin, 12 narrow-gap region(s) (raster)
+QH           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 8.4% | [12] ink: 0 thin, 6 narrow-gap region(s) (raster)
+JH           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 11.6% | [12] ink: 0 thin, 2 narrow-gap region(s) (raster)
+KC           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 12.2% | [12] ink: 0 thin, 12 narrow-gap region(s) (raster)
+QC           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 10.2% | [12] ink: 2 thin, 12 narrow-gap region(s) (raster)
+JC           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    ✓    ✓    ✓    ✓  gold 7.8%
+KD           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 10.5% | [12] ink: 0 thin, 2 narrow-gap region(s) (raster)
+QD           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    !    ✓    ✓    ✓  gold 10.1% | [12] ink: 0 thin, 6 narrow-gap region(s) (raster)
+JD           art            ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ·    ✓    ✓    ·    ✓    ✓    ✓    ✓  gold 7.9%
+---------------------------------------------------------------------------------------------------------------
+deck-wide 6 (index overlay): ✓ worst 2 px
+§E.2 clearances built (brief ≥ 35 / ≥ 37): S 35.0/37.0, H 32.7/32.4, C 32.7/32.4, D 46.6/60.2
+checks: 158 pass, 0 fail, 10 warn  ·  12 pieces in 100.9s
+legend: ✓ pass  ✗ fail  ! warning (look at build/qa/flags/<stem>.png)  · n/a

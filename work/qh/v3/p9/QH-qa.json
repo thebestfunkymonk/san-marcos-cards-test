@@ -1,0 +1,409 @@
+{
+ "id": "QH",
+ "stem": "QH",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    58.56,
+    44.9,
+    114.81,
+    152.86
+   ],
+   "index-rank/br": [
+    635.19,
+    897.14,
+    691.44,
+    1005.1
+   ],
+   "index-pip/tl": [
+    51.76,
+    164.0,
+    116.24,
+    223.32
+   ],
+   "index-pip/br": [
+    633.76,
+    826.68,
+    698.24,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 92.98,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 4e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 6.7,
+  "balance": {
+   "ink": 15.8,
+   "gold": 6.7,
+   "red": 11.2,
+   "jade": 14.7,
+   "paper": 51.6
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: paper 51.6% (target 45-50); jade 14.7% (target 15-20); red 11.2% (target 12-16); gold 6.7% (target 10-15)"
+  ]
+ },
+ "5r": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     319.0,
+     347.0,
+     324.3,
+     352.0
+    ],
+    "area": 15.3
+   },
+   {
+    "bbox": [
+     425.7,
+     698.0,
+     431.0,
+     703.0
+    ],
+    "area": 15.3
+   },
+   {
+    "bbox": [
+     289.0,
+     443.3,
+     292.3,
+     447.0
+    ],
+    "area": 8.0
+   },
+   {
+    "bbox": [
+     457.7,
+     603.0,
+     461.0,
+     606.7
+    ],
+    "area": 8.0
+   }
+  ],
+  "detail": [
+   "thin gold on red at [319.0, 347.0, 324.3, 352.0]",
+   "thin gold on red at [425.7, 698.0, 431.0, 703.0]",
+   "thin gold on red at [289.0, 443.3, 292.3, 447.0]"
+  ]
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     556.7,
+     289.3,
+     565.7,
+     296.3
+    ],
+    "area": 22.9,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     184.3,
+     753.7,
+     193.3,
+     760.7
+    ],
+    "area": 22.9,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     596.0,
+     293.0,
+     600.7,
+     299.3
+    ],
+    "area": 17.3,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     149.3,
+     750.7,
+     154.0,
+     757.0
+    ],
+    "area": 17.3,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     577.3,
+     266.0,
+     583.0,
+     273.7
+    ],
+    "area": 32.2,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     167.0,
+     776.3,
+     172.7,
+     784.0
+    ],
+    "area": 32.2,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     440.7,
+     194.7,
+     448.3,
+     200.7
+    ],
+    "area": 16.1,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     301.7,
+     849.3,
+     309.3,
+     855.3
+    ],
+    "area": 16.1,
+    "layer": "gold",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "jade hidden under the ink solid at [556.7, 289.3, 565.7, 296.3]",
+   "jade hidden under the ink solid at [184.3, 753.7, 193.3, 760.7]",
+   "jade hidden under the ink solid at [596.0, 293.0, 600.7, 299.3]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": "warn",
+  "vector": [],
+  "raster": {
+   "gold": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       297.3,
+       353.3,
+       304.3,
+       357.0
+      ],
+      "area": 10.3
+     },
+     {
+      "bbox": [
+       445.7,
+       693.0,
+       452.7,
+       696.7
+      ],
+      "area": 10.3
+     }
+    ]
+   },
+   "ink": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       318.7,
+       425.3,
+       341.7,
+       439.0
+      ],
+      "area": 47.7
+     },
+     {
+      "bbox": [
+       321.3,
+       430.0,
+       344.0,
+       443.3
+      ],
+      "area": 47.7
+     },
+     {
+      "bbox": [
+       406.0,
+       606.7,
+       428.7,
+       620.0
+      ],
+      "area": 47.7
+     },
+     {
+      "bbox": [
+       408.3,
+       611.0,
+       431.3,
+       624.7
+      ],
+      "area": 47.7
+     },
+     {
+      "bbox": [
+       554.0,
+       276.0,
+       556.0,
+       291.3
+      ],
+      "area": 18.8
+     },
+     {
+      "bbox": [
+       194.0,
+       758.7,
+       196.0,
+       774.0
+      ],
+      "area": 18.8
+     },
+     {
+      "bbox": [
+       475.0,
+       262.7,
+       480.7,
+       272.3
+      ],
+      "area": 15.7
+     },
+     {
+      "bbox": [
+       269.3,
+       777.7,
+       275.0,
+       787.3
+      ],
+      "area": 15.7
+     },
+     {
+      "bbox": [
+       575.0,
+       276.0,
+       580.0,
+       285.3
+      ],
+      "area": 11.7
+     },
+     {
+      "bbox": [
+       170.0,
+       764.7,
+       175.0,
+       774.0
+      ],
+      "area": 11.7
+     },
+     {
+      "bbox": [
+       250.7,
+       353.7,
+       258.7,
+       357.0
+      ],
+      "area": 10.7
+     },
+     {
+      "bbox": [
+       491.3,
+       693.0,
+       499.3,
+       696.3
+      ],
+      "area": 10.7
+     }
+    ]
+   }
+  },
+  "pieces": 928,
+  "detail": [
+   "gold: 0 thin, 2 narrow-gap region(s) (raster)",
+   "ink: 0 thin, 12 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 50,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/QH.png",
+ "seconds": 14.73
+}

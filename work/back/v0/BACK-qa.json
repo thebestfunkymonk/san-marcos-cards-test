@@ -1,0 +1,885 @@
+{
+ "id": "BACK",
+ "stem": "BACK",
+ "kind": "back",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "jade"
+  ],
+  "budget": [
+   "jade"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "25": {
+  "ok": true,
+  "diff": 4e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 8e-05,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "5r": {
+  "ok": null,
+  "detail": []
+ },
+ "4c": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "11": {
+  "ok": false,
+  "knockout": 0.1717,
+  "emblem": {
+   "rot180_clusters": [],
+   "mirror_lr": 0.21923,
+   "mirror_ud": 0.21924
+  },
+  "frame_mirror_clusters": [],
+  "detail": [
+   "knockout coverage 17.2% (target 18-22 %)"
+  ]
+ },
+ "12": {
+  "ok": false,
+  "vector": [
+   {
+    "at": [
+     220.0,
+     285.7
+    ],
+    "gap": 0.43,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     530.0,
+     764.3
+    ],
+    "gap": 0.43,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     182.8,
+     431.6
+    ],
+    "gap": 0.78,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     567.3,
+     618.4
+    ],
+    "gap": 0.78,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     176.1,
+     453.6
+    ],
+    "gap": 1.01,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     573.9,
+     596.4
+    ],
+    "gap": 1.01,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     218.5,
+     288.6
+    ],
+    "gap": 1.05,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     531.5,
+     761.3
+    ],
+    "gap": 1.06,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     312.3,
+     687.8
+    ],
+    "gap": 1.16,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     437.7,
+     362.2
+    ],
+    "gap": 1.16,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     565.0,
+     624.8
+    ],
+    "gap": 1.3,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     185.0,
+     425.2
+    ],
+    "gap": 1.31,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     380.1,
+     115.3
+    ],
+    "gap": 1.32,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     369.9,
+     934.7
+    ],
+    "gap": 1.32,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     267.4,
+     685.0
+    ],
+    "gap": 1.36,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     482.6,
+     365.0
+    ],
+    "gap": 1.36,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     287.0,
+     689.4
+    ],
+    "gap": 1.37,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     463.0,
+     360.6
+    ],
+    "gap": 1.37,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     265.0,
+     682.5
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     273.3,
+     688.7
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     276.6,
+     689.7
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     280.1,
+     690.2
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     283.6,
+     690.1
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     466.4,
+     359.9
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     469.9,
+     359.8
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     473.4,
+     360.3
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     476.7,
+     361.3
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     485.0,
+     367.5
+    ],
+    "gap": 1.38,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     270.2,
+     687.1
+    ],
+    "gap": 1.39,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     479.8,
+     362.9
+    ],
+    "gap": 1.39,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     327.0,
+     699.8
+    ],
+    "gap": 1.4,
+    "need": 1.6,
+    "rule": "knockout line / gap in a solid",
+    "layers": [
+     "jade",
+     "jade"
+    ],
+    "what": [
+     "art",
+     "art"
+    ]
+   },
+   {
+    "at": [
+     423.0,
+     350.2
+    ],
+    "gap": 1.4,
+    "need": 1.6,
+    "rule": "knockout line / gap in a solid",
+    "layers": [
+     "jade",
+     "jade"
+    ],
+    "what": [
+     "art",
+     "art"
+    ]
+   },
+   {
+    "at": [
+     266.0,
+     663.5
+    ],
+    "gap": 2.25,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     484.0,
+     386.5
+    ],
+    "gap": 2.25,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     303.2,
+     681.8
+    ],
+    "gap": 2.51,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     446.8,
+     368.2
+    ],
+    "gap": 2.51,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     277.4,
+     672.4
+    ],
+    "gap": 2.81,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     289.3,
+     679.2
+    ],
+    "gap": 2.81,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     460.7,
+     370.8
+    ],
+    "gap": 2.81,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     472.6,
+     377.6
+    ],
+    "gap": 2.81,
+    "need": 3.0,
+    "rule": "solid bridge between knockouts",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   }
+  ],
+  "raster": {
+   "jade": {
+    "thin": [
+     {
+      "bbox": [
+       93.3,
+       519.3,
+       94.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       655.3,
+       519.3,
+       656.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       102.0,
+       288.7,
+       107.3,
+       297.3
+      ],
+      "area": 13.9
+     },
+     {
+      "bbox": [
+       642.7,
+       752.7,
+       648.0,
+       761.0
+      ],
+      "area": 13.4
+     },
+     {
+      "bbox": [
+       642.7,
+       289.0,
+       648.0,
+       297.3
+      ],
+      "area": 13.1
+     },
+     {
+      "bbox": [
+       102.0,
+       752.7,
+       107.0,
+       760.7
+      ],
+      "area": 12.8
+     },
+     {
+      "bbox": [
+       526.7,
+       679.3,
+       531.7,
+       686.3
+      ],
+      "area": 7.6
+     },
+     {
+      "bbox": [
+       478.0,
+       364.3,
+       483.3,
+       370.3
+      ],
+      "area": 6.6
+     },
+     {
+      "bbox": [
+       266.7,
+       679.7,
+       272.0,
+       685.7
+      ],
+      "area": 6.6
+     },
+     {
+      "bbox": [
+       376.0,
+       288.7,
+       377.3,
+       296.7
+      ],
+      "area": 6.4
+     },
+     {
+      "bbox": [
+       372.7,
+       753.3,
+       374.0,
+       761.3
+      ],
+      "area": 6.4
+     },
+     {
+      "bbox": [
+       469.3,
+       359.0,
+       470.7,
+       366.7
+      ],
+      "area": 6.3
+     }
+    ],
+    "gaps": [
+     {
+      "bbox": [
+       93.3,
+       519.3,
+       94.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       655.3,
+       519.3,
+       656.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       102.0,
+       288.7,
+       107.3,
+       297.3
+      ],
+      "area": 13.9
+     },
+     {
+      "bbox": [
+       642.7,
+       752.7,
+       648.0,
+       761.0
+      ],
+      "area": 13.4
+     },
+     {
+      "bbox": [
+       642.7,
+       289.0,
+       648.0,
+       297.3
+      ],
+      "area": 13.1
+     },
+     {
+      "bbox": [
+       102.0,
+       752.7,
+       107.0,
+       760.7
+      ],
+      "area": 12.8
+     }
+    ]
+   }
+  },
+  "pieces": 533,
+  "detail": [
+   "0.43 px < 1.6 (fill thinner than HAIRLINE; art / art) at [220.0, 285.7]",
+   "0.43 px < 1.6 (fill thinner than HAIRLINE; art / art) at [530.0, 764.3]",
+   "0.78 px < 1.6 (fill thinner than HAIRLINE; art / art) at [182.8, 431.6]",
+   "0.78 px < 1.6 (fill thinner than HAIRLINE; art / art) at [567.3, 618.4]",
+   "1.01 px < 1.6 (fill thinner than HAIRLINE; art / art) at [176.1, 453.6]",
+   "1.01 px < 1.6 (fill thinner than HAIRLINE; art / art) at [573.9, 596.4]",
+   "jade: 12 thin, 6 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/BACK.png",
+ "seconds": 19.43
+}

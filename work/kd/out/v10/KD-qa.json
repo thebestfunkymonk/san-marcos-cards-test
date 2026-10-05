@@ -1,0 +1,937 @@
+{
+ "id": "KD",
+ "stem": "KD",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    56.16,
+    46.0,
+    111.83,
+    142.0
+   ],
+   "index-rank/br": [
+    638.17,
+    908.0,
+    693.84,
+    1004.0
+   ],
+   "index-pip/tl": [
+    59.2,
+    164.0,
+    108.8,
+    233.44
+   ],
+   "index-pip/br": [
+    641.2,
+    816.56,
+    690.8,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 116.48,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 9e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 9.5,
+  "balance": {
+   "ink": 15.3,
+   "gold": 9.5,
+   "red": 10.5,
+   "jade": 15.0,
+   "paper": 49.7
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: red 10.5% (target 12-16); gold 9.5% (target 10-15)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     261.7,
+     568.3,
+     286.3,
+     682.7
+    ],
+    "area": 117.1,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     463.7,
+     367.3,
+     488.3,
+     481.3
+    ],
+    "area": 116.9,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     444.0,
+     602.0,
+     473.7,
+     685.7
+    ],
+    "area": 93.9,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     276.3,
+     364.3,
+     306.0,
+     448.0
+    ],
+    "area": 93.8,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     290.7,
+     364.7,
+     307.3,
+     417.7
+    ],
+    "area": 57.1,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     442.7,
+     632.7,
+     459.3,
+     685.3
+    ],
+    "area": 56.7,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     462.0,
+     367.7,
+     473.0,
+     417.7
+    ],
+    "area": 50.4,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     277.0,
+     632.7,
+     288.0,
+     682.3
+    ],
+    "area": 50.3,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     266.7,
+     580.3,
+     277.3,
+     629.7
+    ],
+    "area": 47.8,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     473.0,
+     420.7,
+     483.3,
+     469.7
+    ],
+    "area": 47.4,
+    "layer": "red",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "jade hidden under the ink solid at [261.7, 568.3, 286.3, 682.7]",
+   "jade hidden under the ink solid at [463.7, 367.3, 488.3, 481.3]",
+   "jade hidden under the ink solid at [444.0, 602.0, 473.7, 685.7]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": false,
+  "vector": [
+   {
+    "at": [
+     431.0,
+     179.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     353.0,
+     179.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     372.5,
+     179.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     392.0,
+     179.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     411.5,
+     179.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     319.0,
+     871.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     397.0,
+     871.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     377.5,
+     871.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     358.0,
+     871.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     338.5,
+     871.0
+    ],
+    "gap": 1.69,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "gold"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     446.4,
+     476.8
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     255.6,
+     438.0
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     288.5,
+     348.0
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     490.4,
+     374.7
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     303.6,
+     573.2
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     494.4,
+     612.0
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     461.5,
+     702.0
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     259.6,
+     675.3
+    ],
+    "gap": 2.32,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     420.5,
+     427.2
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     261.9,
+     414.9
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     224.4,
+     356.3
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     247.1,
+     348.4
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     250.5,
+     461.5
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     292.5,
+     332.8
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     201.7,
+     364.1
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     269.8,
+     340.6
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     188.4,
+     407.5
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     177.1,
+     478.6
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     184.7,
+     431.2
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     180.9,
+     455.0
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     173.4,
+     502.4
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     192.2,
+     383.8
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     278.4,
+     369.8
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     269.6,
+     392.1
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     482.3,
+     352.1
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     497.2,
+     397.7
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     487.0,
+     343.0
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     509.7,
+     350.8
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     532.3,
+     358.6
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     502.6,
+     421.1
+    ],
+    "gap": 2.33,
+    "need": 2.5,
+    "rule": "knockout line (hole) too thin",
+    "layers": [
+     "jade"
+    ],
+    "what": [
+     "art"
+    ]
+   }
+  ],
+  "raster": {
+   "ink": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       320.0,
+       434.7,
+       343.3,
+       446.7
+      ],
+      "area": 47.6
+     },
+     {
+      "bbox": [
+       406.7,
+       603.3,
+       430.0,
+       615.3
+      ],
+      "area": 47.6
+     },
+     {
+      "bbox": [
+       318.0,
+       430.3,
+       341.3,
+       442.0
+      ],
+      "area": 47.3
+     },
+     {
+      "bbox": [
+       408.7,
+       608.0,
+       432.0,
+       619.7
+      ],
+      "area": 47.3
+     },
+     {
+      "bbox": [
+       581.7,
+       453.0,
+       589.3,
+       455.0
+      ],
+      "area": 14.8
+     },
+     {
+      "bbox": [
+       160.7,
+       595.0,
+       168.3,
+       597.0
+      ],
+      "area": 14.8
+     },
+     {
+      "bbox": [
+       314.3,
+       433.3,
+       321.7,
+       438.0
+      ],
+      "area": 12.3
+     },
+     {
+      "bbox": [
+       428.3,
+       612.0,
+       435.7,
+       616.7
+      ],
+      "area": 12.3
+     }
+    ]
+   }
+  },
+  "pieces": 406,
+  "detail": [
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [431.0, 179.0]",
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [353.0, 179.0]",
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [372.5, 179.0]",
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [392.0, 179.0]",
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [411.5, 179.0]",
+   "1.69 px < 2.5 (knockout line (hole) too thin; art / art) at [319.0, 871.0]",
+   "ink: 0 thin, 8 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 46,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/KD.png",
+ "seconds": 11.37
+}
