@@ -3187,8 +3187,10 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     cup uses a minimum rim
     diameter of 0.72 × ``size`` to keep the thumb web open. ``view`` is ``back`` or
     ``palm``; ``hand`` is the figure's anatomical ``L`` or ``R``. The thumb
-    leaves from the palm edge on an open V and ends beside the index tip,
-    never across the four-finger band. At most three short MEDIUM lines are
+    leaves from the palm edge on an open V. In wrap it presses a short pad
+    onto the near edge of the shaft while four graduated curled fingertips
+    scallop the far edge; the palm covers the shaft between those tips.
+    It never lies across the fingers. At most three short MEDIUM lines are
     drawn, with the finger lines starting clear of the tip notches and at
     least 4.2 px of paper between them. Crowded lines are shortened or omitted.
 
@@ -3228,8 +3230,9 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     ys = np.linspace(-0.3375 * hb, 0.3375 * hb, 4)
     ys = list(ys[::-1] if thumb_side > 0 else ys)
     if is_wrap:
-        # Enough pitch for open webs even after the silhouette is stroked.
-        ys = [y * (0.525 / 0.3375) for y in ys]
+        # Index/middle knuckles lead the arc; the little finger is shorter
+        # and narrower. Reflect the anatomical row, not the palm alone.
+        ys = [thumb_side * y * hb for y in (0.46, 0.14, -0.15, -0.38)]
     fan_side = -thumb_side  # digit order reverses with the visible thumb side
     widths = (0.19, 0.205, 0.20, 0.18)
     lengths = (0.94, 0.99, 1.0, 0.87)
@@ -3240,54 +3243,81 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
 
     if is_wrap:
         a = grip_w / 2.0
-        # The palm quad is behind the staff; four separate tapered centrelines
-        # cross the shaft and turn only a little around its far edge.
+        wrap_widths = (0.27, 0.29, 0.24, 0.17)
+        reaches = (0.13, 0.23, 0.12, -0.04)
+        knuckles = (0.46, 0.57, 0.54, 0.40)
+        # A curled grip is one fleshy mass, not four disjoint rungs crossing
+        # the staff. Only the tapered distal pads scallop the far edge.
         for i, y in enumerate(ys):
-            fw = widths[i] * hb
+            fw = wrap_widths[i] * hb
             y_shift = fan_side * (i - 1.5) * (spread / 18.0) * 0.035 * hb
-            root = P(0.43 * hb + (i in (0, 3)) * 0.025 * hb, y + y_shift)
-            tip_y = y + y_shift + fan_side * (i - 1.5) * (0.012 + 0.03 * spread / 18.0) * hb
-            tip = P(-a - (0.055 + 0.025 * math.sin(math.radians(curl))) * hb
-                    - 0.012 * hb * lengths[i], tip_y)
-            ctrl = P(-a - (0.19 + 0.10 * math.sin(math.radians(curl))) * hb,
-                     y + y_shift + fan_side * (i - 1.5) * 0.018 * hb)
+            root = P(a + knuckles[i] * hb,
+                     y + y_shift + (thumb_side * 0.07 * hb if i == 3 else 0.0))
+            tip_y = y + y_shift + fan_side * (i - 1.5) * 0.012 * hb
+            tip = P(-a - (reaches[i] + 0.045 * math.sin(math.radians(curl))) * hb, tip_y)
+            ctrl = P(-a - (reaches[i] + 0.13) * hb,
+                     y + y_shift - thumb_side * (0.045 if i < 2 else 0.025) * hb)
             cen = _qbez(root, ctrl, tip, 18)
-            digit = _digit(cen, np.linspace(fw * 0.88, fw * 0.80, len(cen)))
+            digit = _digit(cen, np.linspace(fw, fw * 0.78, len(cen)))
             digits.append(digit)
             centerlines.append(cen)
             tips.append(cen[-1])
-            tip_radii.append(fw * 0.40)
+            tip_radii.append(fw * 0.39)
 
-        # A tapered palm quad joins the four bases. Its heel grows into a real
-        # wrist on the forearm side, not a boxed-off finger block.
-        palm = Polygon([
-            (0.26 * hb, -0.60 * hb), (0.72 * hb, -0.62 * hb),
-            (1.10 * hb, -0.42 * hb), (1.18 * hb, 0.12 * hb),
-            (0.89 * hb, 0.62 * hb), (0.29 * hb, 0.60 * hb),
-        ]).buffer(1.3, quad_segs=10).buffer(-1.3, quad_segs=10)
+        # Rounded palm/heel flowing into the forearm. The proximal webs cover
+        # the shaft; their shallow distal notches suggest curled tips rather
+        # than exposing rectangular windows between long finger bands.
+        palm = shapely.union_all([
+            Point(a + 0.38 * hb, thumb_side * 0.30 * hb).buffer(0.23 * hb),
+            Point(a + 0.59 * hb, 0).buffer(0.35 * hb),
+            Point(a + 0.53 * hb, -thumb_side * 0.29 * hb).buffer(0.23 * hb),
+            Point(a + 0.83 * hb, -thumb_side * 0.04 * hb).buffer(0.25 * hb),
+        ]).convex_hull
+        webs = []
+        for i in range(3):
+            notch_x = -a + (-0.115, -0.10, 0.025)[i] * hb
+            webs.append(digits[i].union(digits[i + 1]).convex_hull.intersection(
+                shapely.box(notch_x, -BIG, BIG, BIG)))
+        palm = palm.union(shapely.union_all(webs))
         thumb_fan = 1.5 * (spread / 18.0) * 0.065 * hb
-        thumb_root = P(0.39 * hb, thumb_side * 0.68 * hb)
-        thumb_mcp = P(0.02 * hb, thumb_side * (0.90 * hb + thumb_fan))
-        thumb_tip = P(-a - 0.075 * hb, thumb_side * (0.76 * hb + thumb_fan))
+        thumb_root = P(a + 0.46 * hb, thumb_side * 0.40 * hb)
+        thumb_mcp = P(a + 0.17 * hb, thumb_side * (0.67 * hb + thumb_fan))
+        # The thumb presses on the near side, not a long loop spanning the
+        # entire shaft. Its broad base narrows into a short opposed pad.
+        thumb_tip = P(a - 0.06 * hb, thumb_side * (0.83 * hb + thumb_fan))
         thumb_cen = np.vstack([
-            _qbez(thumb_root, P(0.22 * hb, thumb_side * (0.83 * hb + thumb_fan)), thumb_mcp, 12)[:-1],
-            _qbez(thumb_mcp, P(-0.20 * hb, thumb_side * (0.84 * hb + thumb_fan)), thumb_tip, 14),
+            _qbez(thumb_root, P(a + 0.35 * hb, thumb_side * (0.55 * hb + thumb_fan)), thumb_mcp, 12)[:-1],
+            _qbez(thumb_mcp, P(a + 0.13 * hb, thumb_side * (0.81 * hb + thumb_fan)), thumb_tip, 14),
         ])
-        thumb = _digit(thumb_cen, np.linspace(0.18 * hb, 0.12 * hb, len(thumb_cen)))
-        wrist = P(0.96 * hb, 0.16 * hb)
-        wrist_dir = P(1.0, 0.45)
-        width_default = 0.95 * hb
+        thumb = _digit(thumb_cen, np.linspace(0.38 * hb, 0.20 * hb, len(thumb_cen)))
+        # A fleshy thenar joins the short thumb to the shaft-side palm. Keep
+        # the open web over the shaft, not a tiny enclosed ground window just
+        # outside its near edge.
+        thenar = shapely.union_all([
+            Point(a + 0.09 * hb, thumb_side * (0.57 * hb + thumb_fan / 2)).buffer(0.15 * hb),
+            Point(*thumb_root).buffer(0.19 * hb),
+        ]).convex_hull
+        palm = palm.union(thenar)
+        wrist = P(a + 0.79 * hb, -thumb_side * 0.04 * hb)
+        wrist_dir = P(1.0, -thumb_side * 0.45)
+        width_default = 0.85 * hb
         # The thumb lobe is kept on the palm side, outside the four-finger band.
         thumb_distal = thumb.difference(palm.buffer(-0.1))
         finger_band = shapely.union_all(digits)
-        # Three shallow V webs at the roots, never a separate digit drawn on top.
+        # Short staggered oblique separations, not a stripe on every finger.
         web_lines = []
-        for i in range(3):
-            gap_y = (ys[i] + ys[i + 1]) / 2.0
-            start_x = 0.40 * hb
-            end_x = 0.80 * hb
-            if end_x > start_x + 4.0:
-                web_lines.append(LineString([(start_x, gap_y), (end_x, gap_y)]))
+        for i, level in enumerate((0.225, 0.0, -0.225)):
+            gap_y = thumb_side * level * hb
+            web_lines.append(LineString([
+                (-a + (0.38, 0.42, 0.46)[i] * hb, gap_y),
+                (a + (0.32, 0.24, 0.16)[i] * hb, gap_y + thumb_side * (0.05, 0.02, 0.015)[i] * hb),
+            ]))
+        if view == "palm":
+            web_lines = web_lines[:2]
+            web_lines.append(LineString([
+                (a + 0.56 * hb, thumb_side * 0.22 * hb),
+                (a + 0.73 * hb, -thumb_side * 0.04 * hb),
+            ]))
         object_center = P(0.0, 0.0)
     else:
         # Open-family poses share one palm quad and the same four anatomical
@@ -3401,16 +3431,10 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
             # The thenar crease replaces the outermost finger separation so
             # palm views stay within the three-line maximum.
             web_lines = web_lines[:2]
-            if is_wrap:
-                web_lines.append(LineString([
-                    (0.34 * hb, thumb_side * 0.39 * hb),
-                    (0.15 * hb, thumb_side * 0.19 * hb),
-                ]))
-            else:
-                web_lines.append(LineString([
-                    (0.20 * size, thumb_side * 0.13 * hb),
-                    (0.39 * size, thumb_side * 0.22 * hb),
-                ]))
+            web_lines.append(LineString([
+                (0.20 * size, thumb_side * 0.13 * hb),
+                (0.39 * size, thumb_side * 0.22 * hb),
+            ]))
 
     # The palm joins the four digit roots; the thumb is a distinct centreline
     # from the palm edge, then all five digit masses become one closed region.
@@ -3420,8 +3444,9 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         for tip, radius in zip(tips, tip_radii)
     ] + [Point(*thumb_cen[-1]).buffer(0.075 * hb + 2.0, quad_segs=12)])
     softened = raw.buffer(1.25, quad_segs=10).buffer(-1.25, quad_segs=10)
-    if pose == "cup":
-        # Fill narrow proximal webs under the rim without erasing the tips.
+    if pose in {"cup", "hold_flat"}:
+        # Stroke-aware closing removes pinholes in proximal finger webs,
+        # including flat-object holds; the distal caps remain protected.
         softened = raw.buffer(CONTOUR / 2 + 0.4, quad_segs=12).buffer(
             -CONTOUR / 2 - 0.4, quad_segs=12)
     local_shape = _clean(raw.union(softened.difference(tip_keepout)), r_open=0.35, r_close=0.35)

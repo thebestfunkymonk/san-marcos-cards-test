@@ -179,7 +179,7 @@ its upper edge tucks under it; the chin stays paper round the mouth.
 **Hands (§H.0: one five-finger hand per half-figure).** Use the shared
 `K.hand5(at, angle, pose, *, size, hand, view, curl, spread, grip_w,
 sleeve=None)` primitive. It returns the existing `Hand` dataclass and builds
-one smoothed silhouette from a palm quad and five digit centrelines. All
+one smoothed silhouette from a palm mass and five digit centrelines. All
 sizes come from the face (`K.hand_size(fc)`), never from the attribute.
 
 ```python
@@ -192,7 +192,10 @@ grip.add_to(sc, "handR", halo=0)
 * `wrap`: `at` is the shaft centre; `angle` is the shaft's up-axis in screen
   degrees (−90 vertical, any angle works). `grip_w` is shaft width. Back and
   palm views share one outline; the thumb leaves the palm side on an open V
-  and its short tip sits beside the index tip, never across the finger band.
+  and presses a short pad onto the near side of the shaft, never across the
+  fingers. Index/middle pads are larger; ring/little pads taper and stop at
+  staggered positions around the far edge. The palm covers the shaft through
+  the grip, with only shallow fingertip recesses, not rectangular windows.
   Put the shaft in the Scene before the hand; use `halo=0` so its lines run
   under the grip without paper rings.
 * `cup`: `at` is the wrist; `angle` points wrist-to-fingers. `grip_w` is the
