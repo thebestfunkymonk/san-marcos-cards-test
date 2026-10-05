@@ -1,0 +1,8 @@
+verifier wheels 2-0 (round-2 fixer state)
+- raster 10x (rmeas.py) + vector svgelements (vmeas.py): every wheel equal side/top-bottom on all 4 corners:
+  card back 6.95/6.95 (both stocks), tuck front 28.95/28.95 (fold), tuck back 53.95/53.95 (fold) = 10.90/10.90 to box companion,
+  flat front/back panels identical. before: 3.95/9.95, 25.95/31.95, 50.95/56.95 (7.90/13.90).
+- rail ends (rends.py): flush in each band on all 4 corners of every instance.
+- sandbox rebuild (deleted after): cards/BACK.svg (both stocks) + all tuck SVGs byte-identical to project; deck.qa BACK 10/0/1 (KO 18.21, orig 18.22), tuck QA all pass.
+- foil_gaps change: only the medallion<->outer-rule pair flips by piece order (same 3.1 gap, runs 11.4/13.1 swapped); strict max flags orig too.
+- open: scope not in relayed user request; print/bleed|plates|png|PDFs + gallery still old corners; brief H.19.4 / ART_CONTRACT §10 not updated.

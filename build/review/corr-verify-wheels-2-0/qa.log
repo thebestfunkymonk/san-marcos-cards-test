@@ -1,0 +1,8 @@
+piece        status      strk  pal budg hide gold  g/r  idx safe pips   c2  clr back gaps  svg rndr  wht  notes
+---------------------------------------------------------------------------------------------------------------
+BACK         art            ✓    ✓    ✓    ✓    ·    ·    ·    ✓    ·    ✓    ·    ✓    !    ✓    ✓    ✓  KO 18.2% | [12] jade: 12 thin, 6 narrow-gap region(s) (raster)
+---------------------------------------------------------------------------------------------------------------
+deck-wide 6 (index overlay): ✓ worst 0 px
+§E.2 clearances built (brief ≥ 35 / ≥ 37): S 35.0/37.0, H 32.7/32.4, C 32.7/32.4, D 46.6/60.2
+checks: 10 pass, 0 fail, 1 warn  ·  1 pieces in 50.0s
+legend: ✓ pass  ✗ fail  ! warning (look at build/qa/flags/<stem>.png)  · n/a

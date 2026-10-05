@@ -1,0 +1,29 @@
+{'action': 'drop', 'role': 'fill', 'layer': 'red', 'at': [318.9, 405.1], 'why': 'fill piece thinner than HAIRLINE'}
+{'action': 'drop', 'role': 'fill', 'layer': 'red', 'at': [371.2, 441.3], 'why': 'fill piece thinner than HAIRLINE'}
+{'action': 'drop', 'role': 'fill', 'layer': 'gold', 'at': [404.7, 360.5], 'why': 'fill piece thinner than HAIRLINE'}
+{'action': 'trim', 'role': 'outline', 'layer': 'ink', 'at': [357.0, 436.0], 'why': 'stroke 0.30 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'finger', 'layer': 'ink', 'at': [357.0, 436.0], 'why': 'stroke 0.30 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'finger', 'layer': 'ink', 'at': [357.0, 436.0], 'why': 'stroke 0.30 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'finger', 'layer': 'ink', 'at': [357.0, 436.0], 'why': 'stroke 0.30 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'thumb', 'layer': 'ink', 'at': [357.0, 436.0], 'why': 'stroke 0.30 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'fill', 'layer': 'red', 'at': [330.0, 367.7], 'why': 'fill 2.17 px from a neighbour (needs 2.5)', 'near': ['fill']}
+{'action': 'trim', 'role': 'fill', 'layer': 'red', 'at': [316.6, 469.4], 'why': 'fill 2.51 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'fill', 'layer': 'red', 'at': [305.9, 479.1], 'why': 'fill 0.87 px from a neighbour (needs 2.5)', 'near': ['fill']}
+{'action': 'trim', 'role': 'fill', 'layer': 'red', 'at': [416.3, 367.7], 'why': 'fill 1.46 px from a neighbour (needs 2.5)', 'near': ['fill']}
+{'action': 'trim', 'role': 'fill', 'layer': 'gold', 'at': [375.8, 362.1], 'why': 'fill 2.34 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'fill', 'layer': 'gold', 'at': [301.6, 361.9], 'why': 'fill 2.34 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [379.4, 362.0], 'why': 'stroke 2.34 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'delete', 'role': 'pearl', 'layer': 'ink', 'at': [404.7, 360.6], 'why': 'stub 6.2 px, 2.44 px from a neighbour', 'near': ['fill']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.5, 362.1], 'why': 'stroke 2.34 px from a neighbour (needs 3.0)', 'near': ['fill']}
+{'action': 'trim', 'role': 'outline', 'layer': 'ink', 'at': [270.1, 461.2], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.0, 452.0], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.0, 452.0], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.0, 452.0], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.0, 452.0], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.0, 452.0], 'why': 'stroke 2.52 px from a neighbour (needs 3.0)', 'near': ['outline']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [379.4, 362.0], 'why': 'stroke 1.30 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'pearl', 'layer': 'ink', 'at': [304.5, 362.1], 'why': 'stroke 1.29 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'outline', 'layer': 'ink', 'at': [270.1, 461.2], 'why': 'stroke 1.53 px from a neighbour (needs 3.0)', 'near': ['finger', 'outline', 'thumb']}
+{'action': 'trim', 'role': 'wave', 'layer': 'ink', 'at': [273.3, 483.0], 'why': 'stroke 2.19 px from a neighbour (needs 3.0)', 'near': ['pearl']}
+{'action': 'trim', 'role': 'outline', 'layer': 'ink', 'at': [299.3, 485.6], 'why': 'stroke 1.48 px from a neighbour (needs 3.0)', 'near': ['finger', 'outline', 'thumb']}
+{'action': 'trim', 'role': 'fill', 'layer': 'gold', 'at': [300.0, 452.0], 'why': 'fill 0.26 px from a neighbour (needs 3.0)', 'near': ['outline']}

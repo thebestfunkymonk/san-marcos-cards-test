@@ -1,0 +1,185 @@
+{
+ "id": "QH",
+ "stem": "QH",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    58.56,
+    44.9,
+    114.81,
+    152.86
+   ],
+   "index-rank/br": [
+    635.19,
+    897.14,
+    691.44,
+    1005.1
+   ],
+   "index-pip/tl": [
+    51.76,
+    164.0,
+    116.24,
+    223.32
+   ],
+   "index-pip/br": [
+    633.76,
+    826.68,
+    698.24,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 78.84,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 8e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 8.5,
+  "balance": {
+   "ink": 16.1,
+   "gold": 8.5,
+   "red": 12.3,
+   "jade": 15.4,
+   "paper": 47.7
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: gold 8.5% (target 10-15); ink 16.1% (target 8-16)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     566.0,
+     254.3,
+     573.0,
+     262.0
+    ],
+    "area": 13.0,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     177.0,
+     788.0,
+     184.0,
+     795.7
+    ],
+    "area": 13.0,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     569.3,
+     258.3,
+     573.0,
+     262.7
+    ],
+    "area": 12.1,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     177.0,
+     787.3,
+     180.7,
+     791.7
+    ],
+    "area": 12.1,
+    "layer": "gold",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "jade hidden under the ink solid at [566.0, 254.3, 573.0, 262.0]",
+   "jade hidden under the ink solid at [177.0, 788.0, 184.0, 795.7]",
+   "gold hidden under the ink solid at [569.3, 258.3, 573.0, 262.7]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": true,
+  "vector": [],
+  "raster": {},
+  "pieces": 758,
+  "detail": []
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/QH.png",
+ "seconds": 10.92
+}
