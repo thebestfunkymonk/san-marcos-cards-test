@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050">
+<title>HEADWATERS JOKER-RED</title>
+<defs><clipPath id="card" clipPathUnits="userSpaceOnUse"><path d="M37.5 0l675 0c20.71 0 37.5 16.79 37.5 37.5l0 975c0 20.71 -16.79 37.5 -37.5 37.5l-675 0c-20.71 0 -37.5 -16.79 -37.5 -37.5l0 -975c0 -20.71 16.79 -37.5 37.5 -37.5z" /></clipPath></defs>
+<g id="ink" clip-path="url(#card)">
+<path d="M445.59 432.41a3.15 3.15 0 1 1 6.3 0a3.15 3.15 0 1 1 -6.3 0z" fill="#15242B" />
+</g>
+</svg>

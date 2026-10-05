@@ -1,0 +1,14 @@
+# courts3 KH progress (r1)
+- [start] read open issues (6 + 1 observation). No prior progress.
+- [c1] backup of courts2 state: scratchpad bak0 + build/review/courts3-KH/work/prev_KH.svg
+- [c1] FIXED rim: COLLAR_RIM 7.5 -> 9.5 (4.8 px red between CONTOUR and fold)
+- [c1] FIXED lip nub: stroke_ends += chalice (END_ALSO) -> robe neckline ends 0.4 px outside the chalice
+- [c1] FIXED red speck R hand/cuff: cause = heal cut 3.9 px of fist wrist line because sleeve jade (trap band under cuff top edge) sat 1.6 px from fist ink. KH._sleeve_jade: sleeve jade starts halfway down the cuff. Also KP.plug_pockets (lattice-style FINE dots in 0.3 px2 jade crumbs of the cuffs).
+- [c1] FIXED ring pinch: cause = ripple_textile re-emits closed rings open (closing segment lost). KP.close_starts rejoins only that missing segment (ring selection unchanged vs courts2).
+- [c1] TODO: seam/chalice-hand 28deg sliver; pole/right-lapel wedge.
+- [c1] pole/lens wedge: LAPEL_TUCK="hide" -> lens of right lapel beyond the pole removed (edge 1 px under pole); tried fillet tuck (KP.tuck_lens, r=7) = ugly nub + messy scales, rejected
+- [c1] jade recovery: ROBE neck_y 262 -> 272 (more jade collar shows). qbal: jade 15.09 paper 45.52 red 13.56 gold 10.33 ink 15.50
+- [c1] extra: KP.Scene fillets (CONTOUR_FILLET=6) at robe-shoulder/chalice-bowl silhouette corner (round join nub into gold)
+- [c1] neck_y lowering REJECTED (heal cascades at neckline junctions, free line end at pole). Reverted to 262.
+- [c1] jade recovery instead: LENS half_w 88->92 (chalice foot-lapel 6.04 px), sleeves 74/62 -> 80/68. qbal: jade 15.09 paper 45.11 red 13.98 gold 10.31 ink 15.51
+- [c1] noted pre-existing twin: red 20deg sliver where right lapel edge leaves pole's LEFT edge (~484,400)

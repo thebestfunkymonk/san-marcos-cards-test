@@ -1,0 +1,12 @@
+# courts2 — KS progress
+
+- start: art/KS.py snapshot at build/review/courts2-KS/work/KS_start.py (post kit-upgrade rebuild)
+- iter 1 (critique): cup thumb read as a 5th-finger stub (kit thumb hugs rim under index), tip on the lowest latitude's end; fingertip tops grazed lowest latitude (∪ vs ∩ crossing); knob at little-finger knuckle and dent where thumb root met back; right lapel edge trimmed by heal where it converged (~20°) with the right sleeve edge -> 17 px red/jade boundary unlined + jade wedge; orb bubble + lone lapel dot pair; heel paper tab (kit, accepted so far).
+- iter 1 (fix): art/_ks_hands.py orb_cup (thumb from low wrist side to rim tip 13°, V to index, sin² hypothenar, local flank fillet, opening 3.5) + orb(gaps) with lowest ripple (8.2,10.6,20) behind fingers; grip 0.40. KS._tuck_lapel fills acute jade tip between right lapel and forearm (r 6).
+- iter 2 (critique): lone left-lapel dot beside orb bubble; sceptre strata course (y 402.75) lying along the fist's top edge -> merged 5 px ink band; hair terminal (337,305) D-shaped trim (pre-existing, kit hair/beard interplay); heel paper tab (kit HEEL_CLOSE) — tried wrists (493–502, 453–458): pocket never shorter than at (498,455); kept.
+- iter 2 (fix): left lapel bubbles=False (its column is behind orb+hand; only the stray dot showed); _ks_hands.clear_grazing drops sceptre pattern strokes grazing the fist (course at 402.75); fist built before the sceptre.
+- iter 3: cup fingers fw 10.0 (knuckle span 40 vs fist bands 8.75 — the two hands now read as one size); tried jade levers (border 58/62, collar rim 13: +0.1–0.2 only) — not taken.
+- iter 4: cup hypothenar edge as a cubic leaving the little finger on its tangent (kit quadratic fell back to the chord -> corner at the knuckle); tried right-sleeve sag 0/4/8 and wrists for the heel tab: no gain, kept (498,455), sag -4.
+- iter 5: docstrings (KS.py plan rows: lapels/orb/sceptre/hands + balance; _ks_hands module doc); removed unused _clear_bubbles/_smooth_edge. deck.build KS (limestone + white), deck.qa KS: 13 pass / 0 fail / 1 warn (12 raster: moustache tips ×4, border seam/hatch wedge ×2 — pre-existing, unchanged). Deterministic (sha c8f4e294e91fd148 twice). Balance paper 45.2 jade 14.4 red 12.6 gold 10.3 ink 17.5.
+- montage: build/review/courts2-KS/before-after.png (750, 188, 3x/6x/10x crops) — looked at.
+- DONE (KS job). Not touched: deck/courtkit.py, other courts, A♠/jokers/back/tuck; print exports/mockups/gallery left to the orchestrator.

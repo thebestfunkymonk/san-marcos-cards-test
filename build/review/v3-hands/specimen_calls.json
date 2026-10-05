@@ -1,0 +1,1690 @@
+[
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "L size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "L size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "L size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "R size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "R size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, palm view (hand= the other chirality)",
+  "label": "R size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "L axis -60 shaft 14",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -60.0
+  ],
+  "kw": {
+   "shaft_w": 14.0,
+   "back": 1,
+   "wrist": [
+    25.903416115796013,
+    40.82430476574176
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "L axis -120 shaft 22",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -120.0
+  ],
+  "kw": {
+   "shaft_w": 22.0,
+   "back": 1,
+   "wrist": [
+    46.11815416917664,
+    1.6677489194176278
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "L axis 180 shaft 10",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   180.0
+  ],
+  "kw": {
+   "shaft_w": 10.0,
+   "back": 1,
+   "wrist": [
+    24.503390015938024,
+    -43.23361862644539
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "L axis 0 shaft 10",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   0.0
+  ],
+  "kw": {
+   "shaft_w": 10.0,
+   "back": 1,
+   "wrist": [
+    -24.503390015938027,
+    43.233618626445384
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "R axis -60 shaft 14",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -60.0
+  ],
+  "kw": {
+   "shaft_w": 14.0,
+   "back": -1,
+   "wrist": [
+    -48.306593076868495,
+    -2.020864018207686
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "R axis -120 shaft 22",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -120.0
+  ],
+  "kw": {
+   "shaft_w": 22.0,
+   "back": -1,
+   "wrist": [
+    -21.614764153238617,
+    40.77336754586301
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "R axis 180 shaft 10",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   180.0
+  ],
+  "kw": {
+   "shaft_w": 10.0,
+   "back": -1,
+   "wrist": [
+    24.503390015938038,
+    43.23361862644538
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip at other angles (size 85)",
+  "label": "R axis 0 shaft 10",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   0.0
+  ],
+  "kw": {
+   "shaft_w": 10.0,
+   "back": -1,
+   "wrist": [
+    -24.50339001593803,
+    -43.233618626445384
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "L size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "L",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "L size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "L size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "L",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "R size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -35.4364088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "R",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "R size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thumb='behind' (tip round the far side)",
+  "label": "R size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -48.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "R",
+   "thumb": "behind"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "L size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": 1,
+   "wrist": [
+    38.7164088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "L size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": 1,
+   "wrist": [
+    44.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "L size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": 1,
+   "wrist": [
+    53.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "R size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": -1,
+   "wrist": [
+    -38.7164088528362,
+    21.963822983473868
+   ],
+   "size": 70.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "R size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": -1,
+   "wrist": [
+    -44.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, thin rod 8 (key, sceptre stem)",
+  "label": "R size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 8.0,
+   "back": -1,
+   "wrist": [
+    -53.62778661934752,
+    28.827517665809445
+   ],
+   "size": 100.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "L size 70",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": 1,
+   "wrist": [
+    39.13330444827409,
+    31.95330444827409
+   ],
+   "size": 70.0
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "L size 85",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": 1,
+   "wrist": [
+    43.947155275105786,
+    35.64790527510578
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "L size 100",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": 1,
+   "wrist": [
+    52.14371208835975,
+    41.93871208835974
+   ],
+   "size": 100.0
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "R size 70",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": -1,
+   "wrist": [
+    -39.13330444827409,
+    31.95330444827409
+   ],
+   "size": 70.0
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "R size 85",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": -1,
+   "wrist": [
+    -43.947155275105786,
+    35.64790527510578
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch: a stem between thumb and index",
+  "label": "R size 100",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": -1,
+   "wrist": [
+    -52.14371208835975,
+    41.93871208835974
+   ],
+   "size": 100.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "L axis -45 stem 5",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -45.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": 1,
+   "wrist": [
+    5.868455953762462,
+    56.282207064008446
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "L axis -70 stem 4.2",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -70.0
+  ],
+  "kw": {
+   "stem_w": 4.2,
+   "back": 1,
+   "wrist": [
+    29.480392893412237,
+    48.66569393676933
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "L axis -110 stem 6",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -110.0
+  ],
+  "kw": {
+   "stem_w": 6.0,
+   "back": 1,
+   "wrist": [
+    53.019272877608,
+    18.638271259207695
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "R axis -45 stem 5",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -45.0
+  ],
+  "kw": {
+   "stem_w": 5.0,
+   "back": -1,
+   "wrist": [
+    -56.282207064008446,
+    -5.868455953762453
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "R axis -70 stem 4.2",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -70.0
+  ],
+  "kw": {
+   "stem_w": 4.2,
+   "back": -1,
+   "wrist": [
+    -53.86499623631532,
+    18.330453130214593
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "pinch at other angles (size 85): tilted stems",
+  "label": "R axis -110 stem 6",
+  "fn": "pinch",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -110.0
+  ],
+  "kw": {
+   "stem_w": 6.0,
+   "back": -1,
+   "wrist": [
+    -28.63466953470492,
+    48.357875807776225
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "L size 70",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -17.5
+   ],
+   26.6
+  ],
+  "kw": {
+   "side": 1,
+   "wrist": [
+    11.97,
+    30.380000000000003
+   ],
+   "size": 70.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "L size 85",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -21.25
+   ],
+   32.3
+  ],
+  "kw": {
+   "side": 1,
+   "wrist": [
+    14.534999999999998,
+    36.88999999999999
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "L size 100",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -25.0
+   ],
+   38.0
+  ],
+  "kw": {
+   "side": 1,
+   "wrist": [
+    17.1,
+    43.400000000000006
+   ],
+   "size": 100.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "R size 70",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -17.5
+   ],
+   26.6
+  ],
+  "kw": {
+   "side": -1,
+   "wrist": [
+    -11.97,
+    30.380000000000003
+   ],
+   "size": 70.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "R size 85",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -21.25
+   ],
+   32.3
+  ],
+  "kw": {
+   "side": -1,
+   "wrist": [
+    -14.534999999999998,
+    36.88999999999999
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "cup: orb from below",
+  "label": "R size 100",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -25.0
+   ],
+   38.0
+  ],
+  "kw": {
+   "side": -1,
+   "wrist": [
+    -17.1,
+    43.400000000000006
+   ],
+   "size": 100.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "L size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -14.700000000000003,
+    25.461146871262493
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "L size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -17.85,
+    30.917106915104455
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "L size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -21.000000000000004,
+    36.373066958946424
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "R size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -14.700000000000003,
+    25.461146871262493
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "R size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -17.85,
+    30.917106915104455
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, together",
+  "label": "R size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -21.000000000000004,
+    36.373066958946424
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "L size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -14.700000000000003,
+    25.461146871262493
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "L size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -17.85,
+    30.917106915104455
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "L size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -21.000000000000004,
+    36.373066958946424
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "R size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -14.700000000000003,
+    25.461146871262493
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "R size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -17.85,
+    30.917106915104455
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, together",
+  "label": "R size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -21.000000000000004,
+    36.373066958946424
+   ],
+   -60.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "L size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -7.60927992601411,
+    28.398219292898606
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "L size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -9.23983991015999,
+    34.48355199851974
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "L size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -10.870399894305871,
+    40.56888470414087
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "R size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -7.60927992601411,
+    28.398219292898606
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "R size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -9.23983991015999,
+    34.48355199851974
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, back view, spread 7\u00b0",
+  "label": "R size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -10.870399894305871,
+    40.56888470414087
+   ],
+   -75.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 7.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "L size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -25.461146871262496,
+    14.699999999999998
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "L size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -30.91710691510446,
+    17.849999999999994
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "L size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -36.373066958946424,
+    20.999999999999996
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "L",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "R size 70",
+  "fn": "open_hand",
+  "args": [
+   [
+    -25.461146871262496,
+    14.699999999999998
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 70.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "R size 85",
+  "fn": "open_hand",
+  "args": [
+   [
+    -30.91710691510446,
+    17.849999999999994
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "open hand, palm view, curled 25\u00b0 (on the chest)",
+  "label": "R size 100",
+  "fn": "open_hand",
+  "args": [
+   [
+    -36.373066958946424,
+    20.999999999999996
+   ],
+   -30.0
+  ],
+  "kw": {
+   "size": 100.0,
+   "hand": "R",
+   "view": "palm",
+   "spread": 0.0,
+   "curl": 25.0
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "L grip + sleeve",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "R grip + sleeve",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -39.233618626445384,
+    24.50339001593803
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "L open + sleeve",
+  "fn": "open_hand",
+  "args": [
+   [
+    -12.210119116726375,
+    33.54702656205692
+   ],
+   -70.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "L",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "R open + sleeve",
+  "fn": "open_hand",
+  "args": [
+   [
+    -12.210119116726375,
+    33.54702656205692
+   ],
+   -70.0
+  ],
+  "kw": {
+   "size": 85.0,
+   "hand": "R",
+   "view": "back",
+   "spread": 0.0,
+   "curl": 0.0
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "L cup + sleeve",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -21.25
+   ],
+   32.3
+  ],
+  "kw": {
+   "side": 1,
+   "wrist": [
+    14.534999999999998,
+    36.88999999999999
+   ],
+   "size": 85.0
+  }
+ },
+ {
+  "row": "hand + sleeve as ONE outline (Hand.with_sleeve), size 85",
+  "label": "R cup + sleeve",
+  "fn": "cup",
+  "args": [
+   [
+    0.0,
+    -21.25
+   ],
+   32.3
+  ],
+  "kw": {
+   "side": -1,
+   "wrist": [
+    -14.534999999999998,
+    36.88999999999999
+   ],
+   "size": 85.0
+  }
+ }
+]

@@ -1,0 +1,273 @@
+{
+ "id": "BACK",
+ "stem": "BACK",
+ "kind": "back",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "jade"
+  ],
+  "budget": [
+   "jade"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "25": {
+  "ok": true,
+  "diff": 4e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "5r": {
+  "ok": null,
+  "detail": []
+ },
+ "4c": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "11": {
+  "ok": true,
+  "knockout": 0.1821,
+  "emblem": {
+   "rot180_clusters": [],
+   "mirror_lr": 0.21336,
+   "mirror_ud": 0.21337
+  },
+  "frame_mirror_clusters": [],
+  "detail": []
+ },
+ "12": {
+  "ok": "warn",
+  "vector": [],
+  "raster": {
+   "jade": {
+    "thin": [
+     {
+      "bbox": [
+       93.3,
+       519.3,
+       94.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       655.3,
+       519.3,
+       656.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       102.0,
+       288.7,
+       107.3,
+       297.3
+      ],
+      "area": 13.3
+     },
+     {
+      "bbox": [
+       642.7,
+       288.7,
+       648.0,
+       297.3
+      ],
+      "area": 13.3
+     },
+     {
+      "bbox": [
+       102.0,
+       752.7,
+       107.0,
+       760.7
+      ],
+      "area": 12.2
+     },
+     {
+      "bbox": [
+       643.0,
+       752.7,
+       648.0,
+       760.7
+      ],
+      "area": 12.2
+     },
+     {
+      "bbox": [
+       196.7,
+       144.3,
+       200.3,
+       148.3
+      ],
+      "area": 5.6
+     },
+     {
+      "bbox": [
+       549.7,
+       144.3,
+       553.3,
+       148.3
+      ],
+      "area": 5.6
+     },
+     {
+      "bbox": [
+       187.7,
+       153.3,
+       191.7,
+       157.0
+      ],
+      "area": 5.6
+     },
+     {
+      "bbox": [
+       526.3,
+       167.7,
+       530.0,
+       171.7
+      ],
+      "area": 5.6
+     },
+     {
+      "bbox": [
+       220.0,
+       878.3,
+       223.7,
+       882.3
+      ],
+      "area": 5.6
+     },
+     {
+      "bbox": [
+       526.3,
+       878.3,
+       530.0,
+       882.3
+      ],
+      "area": 5.6
+     }
+    ],
+    "gaps": [
+     {
+      "bbox": [
+       93.3,
+       519.3,
+       94.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       655.3,
+       519.3,
+       656.7,
+       530.7
+      ],
+      "area": 14.4
+     },
+     {
+      "bbox": [
+       102.0,
+       288.7,
+       107.3,
+       297.3
+      ],
+      "area": 13.3
+     },
+     {
+      "bbox": [
+       642.7,
+       288.7,
+       648.0,
+       297.3
+      ],
+      "area": 13.3
+     },
+     {
+      "bbox": [
+       102.0,
+       752.7,
+       107.0,
+       760.7
+      ],
+      "area": 12.2
+     },
+     {
+      "bbox": [
+       643.0,
+       752.7,
+       648.0,
+       760.7
+      ],
+      "area": 12.2
+     }
+    ]
+   }
+  },
+  "pieces": 573,
+  "detail": [
+   "jade: 12 thin, 6 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/BACK.png",
+ "seconds": 30.39
+}

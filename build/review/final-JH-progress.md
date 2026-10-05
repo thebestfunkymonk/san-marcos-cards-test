@@ -1,0 +1,12 @@
+# J♥ final notes — progress
+
+Notes: (1) jaw line + neck contour, mouth = upper-lip bow + FINE lower-lip tick; (2) fiddle pegs → small gold T-pegs, Aquifer contours, 2 a side, inside the scroll silhouette.
+Scratch: work/jh-final/ (pv.sh <tag> → out/<tag>/{JH.png,JH-188.png,face3x.png,pegs3x.png}); baseline crops in work/jh-final/base/.
+
+- [start] baseline rendered; reading _jh_face.py / Fiddle.neck_part.
+- [note 1, f1–f4] _jh_face.minstrel_profile: lower lip bump removed from the contour (corner → sulcus → chin: 2 bumps), FINE lower-lip tick springing from the contour at the sulcus (my+8.4, 8 long), MEDIUM jaw from the under-chin (snapped onto the contour) to under the ear lobe (sag −3.6, mandible), throat pinned so the neck front drops into the collar; mouth_dy 38.5 → 37 (shorter lower face). JH.py collar top lowered (front 279→287, back 273→280, design coords) → ≈14 px of neck shows. Heal log clean for face marks. Next: chin firmness check, then pegs.
+- [f5, j2] chin firmed (fr−0.6); jaw sag −3.6 → −5.5 (rounder mandible, less strap). Profile check: front-x per row shows exactly two bumps (upper lip 343.5, chin 347.1; sulcus 349.0).
+- [note 2, p1–p4] Fiddle(pegs="T", tpeg=(3.0 shaft showing, 6.0 shaft w, 6.5 head w, 12.0 head h)) + Fiddle.tpegs_part(): gold T's, MEDIUM Aquifer outline, sil=False, stacked behind the neck (shafts run in under the cheek contour); asserted |dx|+MED/2 ≤ scroll r + CON/2 (max 24.1 ≤ 24.2). peg_t → (0.425, 0.60, 0.77, 0.94): top pegs clear the scroll contour by ≥ 3 px, same-side heads ≥ 3 px apart. Jade ovals removed.
+- [p2–p3] side effects fixed: collar back top kept at 274 (bob meets it cleanly, collar higher at the nape than the throat); Lion Mark 330 → 333.5 (was trimmed flat against the collar foot; now whole, collar foot line unbroken). Heal log 61 → 57 entries, new ones only hidden peg crumbs.
+- preview QA p4: all ✓ except 12 raster ! (same 2 pre-existing beret-hatch wedges as baseline, vector clean); balance jade 14.6 (baseline 14.9; soft), gold 11.6, ink 14.2.
+- [DONE] deck.build JH (limestone + white) → cards/JH.svg (deterministic: two builds same md5), build/png/JH.png, build/png/small/JH.png, build/white/png/JH.png. deck.qa JH: 13 pass, 0 fail, 1 warn (12 raster: the 2 pre-existing beret-fold wedges, bbox identical to baseline; vector clean). gold 11.6, jade 14.6 (soft). Before/after: work/jh-final/final/{face_before_after,pegs_before_after}.png.

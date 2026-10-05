@@ -1,0 +1,10 @@
+corr-verify-wheels-2-1 (verifier, read-only on project; sandboxes in session scratchpad vw21 (current) / vw21o (orig backups))
+- rebuilt BACK (+white), deck.qa BACK, tuck --no-mock in both sandboxes: project cards/BACK.svg, white, build/png/BACK.png, tuck/TUCK-{FRONT,BACK,FLAT}.svg byte-identical to rebuild
+- raster 10x clearances (all 4 corners): back flood 4/10 -> 7/7; tuck front fold 26/32 -> 29/29; tuck back fold 51/57 -> 54/54, box companion 10.95/10.95; flat panels identical; lap past outer rule 5.9/-0.1 -> 2.9/2.9
+- deck.qa BACK 10 pass 1 warn (12 raster, identical regions to orig), KO 18.21 (orig 18.22), frame mirror clusters none, emblem mirror_lr 0.213
+- tuck QA all pass (new foil_gaps); orig foil_gaps on new front -> 2 flags; bidirectional runs identical old/new (11.4/13.1 @ y192/298/534.5 both sides), only order flips at 534.5
+- band rail breaks (vector, back TL): top 4.60/7.52, side 6.61/4.81, outer rule 4.75/4.75 (orig 4.51/4.51, 4.72/4.72, 4.56/4.93). Same on tuck front. Inherent to off-centre wheel + flush ends.
+- docstring says companion breaks symmetric about diagonal: false after flush (100.47 vs 102.65)
+- tuck back outer ladder open top cell 32.3 -> 37.7 px (pitch 26), pre-existing 125 px corner-zone rule
+- stale: print/*, build/print/BACK.svg, gallery, tuck mockups; brief H.19.4 still Ø56 @ (68.5,74.5)
+- crops: issue-uneven-rail-breaks-*-8x.png, back-*-old-new-3x.png, tuck-*-old-new-3x.png, back-now-750/188, back-white-corners-3x.png

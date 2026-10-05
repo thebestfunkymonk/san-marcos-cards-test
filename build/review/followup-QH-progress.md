@@ -1,0 +1,6 @@
+# followup-QH progress (air-hose -> bubble ribbon)
+
+- [start] backups: work/qh-followup/QH_orig.py, work/qh-followup/_qh_attr_orig.py. v0 render: work/qh-followup/out/v0/ (hard checks pass; 12 raster warn x6 pre-existing, not hose-related; gold 8.4, jade 16.0).
+- plan: drop A.hose + ferrule; new A.bubble_ribbon on a gentle S from the far-shoulder dip (~503,300) up the gap between hair and stem, left of the flower, ending up-right ~ (508,72) >= 12 px inside the gold rule (y 51). Sizes graduated 3 -> 8 nominal, legal marks (Ø4.2 dot start, FINE rings), atomic.
+- [v1..i] variants in work/qh-followup/out/{v1,a..i}; chose g: path AIR 7 pts (497,302)->(511,71), 4 Ø4.2 dots + 12 FINE rings Ø5.2->8, gaps x1.1. hose()/ferrule removed from _qh_attr.py; new bubble_ribbon()/_legal_bubble(). Adopted into art/QH.py. Clearances: >= 6.5 px paper to any contour; top ring 13.9 px inside gold rule.
+- [done] deck.build QH (limestone + white) and deck.qa QH: 12 pass, 0 fail, 2 warn. Warns: 5r thin gold on red at the Lion clasp (shared K.lion_clasp redrawn in deck/courtkit.py at 10:50 by another job; v0 was clean; not QH code), 12 raster x6 (same pre-existing regions as v0: stem/petiole, hair, flower hatch; none on the ribbon). Balance ink 16.4 gold 8.3 red 12.5 jade 15.4 paper 47.4. No heal entries on the ribbon.

@@ -1,0 +1,587 @@
+[
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    39.113422179807294,
+    25.337203509969257
+   ],
+   "size": 70.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    43.335786619347516,
+    28.266817665809448
+   ],
+   "size": 85.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "L size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": 1,
+   "wrist": [
+    53.453866610997075,
+    33.25507960683465
+   ],
+   "size": 100.0,
+   "hand": "L",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 70",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -39.113422179807294,
+    25.337203509969257
+   ],
+   "size": 70.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 85",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -43.335786619347516,
+    28.266817665809448
+   ],
+   "size": 85.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "grip, back view (thumb over the fist), vertical staff 18",
+  "label": "R size 100",
+  "fn": "fist",
+  "args": [
+   [
+    0.0,
+    0.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "shaft_w": 18.0,
+   "back": -1,
+   "wrist": [
+    -53.453866610997075,
+    33.25507960683465
+   ],
+   "size": 100.0,
+   "hand": "R",
+   "thumb": "over"
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KS fist",
+  "fn": "fist",
+  "args": [
+   [
+    540.0,
+    419.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "back": -1,
+   "hand": "L",
+   "wrist": [
+    498.0,
+    455.0
+   ],
+   "wrist_w": 28.0,
+   "h": 38.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QS fist",
+  "fn": "fist",
+  "args": [
+   [
+    326.0,
+    424.0
+   ],
+   -104.0
+  ],
+  "kw": {
+   "wrist": [
+    291.4806158021831,
+    458.7195163884044
+   ],
+   "wrist_w": 24.0,
+   "hand": "R",
+   "shaft_w": 9.0,
+   "back": -1,
+   "h": 30.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QS fist",
+  "fn": "fist",
+  "args": [
+   [
+    512.0,
+    444.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    552.3934221798073,
+    469.33720350996924
+   ],
+   "wrist_w": 26.0,
+   "hand": "L",
+   "shaft_w": 12.0,
+   "back": 1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JS fist",
+  "fn": "fist",
+  "args": [
+   [
+    302.0,
+    418.0
+   ],
+   -96.0
+  ],
+  "kw": {
+   "wrist": [
+    267.1986413917379,
+    446.17079282947213
+   ],
+   "wrist_w": 26.0,
+   "shaft_w": 31.0,
+   "back": -1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JS fist",
+  "fn": "fist",
+  "args": [
+   [
+    523.0,
+    180.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    555.0900469744043,
+    207.31782197349713
+   ],
+   "wrist_w": 26.0,
+   "shaft_w": 10.0,
+   "back": 1,
+   "h": 32.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KH fist",
+  "fn": "fist",
+  "args": [
+   [
+    233.5,
+    393.75
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    194.33721162634237,
+    423.48766613604045
+   ],
+   "wrist_w": 26.0,
+   "shaft_w": 10.4,
+   "back": -1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KH fist",
+  "fn": "fist",
+  "args": [
+   [
+    520.0,
+    456.0
+   ],
+   -121.78652611012423
+  ],
+  "kw": {
+   "wrist": [
+    564.2783937367795,
+    471.3898696595307
+   ],
+   "wrist_w": 27.0,
+   "shaft_w": 17.0,
+   "back": 1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QH flat",
+  "fn": "flat",
+  "args": [
+   [
+    300.0,
+    452.0
+   ],
+   -24.0
+  ],
+  "kw": {
+   "side": -1,
+   "length": 72.0,
+   "width": 31.0,
+   "wrist_w": 24.0,
+   "tips": [
+    5.0,
+    0.0,
+    3.0,
+    10.0
+   ],
+   "knuckle": 0.45,
+   "thumb_deg": 32.0,
+   "thumb_len": 0.4,
+   "stub": 7.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QH fist",
+  "fn": "fist",
+  "args": [
+   [
+    546.0,
+    434.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    507.29946581278386,
+    461.94196522960203
+   ],
+   "wrist_w": 26.0,
+   "shaft_w": 19.0,
+   "back": -1,
+   "hand": "L",
+   "h": 36.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JH fist",
+  "fn": "fist",
+  "args": [
+   [
+    268.0,
+    424.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    231.83079649003074,
+    453.2814221798073
+   ],
+   "wrist_w": 26.0,
+   "shaft_w": 20.0,
+   "back": -1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JH fist",
+  "fn": "fist",
+  "args": [
+   [
+    530.0,
+    254.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    562.0,
+    289.0
+   ],
+   "wrist_w": 26.0,
+   "arm": [
+    0.0,
+    1.0
+   ],
+   "shaft_w": 18.0,
+   "back": 1,
+   "h": 34.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KC fist",
+  "fn": "fist",
+  "args": [
+   [
+    540.0,
+    404.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    503.89092339055475,
+    431.9728166717236
+   ],
+   "hand": "L",
+   "wrist_w": 28.0,
+   "shaft_w": 24.0,
+   "back": -1,
+   "h": 38.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QC fist",
+  "fn": "fist",
+  "args": [
+   [
+    316.0,
+    412.0
+   ],
+   -118.0
+  ],
+  "kw": {
+   "shaft_w": 10.0,
+   "back": -1,
+   "wrist": [
+    299.1667287798977,
+    447.7699601748701
+   ],
+   "wrist_w": 26.0,
+   "h": 32.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JC flat",
+  "fn": "flat",
+  "args": [
+   [
+    268.99220004547146,
+    425.485084847107
+   ],
+   55.0
+  ],
+  "kw": {
+   "side": -1,
+   "length": 72.0,
+   "width": 32.0,
+   "wrist_w": 24.0,
+   "tips": [
+    5.0,
+    0.0,
+    3.0,
+    9.0
+   ],
+   "knuckle": 0.46,
+   "curl": 10.0,
+   "thumb_deg": 26.0,
+   "thumb_len": 0.44,
+   "stub": 0.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "JC fist",
+  "fn": "fist",
+  "args": [
+   [
+    548.0,
+    388.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    508.78974723950955,
+    412.0950930695364
+   ],
+   "wrist_w": 26.0,
+   "hand": "L",
+   "shaft_w": 22.0,
+   "back": -1,
+   "h": 36.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KD fist",
+  "fn": "fist",
+  "args": [
+   [
+    375.85248047012374,
+    406.5081860109122
+   ],
+   -106.0
+  ],
+  "kw": {
+   "wrist": [
+    343.61524886247634,
+    432.4453739635177
+   ],
+   "wrist_w": 24.0,
+   "shaft_w": 10.0,
+   "back": -1,
+   "h": 38.0,
+   "reach": 6.0,
+   "knuckle": 10.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "KD fist",
+  "fn": "fist",
+  "args": [
+   [
+    546.0,
+    384.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    510.89092339055475,
+    411.9728166717236
+   ],
+   "wrist_w": 26.0,
+   "hand": "L",
+   "shaft_w": 22.0,
+   "back": -1,
+   "h": 38.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QD fist",
+  "fn": "fist",
+  "args": [
+   [
+    237.056,
+    438.0
+   ],
+   -96.61673789791084
+  ],
+  "kw": {
+   "wrist": [
+    202.62063077838133,
+    470.2383822447288
+   ],
+   "wrist_w": 20.0,
+   "shaft_w": 9.0,
+   "back": -1,
+   "h": 34.0,
+   "knuckle": 12.0,
+   "reach": 4.0
+  }
+ },
+ {
+  "row": "the courts' own calls",
+  "label": "QD fist",
+  "fn": "fist",
+  "args": [
+   [
+    528.0,
+    408.0
+   ],
+   -90.0
+  ],
+  "kw": {
+   "wrist": [
+    558.6,
+    440.48081292110203
+   ],
+   "wrist_w": 24.0,
+   "shaft_w": 18.0,
+   "back": 1,
+   "h": 34.0,
+   "knuckle": 10.0,
+   "reach": 6.0
+  }
+ }
+]

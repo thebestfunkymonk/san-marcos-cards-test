@@ -1,0 +1,238 @@
+[
+ {
+  "lens": "craft",
+  "verdict": "NOT READY. The geometric half of the library (B1) is sound. Its hatch ends all land on contours: I checked 120 on the rosette, plus the ribbon leaf, stalactite, knee, rowel and plinth. It uses legal widths only, correct layer groups, no transforms and no <text>. Curves are tangent-continuous. My only B1 notes are minor reads (dartboard, aperture, ladder, padlock). The figurative half (B2) is not yet Jinkins-grade, and it also exposed a core knockout bug. 1) Frag.outline() gives wrong unions for some rotations, so knockout mode fills in the darter the brief places on the back and drops a contour from the andante. 2) The winged lion on the A\u2660 does not read as winged: the wings are a spray of loose, partly broken leaves. 3) The tuck's lion andante reads as a rodent or goat. 4) The simplified Lion Mark fails at its production size of 40 px and under: gaps of 0.3 px, and it reads as a sunflower with ram's horns, or as a Mickey-Mouse head as the solid clasp. There are also rule breaks: about 20 % of the lions' hatch ends stop in mid-air (\u00a7B.2/\u00a7I.3), and the salamander has 28 plain X crossings (\u00a7I.13). The wreath has lost its stem and reads as laurel with wheat ears (\u00a7G.6/\u00a7H.15). All crops and check scripts are in /home/luke/Projects/design/san-marcos-deck/build/review/. I modified no project files.",
+  "issues": [
+   {
+    "severity": "critical",
+    "target": "deck/motifs/core.py Frag.outline() (l.308-330) and knockout() (l.873-885); triggered by deck/motifs/fauna.py fountain_darter fan",
+    "problem": "Knockout mode is silently wrong. outline() adds every mark's skia path into one WINDING path and calls simplify(fix_winding=True). With near-coincident geometry this gives wrong unions. The darter's 9 spines converge to a sub-pixel pivot on the dorsal outline, next to the membrane. Its union area is 1142.9 to 1143.4 px\u00b2 in the good cases (shapely union of the marks: 1143) but 937.6, 1218.6 or 1959.2 px\u00b2 at 6 of the 12 rotations I tried. That includes the brief's back placement (orbit r175 at 1 o'clock, rot 30: 1219) and its C2 copy (1959, where the whole body knocks out as a solid paper blob). The andante's knockout drops the near foreleg's rear contour (region x \u221271\u2026\u221250, y 31\u202684). cut() occludes through Frag.shape(), which is built from outline(), so occlusion is exposed to the same fault. No test compares outline() with the true union. \u00a7H.19 makes the C2 darter pair a must-have, so this breaks the back.",
+    "fix": "(a) Make outline() robust. Build the union pairwise with pathops.op(acc, p, PathOp.UNION), or union per-mark shapely polygons. Check the result against a shapely union of the per-mark outlines, and fall back or raise when the area differs by more than 0.5 % or 2 px\u00b2. (b) Remove the degenerate geometry. Start the darter's spines at a base arc where neighbours are at least 3 px (the knockout gap) + w apart, not at a shared pivot on the outline. (c) Add a test that asserts outline area equals the shapely union for every motif at rotations 0\u2013330 in 30\u00b0 steps, plus rot180 and mirror_x.",
+    "evidence": "build/review/ko-darters.png: panels 1\u20132 are the back-orbit darter and its rot180 copy; the fin base and whole body fill with paper. build/review/darter-pair-ko.png. build/review/andante-ko-leg-crop.png: the foreleg rear edge is missing. Script build/review/kocheck.py prints 'darter orbit rot180 pathops 1959.2 shapely 1143.3 <-- MISMATCH' and 'lion andante pathops 10581.4 shapely 10346.5'. build/review/kobisect.py: the mismatch disappears when the outline, spine or membrane mark is dropped."
+   },
+   {
+    "severity": "critical",
+    "target": "deck/motifs/lion.py moleca_wing() l.299-404 (A\u2660 lion in moleca, \u00a7G.2 / \u00a7H.13)",
+    "problem": "The winged lion does not read as winged. The wings do not rise from behind the mane. What shows is a spray of separate leaves fanning up from the lower lobes, the coverts piled below the vent like bubbles or grapes, and a bare single line running up each upper edge to a tiny curl at the apex. The two curls read as insect antennae. Construction faults behind this: P1, the edge primary, is a kinked boomerang (its inner edge bulges). The next feathers then cut it with a 4.2 gap (l.382-383) down to its outer edge plus hatch ticks. The covert-zone cut (l.393) removes the fan's bases, so every primary floats with an open end. Stubs remain at about (462,348) and (476,371). Of the '5 vesica primaries, one half hatched', only 2 to 3 survive whole. At 188 px the lobes read as wheat or palm sprays around a lion on a dish. The same happens on the \u00a7H.13-table spade.",
+    "fix": "Redesign the wing layout, not just the parameters. Root each wing behind the mane at the shoulders. Run the arm with its 3 shingled covert rows up and out along the spade's upper edge, so the curl ends the arm. Hang the 5 primaries from the arm into the lobe as a non-overlapping fan of complete vesicas: at least 4.2 px clear, each with midrib and one hatched half, like the Monarchs leaves in build/review/ref-monarchs-leaves.png. Where a feather must overlap, end the under-feather on the front feather's contour (T-junction) rather than leaving a free gap. Delete P1's edge-riding leaf, or rebuild it as a true vesica. If Track A's narrow spade (306 px) blocks the shoulder route, get the spade corrected to the \u00a7H.13 table first; the builder already flagged this.",
+    "evidence": "build/review/as-emblem-2.5x.png, as-wing-right-4x.png, as-wing-edge-8x.png, wings-roles.png (colour-coded by role: yellow outline, blue midrib, red hatch), wsin-steps.png and ws-steps.png (feather state before and after each cut), f01-2.5x.png (same failures on the H13 spade), as-188-crop-x4.png."
+   },
+   {
+    "severity": "critical",
+    "target": "deck/motifs/lion.py lion_andante() and the _ANDANTE table l.739-779 (tuck front, \u00a7G.3 / \u00a7H.20)",
+    "problem": "The tuck's hero drawing does not read as a lion at 769 or 192 px. It reads as a rodent/goat/porcupine hybrid. The head in profile is small, with a rounded snout and receding chin, like a beaver or hamster. The flame locks are cut open against the face, so the mane reads as quills. The three locks under the chin read as a goat beard. The legs are thin parallel 'table legs' with 5 px paws. The hind legs wobble, because hind_back and hind_front are zigzags (x 118\u2192110\u2192118\u2192110). The tuft is four locks crossing at the terminal (8 plain crossings at lens coords (90\u2013111, \u2212140\u2026\u2212125)) and reads as a lily or star flower. The far wing shows as hatched debris at the top of the lens. The builder rates it 'good at tuck size'; I disagree. The drawing also departs from \u00a7G.3's 'Mane in scalloped arcs', so the frontal and profile lions do not look drawn by one hand.",
+    "fix": "Redraw the design table from a heraldic lion passant. Head about one third of body length, with a squared muzzle, deep jaw, nose pad and heavy brow. Mane as closed, layered locks: G.24 current lines or pointed-ogee scallops, one language shared with the frontal lion, lying over the neck and chest and occluded by the head outline with a T-junction, not an open V. Forearms at least 12 px thick, paws about 1.5\u00d7 the leg width with 3 knuckle scallops, and a hind leg with a single clean hock angle (monotone splines, no zigzag). Tuft as 3 current-line locks with 4.2 interlace gaps, ending in the \u00d86.3 terminal. Tail rising out of the rump contour, not crossing it (plain crossing at (90.5,\u221256.8)).",
+    "evidence": "build/review/tuck-lens-2x.png, andante-head-5x.png, andante-wing-4x.png, andante-legs-4x.png, tuck-192-x4.png. Crossing locations from build/review/crossings2.py."
+   },
+   {
+    "severity": "critical",
+    "target": "deck/motifs/lion.py lion_mark() / _lion_mark_solid() l.579-730 (court hallmark on all 12 courts and the J\u2666 banner, \u00a7G.2 / \u00a7H.0)",
+    "problem": "The mark fails at the size \u00a7H.0 prescribes (\u2264 40 px). At 40 px the face radius is 5.34 and the scallop sag is 2.44, so each scallop leaves 2.44 \u2212 2.1 = 0.34 px clear (1.6 px at 60 px). That is far under \u00a7I.12's 4.2, and under the 3 px knockout gap. The brow and nose sit inside an 8.6 px hole. Gold ink will fill all of this in. As a read, the line mark at 40\u201360 px is a sunflower or cog with ram's horns or earmuffs; the wings are rounded lobes with no pointed primaries. The solid clasp reads as an owl or bat at 48\u201360 px, and at 24\u201332 px as a Mickey-Mouse or bear-head silhouette (disc plus two round ear lobes). Yet the solid clasp is what the builder recommends for \u2264 40 px and for red grounds.",
+    "fix": "Design at 40 px first. Wings: two tall sickle arcs rising above the head, tips higher than the mane's top, so the silhouette is a V or U over a round head (overall about 1:1). Give each wing 3 straight-edged pointed primaries on the trailing edge (\u00a7G.2 'two wing arcs with 3 primaries each'). Mane: a plain ring, or at most 8 scallops with at least 6.3 px sag at 40 px. Face at \u2264 40 px: two \u00d84.2 eye dots and the nose pad only; no brow. At \u2264 32 px use a straight ground line instead of the ripple. Gate the test on knockout_report(min_gap=3) and on forms.tight_spots at 24/32/40.",
+    "evidence": "build/review/mark-line-4x.png, mark-solid-4x.png, mark-1x-both-x2.png (real size, 2\u00d7 nearest neighbour). build/motifs/report-figurative.txt gives 927 px\u00b2 of ground narrower than 4.2 px for the 5 line marks."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py moleca_wing l.382-383 and lion_andante wing and ledge l.963-981",
+    "problem": "Hatch ends in mid-air, against \u00a7B.2 ('clipped to the region and meet the contour's centreline') and \u00a7I.3. 26 of 132 hatch ends in the moleca wings, and 20 of 106 in the andante, end 2.3 to 6.8 px from any drawn line. Examples: wing (507.8,341.4) is 6.3 px off; andante (\u221214,\u2212209.8) is 6.8 px off. Cause: an occluding feather cuts the under-feather's midrib and contour back by the 4.2 px interlace gap, but that feather's hatch keeps running up to where the missing midrib was. The andante ledge also leaves its bottom course without a bottom bedding line: the 45\u00b0 hatch stops on nothing along y 143 (lens coords; y \u2248 683 on the tuck). The B1 geometric motifs have none of these (0 of 120 on the rosette; knee, stalactite and rowel are also clean).",
+    "fix": "Treat hatch as tone. Occlude it with gap 0 against the front shape's outline, so it butts onto the occluding contour. Delete any hatch segment whose far end no longer lies on its own midrib or contour after cuts. Draw the ledge's ys[-1] bedding line and close its left end, or let it butt onto the lens rule. Add build/review/hatchends.py as a test that every hatch end lies within 1.3 px of a contour centreline.",
+    "evidence": "build/review/hatchends.py output: 'moleca wings \u2026 hatch ends 132 not on a contour 26', 'lion andante \u2026 106 \u2026 20', rosette, ribbon leaf, stalactite, knee and rowel all 0. Crops: build/review/as-wing-edge-8x.png, andante-wing-4x.png, andante-ledge-6x.png."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/rice.py rice_wreath() l.265-289 and rice_stalk() (\u00a7G.5, \u00a7G.6, \u00a7H.15 A\u2663 wreath, \u00a7H.20 tuck wreath)",
+    "problem": "The wreath has no stem. The final Frag contains 0 marks with role 'stem', because each leaf pair's filled shape cuts it away (l.267). The leaves float in paired V's; the tip spikes float free of any stalk; and the reed-node knot sits about 10 px from the stem ends, tying nothing. The knot reads as a \u2640 or cherry glyph. All wreath leaves fall below 12.6 px wide and fall back to plain vesicas with no midrib or hatch, which removes exactly what separates G.4 ribbon leaves from laurel. At 1x (A\u2663 arc and tuck at 769 and 192 px) the whole reads as a classical laurel wreath with wheat ears at the tips. That breaks \u00a7G.6 ('no laurel or olive'), \u00a7H.15's must-avoid on laurel, and \u00a7H.8's must-avoid on wheat or generic grain. The flowering stalk alone also reads as an evenly alternating wheat or barley ear.",
+    "fix": "Keep the stem continuous. Cut it only where a leaf truly overlaps it (or cut the leaf bases against the stem instead), and run both stems through the node ellipse with 4.2 interlace gaps, tails ending in terminals. Widen the leaves to at least 12.6 px (ratio 10, leaf_len at least 126, fewer pairs) so the midrib and perpendicular half-hatch survive. Or use a stronger two-arc S, around 20\u201330\u00b0, so they read as streaming ribbons. Make the tip spikes airier: longer awns (about 1.5\u20132\u00d7 the spikelet), spikelets pressed to the stalk, and male florets on longer drooping pedicels, so the spikes cannot read as wheat ears.",
+    "evidence": "build/review/wreathroles.png (role render: no green stem anywhere), wreath-2x.png, wreath-knot-6x.png, wreath-tip-4x.png, rice-1x.png, fig-tuck-lens-board-769.png, tuck-192-x4.png. Reference: build/review/ref-monarchs-leaves.png (Jinkins leaves always hang from a continuous stem, with midrib and half-hatch)."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/fauna.py blind_salamander() (seal, \u00a7H.20; \u00a7I.13, \u00a7I.23)",
+    "problem": "The gill plumes clot, and the pose has antler and antenna reads. The salamander has 28 plain X crossings with no interlace gap: spine \u00d7 spine 6, barb \u00d7 barb 7, spine \u00d7 barb 8, outline \u00d7 limb 4, plus others. For example, three gill spines cross at seal coords (217,144). All 3 plumes per side root at one point, so their bases fuse into a solid gold knot (10\u00d7 crop), and at 83 px this becomes a blob. The upper gill trio rises straight off the head like antlers. The upper forelimb stands vertically out of the back like a periscope. Blind-salamander gills are three feathery plumes swept back from behind the head.",
+    "fix": "Root the 3 plumes at 3 separate stations along the neck, at least 6.3 px apart. Sweep them backward at 30\u201360\u00b0 to the body axis, with barbs on the outer side, and add interlace gaps where they overlap a limb or the outline. Pose both forelimbs laterally, splayed from the flanks. Add a crossings test (build/review/crossings.py) to test_figurative.",
+    "evidence": "build/review/fig-seal-limestone-330.png, sal-head-4x.png, sal-gills-10x.png, sal-body-3x.png. build/review/crossings.py prints '28' with the counts by role."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/fauna.py fountain_darter() DARTER table l.101-112 and fan l.215-225 (\u00a7G.25, back \u00a7H.19, K\u2665 window)",
+    "problem": "The 9 spines converge to a sub-pixel pivot, so the fin base is a solid black wedge at 1x. This convergence is also the trigger for the knockout union failure above. The eye ring has r 3.15 at w 2.1, which leaves a \u00d84.2 hole, and the \u00d84.2 pupil fills it exactly. So the 'round eye with a dot' prints as a \u00d88.4 blob (in knockout, a solid disc with an anti-aliasing sliver). The concave membrane scallops between spine tips make the fin read as a spiky crown or sawtooth, and the 8 saddle ticks over the dashed stitch read as a ruler.",
+    "fix": "Start the spines on a base arc where adjacent spines are at least w + 3 px apart, and close the fin base with a fin-base line. Membrane: shallow convex arcs between tips, so the fan reads as a fin rather than a crown. Eye at 100 px: either ring only (\u00d88.4), or a ring of r \u2265 6.2 with the \u00d84.2 pupil, giving 3 px clear. Keep ring plus dot for \u2265 150 px.",
+    "evidence": "build/review/darter100b-6x.png, darter100b-ko-6x.png, ko-darters.png (panel 3: the eye is a solid disc)."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py lion_face / lion_ears / mane_rings / lion_moleca_parts (A\u2660 head, \u00a7G.2)",
+    "problem": "The frontal head reads as a cartoon teddy bear or cat, not a heraldic lion. Round ears with inner folds sit on a perfect face circle. The mane is uniform semicircular 'cloud' scallops. The chin arc under a drooping upper lip makes a \u03c9 cat-mouth or smile. The ears are not in \u00a7G.2's head spec (face circle, almond eyes, trapezoid nose, closed mouth). The mane rings also continue below the chin between the forelegs as a column of isolated fragments: ring-1 peak at (375,298), ring-2 cusp '^' at (375,304) and ring-3 peak at (375,322). They read as a stack of chevrons or a zipper. The paws are cartoon mittens, and the vent reads as a dish.",
+    "fix": "Drop the ears, or reduce them to small pointed forms half-hidden in a mane break. Drop the chin arc: the drooping lip alone is the closed mouth. Cut all mane rings below about cy + 28 between the forelegs, or replace them with a chest ruff of 3 current-line locks. Consider pointed-ogee scallops (still 'scalloped arcs') so the mane reads as locks, and share that language with the andante. Give the vent 2\u20133 open ripple arcs rather than a closed banded ellipse.",
+    "evidence": "build/review/as-face-8x.png, as-head-4x.png, as-paws-vent-6x.png."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/lion.py lion_moleca_parts (vent / mane cuts)",
+    "problem": "Cut remnants are left as ragged 1\u20133 px specks on the vent rim beside the paws, at (345.8,340), (351.7,339.5), (397.5,339.5) and (403.3,340). drop_specks is applied only to the wing hatch (\u00a7I.14: no ragged ends).",
+    "fix": "Run drop_specks(frag, 4.2, roles=None) on the vent, mane and paws after the occlusion cuts, or extend the paw cut so the rim ends cleanly at the 4.2 gap.",
+    "evidence": "build/review/as-paws-vent-6x.png."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/hair.py current_lines(gold='lock'|'alternate') / lock_band",
+    "problem": "The flat-gold lock ends at the root in a straight diagonal chop with no Aquifer contour. At the tip, a gold wedge pokes out beyond the terminal dots. These uncontoured gold edges look unfinished and depend on registration.",
+    "fix": "Close the band at the root with a contour stroke, or clip the gold to the band between the outermost lines. End the gold at the centre of the last terminal.",
+    "evidence": "build/review/f09-3x.png (groups 3 and 4)."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/fauna.py gill_plume() (\u00a7G.15; Q\u2660 ruff)",
+    "problem": "Each barb is a J-hook curling back toward the base, so the plume reads as a thorny briar stem rather than a feathery gill.",
+    "fix": "Make the barbs straight, or gentle arcs leaning toward the tip at about 35\u201350\u00b0, still shortening toward the tip.",
+    "evidence": "build/review/f08-4x.png."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/geometric.py source_rosette small (R40) and tiny (R16) recipes",
+    "problem": "The small D2 rosette used on the A\u2665 is a bullseye plus a band of ribbed cells, and reads as a dartboard or casino chip. The tiny R16 jewel (K\u2660 brow, finial) is the camera-aperture icon. Both lose the rosette's signature bubble ring and wave.",
+    "fix": "In the small recipe, replace the bullseye's inner ring with the bubble ring (\u00d86.3 knockout dots), keeping ribs straight for D2. For the tiny recipe, use a crater dot plus a 6-bubble ring or 6 straight ribs instead of swirling blades.",
+    "evidence": "build/review/rosette-small-3x.png, rosette-tiny-5x.png."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/geometric.py cypress_knee / arch",
+    "problem": "The knees' half-hatch runs horizontal (0\u00b0), so each knee reads as a ladder or ribcage (\u00a7B.2 gives 45\u00b0 for panels). The arcade keystone projects about 8 px above the extrados, so each arch reads as a padlock or bell.",
+    "fix": "Hatch the knees at 45\u00b0 (DIAG). Set the keystone inside the arch ring as its top voussoir, flush or at most 2 px proud of the extrados.",
+    "evidence": "build/review/knee-4x.png, arcade-4x.png."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/sheet_figurative.py context_renders \u2192 build/motifs/fig-AS-*.svg",
+    "problem": "The Aquifer spade underlay sits in the <g id=\"paper\"> group. These are the only A\u2660 proofs, so anyone checking separations from them would see an empty ink plate (\u00a7K: gold above the suit ink).",
+    "fix": "Put the spade underlay in the ink group, drawn under gold, or name the files *-preview so they are not mistaken for print files.",
+    "evidence": "grep of build/motifs/fig-AS-limestone.svg: the first paper path is the spade, filled #15242B."
+   }
+  ]
+ },
+ {
+  "lens": "spec",
+  "verdict": "Not ready to hand to the card builders yet. The core print rules hold, but several shared motifs don't match their \u00a7G/\u00a7H definitions and three tests pass without actually checking what they claim. What holds, all verified: every layer group is in brief order; knockouts are true geometric holes (only the background is in paper); only the five legal widths appear; no transforms, <text>, filters or gradients; rsvg-convert and resvg agree to anti-aliasing (no pixel differs by more than 30%; worst diff 12\u201327%). The numeric specs match the brief: the rosette (crater r20 with 8 ribs, rings 30/39/50, 24 \u00d7 \u00d87 bubbles at r62, 24 ribs twisted exactly 25\u00b0 across r72\u2013104, rule r130), the lens (R 463.22, centres 181.8/568.2), the vent roundel, karst voids, reed ladder and running wave (flow/up flips are exact mirrors). Interlace keeps 4.20 px clear, and half_hatch ends exactly on contour centrelines on new shapes. The wild-rice stalk's botany is correct. Main problems, worst first: rice_wreath erases its own stem; the \"D2\" rosette is not mirror-symmetric (and the test is blind to it); the A\u2660 wings don't grow from behind the mane; the Lion Mark's mane can't be resolved at any size; the andante is cut off by its own lens clip; the salamander breaks below seal size (the Q\u2660 mirror needs it at about \u00d8100); the darter's stitch line covers only 39% of the flank. Scratch scripts, renders and crops are all in /home/luke/Projects/design/san-marcos-deck/build/review/mlib/.",
+  "issues": [
+   {
+    "severity": "critical",
+    "target": "deck/motifs/rice.py:267 rice_wreath (interlace loop)",
+    "problem": "The \u00a7G.6 'arc stem' is entirely removed by the interlace cut. Each leaf springs from the stem at only 24\u00b0, so the stem lies within leaf outline + 4.2 + w/2 along its whole length, and `f = cut(f, lf.shape(), MIN_CLEAR) + lf` erases it. The wreath is loose leaf pairs with no stem, and the reed-node knot ties nothing. With every leaf also falling back to a plain, un-hatched vesica (see report-figurative.txt), the result reads as a classical laurel/olive wreath, the one thing \u00a7G.6 exists to replace. Both the A\u2663 (\u00a7H.15) and tuck (\u00a7H.20) wreaths are affected. test_wreath_pairs_shrink never checks the stem.",
+    "evidence": "build/review/mlib/t_wreath3.py: rice_wreath_arc(375,470,175) keeps 0 stem pieces (0.0 px) and the knot is 8.12 px from the nearest mark. The sheet specimen (r150) and the test case (r150, 64/10) also keep 0 px, with knot gaps of 4.91 and 6.22. tuck_lens_demo keeps 2 fragments (28.3 px in total). With angle=40 the stem survives (150.6 px), which confirms the cause. Crops: build/review/mlib/wreath-ac-roles-3x.png (stem roles coloured red: none present), wreath-ac-default-2x.png.",
+    "fix": "Don't cut the stem by the leaves that spring from it. Interlace the leaves only among themselves: `lv = Frag(); for lf in leaves: lv = cut(lv, lf.shape(), MIN_CLEAR) + lf; f = stem + lv`. If a later pair genuinely crosses the stem, cut the stem only by `lf.shape().difference(Point(base).buffer(0.45*leaf_len))`. Run the stem ends into the knot ellipse (gap 0) so it ties them. Add test asserts: surviving stem length \u2265 0.8 \u00d7 path length per branch, and knot.distance(stem) == 0. For the leaves, consider a hatched-half-without-midrib variant (outline plus perpendicular hatch on one half) so wreath leaves below 12.6 px keep the half-hatch that separates them from laurel."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/geometric.py:253-278 rib_band / source_rosette(twist=False); deck/motifs/test_motifs.py:34-36,70-77",
+    "problem": "The README and docstring say `twist=False` gives the D2 variant, which \u00a7G.1 requires 'where D2 is needed' (the A\u2665 rosette, \u00a7H.14, 'straight ribs', on a bilateral heart). With alternate-cell hatching and the ribs starting at \u221290\u00b0, a mirror maps each hatched cell onto an unhatched one, so the rosette is not mirror-symmetric. test_rosette_symmetry still passes because `_dev` uses shapely's discrete hausdorff_distance, which only measures from vertices. Hatch-line corners sit inside the neighbouring rib and rule strokes, so a whole missing hatch line scores \u22480.",
+    "evidence": "build/review/mlib/t_d2.py: symmetric difference against the mirror is 4234 px\u00b2 of 13874 px\u00b2 ink at R130 (31%), 3518 px\u00b2 at R90, and 360 px\u00b2 at R40/MEDIUM (the A\u2665), while the discrete Hausdorff reports 0.021/0.022/0.009. The C_N rosette's C2 is fine (11.9 px\u00b2 residue). Overlay crop: build/review/mlib/d2-r40-vs-mirror-6x.png (the red mirror copy shows in cells the original leaves open).",
+    "fix": "When twist == 0, centre a cell on each axis: in source_rosette pass `start=-90 - 180/nb` to rib_band. Mirroring about x then maps cell k to \u2212k and mirroring about y maps it to n/2 \u2212 k, both the same parity for n = 12/20/24. Replace `_dev` in the tests with an area measure, e.g. `a.symmetric_difference(b).area < 0.005 * a.area`, and rerun it for C2 as well."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py:240-404 WingSpec(root=76) / moleca_wing / _right_edge",
+    "problem": "\u00a7G.2/\u00a7H.13 require wings 'spread from behind the mane into both lobes, then sweep up along the spade's upper edges'. The wing's arm is instead the silhouette inset from root=76\u00b0 round the lobe bottom. The coverts and arm sit below the vent the lion sits on, and the primaries fan up from there, so the wings attach to nothing on the lion. At 2\u00d7 they read as leaf sprays over a bunch of grapes (the covert scallops). B2's reason ('the mane is ~2 px from the 12 px inset at the shoulders') holds only at \u221220\u00b0 to \u221260\u00b0. At 20\u201340\u00b0 about the head, below and beside the mane, there is ample room.",
+    "evidence": "build/review/mlib/wingroom.py (Track A spade / \u00a7H.13-table spade): the arm's right half spans y 383.6\u2013409.0 (y 383.3\u2013399.9 on the \u00a7H.13 spade), while the vent rim spans y 334\u2013366. The inset silhouette's distance beyond the mane's outer edge (r 61.05) is 7.1\u201312.3 px at \u221240/\u221220\u00b0 but 79.3/112.1 px at 20/40\u00b0 (103.6/121.2 px on the \u00a7H.13 spade). Crops: build/review/mlib/as-white-emblem-2x.png, moleca-wing-4x.png.",
+    "fix": "Root the arm under the mane's lower-right scallops (about 25\u201335\u00b0 about the head, r \u2248 55, hidden by the mane cut). Run the shoulder and covert rows outward into the lobe, fan P2\u2013P5 from a wrist near the lobe's widest point, and keep P1 and the tendril along the upper edge to the apex curl as now. This needs a new arm guide (an arc from the mane edge to the inset silhouette), not just WingSpec tuning. Add a test that the arm's root lies within mane_sil.buffer(w + 4.2)."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py:605-730 lion_mark / _lion_mark_solid (_MARK face_r 9.4, mane_peak 4.3)",
+    "problem": "The simplified Lion Mark (\u00a7G.2; on all 12 courts at \u226440 px per \u00a7H.0) cannot resolve its 12-scallop mane at any size. The scallop peaks are only 1.4\u20133.7 px outside the face circle, and each scallop is 1.6\u20134.3 px wide, drawn with a 2.1 px stroke. The mane and face circle fuse into one thick knotted band (\u00a7I.12 requires \u2265 4.2 px clear). In solid mode the Aquifer face-circle stroke doubles the clog, and at 48\u201360 px the clasp reads as an owl or bat; at 24\u201332 px, as a koala.",
+    "evidence": "build/review/mlib/t_mark2.py: clearance between scallop and face circle at the peak is 1.63 px at 60, 0.86 at 48, 0.34 at 40, \u22120.17 at 32 and \u22120.69 at 24 (overlapping); scallop width 4.27\u21921.62 px; ground narrower than 4.2 px covers 195 px\u00b2 of a 1090 px\u00b2 bbox at 40 px. Crops: build/review/mlib/mark-line-row-6x.png, mark-solid-row-6x.png.",
+    "fix": "Re-proportion so the head and mane take about 55\u201360% of the width (the wings currently take about 70%). In the solid clasp, drop the inner Aquifer face-circle stroke (lion.py:708) so the scalloped silhouette edge alone defines the head and the features sit on the gold. Guard the mane: warn when mane_peak\u00b7k \u2212 w < 4.2. Ask the CD whether 8 scallops are acceptable at \u226440 px, since 12 physically cannot be drawn at FINE."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py:1000 lion_andante (clip_lens) + _ANDANTE table; deck/motifs/test_figurative.py:87 test_andante_in_lens",
+    "problem": "The design table puts parts of the lion outside the lens inset, and the final `clip(f, lens_poly.buffer(-(w/2+GAP)))` silently cuts them off. The snout's bridge-to-nose profile is removed (the bridge ends in mid-air and the nostril tick floats), the top tail-tuft lock is sliced open, and a primary tip is cut. test_andante_in_lens only checks the already-clipped output, so it can never fail.",
+    "evidence": "build/review/mlib/t_andante3.py: 142.2 px\u00b2 of ink is removed by the clip, in pieces of 78.8 px\u00b2 (tuft, x 98\u2013112, y \u2212167\u2026\u2212140), 29.8 px\u00b2 (snout, x \u2212156\u2026\u2212149, y \u221266\u2026\u221251) and 23.9 px\u00b2 (feather tip, x \u221221\u2026\u22128, y \u2212213\u2026\u2212206). Crops: build/review/mlib/andante-nose-clip-8x.png, andante-tuft-cmp.png (clipped vs unclipped).",
+    "fix": "Move the head, nose, lip, jaw, brow, eye, ear and mane points +6 px in x (the inset boundary at y \u221258 is x \u2248 \u2212152.3). Rotate or shorten tuft lock ((2,\u22122)\u2192(\u221212,\u221234)) and the far-wing top primary so everything fits before clipping. Keep the clip only as a safety net, warning when `unclipped.shape().difference(clipped.shape()).area > 1`. Change the test to assert the unclipped drawing already lies inside the lens inset."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/fauna.py:315-432 blind_salamander (radius < 74)",
+    "problem": "`radius` is public, and \u00a7H.2 needs one blind salamander inside the Q\u2660 \u00d8110 scrying mirror. Below the seal size the figure falls apart without warning. The spine scales linearly, but limbs, gills and body width scale with sqrt(L/300), and the 11 costal grooves keep their count. At radius 30, the gills sever the outer fore-foot (its toes float as loose dots), the inner hind foot is left as a detached 'U' inside the C, and the grooves fuse into a solid comb.",
+    "evidence": "build/review/mlib/t_sal2.py: at radius 30 the costal grooves are 0.37 px clear (2.27 px at radius 50) and limb pieces include fragments of 3, 9 and 9 px (radius 50: 3 and 7 px). The seal size (radius 74) is fine: grooves 4.59 px clear. Crops: build/review/mlib/sal-r30-roles-8x.png (limbs red, gills jade), sal-r30-mirror-ko-8x.png (knockout in a \u00d8100 jade field).",
+    "fix": "Scale limb and gill lengths and body half-widths linearly with L below the seal size. Set the groove count to min(11, floor(span/(w+4.2))). In the gill\u2013limb interlace, drop limb pieces no longer connected to the body, or pose the inner limbs away from the gills. Add a `preset='mirror'` sized for a \u00d8\u224896 field (fewer grooves, 4-barb gills) and a warning when any spacing drops below 4.2. Add a test at radius 30."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/fauna.py:114,151,202 DARTER['stitch'], fountain_darter eye",
+    "problem": "Species accuracy (\u00a7G.25, \u00a7I.23): the stitch line runs only from behind the gill to mid-body (x 76.5\u219236, 4 dashes, 39% of the body). The reference photo shows the dashes along the whole flank to the caudal peduncle, most prominent at the rear. Separately, the 'round eye with a dot' is a solid \u00d88.4 disc: the ring's hole is exactly \u00d84.2 and the \u00d84.2 pupil is centred in it. The code computes offset 0, contradicting its own 'pupil kisses the ring's inner edge' comment, and the knockout leaves 2 jade sliver islands (0.18 px\u00b2) inside the paper eye. The docstring also says the saddles stop '4.2 px clear' of the stitch; the table uses 3.0.",
+    "evidence": "build/review/mlib/t_darter.py: stitch x \u221213.5\u202626.5 of body \u221250.8\u202651.0 (39%), 4 dashes; eye hole \u00d84.2 equals the pupil \u00d84.2, leaving 0.145 px\u00b2 of visible ground; t_darter_eye.py: jade inside the eye disc 0.18 px\u00b2 in 2 pieces. Tested in memory: stitch x1=22 with saddles x1=30 gives 5 dashes to the peduncle and 7 saddles (one lost) at L=100. Crops: build/review/mlib/darter100-8x.png, darter100-ko-8x.png, darter100-fullstitch-8x.png, ref-darter.png.",
+    "fix": "Set stitch x1 \u2248 22 (peduncle) and saddles x1 \u2248 30, accepting 7 saddles at L=100 (the species has 'about eight indistinct' saddles), or ask the CD. For the eye, either draw a solid eye dot explicitly and document it, or enlarge the ring (centreline r \u2265 4.2) and offset the pupil by (er \u2212 w/2 \u2212 pd/2) along +x so a crescent of ground shows; also stop the dot and the ring hole sharing one boundary, which is what creates the slivers. Fix the docstring (3.0, not 4.2)."
+   },
+   {
+    "severity": "major",
+    "target": "deck/motifs/lion.py:963-981 lion_andante ledge",
+    "problem": "The 3-course ledge has no bottom bedding line and no left closing line. The bottom (hatched) course's 45\u00b0 hatch lines end in mid-air, breaking \u00a7B.2/\u00a7I.3 ('hatch lines butt onto contours') and B1's own documented rule ('no hatch ending in mid-air', fault_plinth).",
+    "evidence": "build/review/mlib/t_andante2.py: 21 of 106 hatch ends are not on any drawn centreline, 11 of them at y = 143 (the ledge bottom), 12.0 px from the nearest line. Crop: build/review/mlib/andante-ledge-4x.png.",
+    "fix": "Add `ys[-1]` to the drawn course lines (loop over `ys[1:]`, not `ys[1:-1]`), and close the ledge's left end with a vertical scarp line at `ledge_poly.bounds[0]`, or clip the hatch to a region that ends on drawn lines."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/geometric.py:713-750 stalactite",
+    "problem": "Below the default 64 \u00d7 20 the growth rings are not thinned to fit. Three rings are packed into a few px of axis and fuse into a solid wedge, and the half-hatch vanishes silently. The Q\u2660 diadem needs nine graduated stalactites (\u00a7H.2), so the motif fails at its intended use sizes.",
+    "evidence": "build/review/mlib/t_small.py: at L48 \u00d7 15 the ring span is about 6 px (\u22482 px pitch) with 1 hatch line; L36: 0 hatch lines; L28: 2 rings; L22: 1 ring; no warnings. Crop: build/review/mlib/stalactites-6x.png.",
+    "fix": "Set `rings = min(rings, int(span // (w + MIN_CLEAR)))` (line 735) and warn when rings or hatch drop below the \u00a7G.13 '3 arcs, one half hatched'. For small points, prefer the hatch over the rings, since the half-hatch is what defines the motif."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/geometric.py:1162 rowel_star (hub=9.0 fixed); geometric.py:927 comb_spray (curved rachis)",
+    "problem": "Both degrade silently at small sizes. The line-mode rowel keeps hub=9 whatever r_out is, so at r_out \u2264 16 the points are 1\u20137 px and the star collapses into a knotted ring (K\u2666 sash and key-bow rowels on jade use line mode). A comb spray on a tight arc crowds its concave-side ticks below 4.2 px clear.",
+    "evidence": "build/review/mlib/t_small.py plus crop rowels-4x.png (r_out 40/24/16/12/10). build/review/mlib/t_comb.py: minimum centreline distance between concave-side ticks is 4.24 px (2.1 clear) on an r25 rachis and 4.97 px (2.9 clear) on r40; crop comb-curved-6x.png.",
+    "fix": "Rowel: `hub = min(hub, 0.25*r_out)`; drop the axis and hatch when the point width is below 2\u00b7(w+4.2); warn when r_out \u2212 hub < 3\u00b7w. Comb spray: raise the pitch by the rachis curvature on the concave side (pitch \u2265 (w+4.2)/sin(angle) \u00d7 R/(R \u2212 tick)), or warn."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/hair.py:110-125 lock_band / current_lines(gold=...)",
+    "problem": "The docstring claims the band's ends 'lie under the lines' terminals / root, so no raw edge shows'. With the default 9 px stagger, each flat-gold lock ends in an unstroked diagonal gold wedge between the staggered terminals.",
+    "evidence": "build/review/mlib/t_hair.py: 21.5 px of gold-lock edge is not covered by any Aquifer line or terminal, including 6.5 px and 5.3 px pieces at the free ends and 4.9 px at each root. Crop: build/review/mlib/hair-alt-8x.png.",
+    "fix": "End the band at the projection of the shorter line's end onto the longer line (cut the band with the normal through b[-1]), so the gold stops under the inner terminal. Alternatively stroke the closing chord in the line colour. Correct the docstring."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/lion.py:402 moleca_wing drop_specks; lion.py:517-546 vent/mane cuts",
+    "problem": "`drop_specks(wf, 4.2)` defaults to roles=('hatch',), and the vent and mane are never cleaned. The occlusion cuts leave sub-3 px stroke stubs that render as stray round-cap dots on the rim, beside the paws and in the coverts. Between the forelegs, the three mane rings' bottom scallops also survive as a stacked \u2323 ^ \u203f glyph that reads as a second face under the chin.",
+    "evidence": "build/review/mlib/t_moleca2.py: 14 fragments under 3 px, e.g. vent 0.36 px at (352.5, 339.4), covert 0.64 px at (347, 390.8), leaf 1.5 px at (462.6, 348.6), arm 2.27 px at (356.8, 384.3), each mirrored. Crop: build/review/mlib/moleca-chest-specks-10x.png (also moleca-head-6x.png).",
+    "fix": "Call `drop_specks(..., 4.2, roles=None)` on the wings, vent and mane in lion_moleca_parts. Cut the mane with the region between the forelegs (x 375\u00b123, from the chin to the vent), or draw deliberate chest-fur there."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/core.py:181-189 Frag.__add__/__iadd__, frag()",
+    "problem": "Composition drops QA warnings. `{**self.meta, **other.meta}` lets the right operand's 'warnings' list replace the left's, so assembling a card silently loses brief-forced spacing warnings. `frag()` / `+=` also aliases the first part's list. rice.py:282 already works around this locally.",
+    "evidence": "build/review/mlib/t_api.py: ripple_rings warns ['\u2026minor-axis clear gap -1.0 < 4.2'] and fault_step(double=6) warns ['\u20263.9 < 4.2'], but (a + b) and frag(a, b) keep only the fault_step warning.",
+    "fix": "Merge lists explicitly in __add__/__iadd__: `meta['warnings'] = list(dict.fromkeys(self.meta.get('warnings', []) + other.meta.get('warnings', [])))`, and copy lists (not references) in Frag.__init__ and select()."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/core.py:219-226 Frag.transformed; README.md:37-40",
+    "problem": "The rigidity check only tests det = \u00b11 and a unit first column. Shears and det-1 non-uniform scales pass, contradicting 'Frag accepts only rigid transforms\u2026 A scaling matrix raises an error'. Geometry would then be distorted silently, e.g. a circle drawn as an ellipse.",
+    "evidence": "build/review/mlib/t_api.py: transformed((1,0,0.7,1,0,0)) and transformed((0.6,0.8,0,1/0.6,0,0)) are both accepted; the second stretches y by 1.667.",
+    "fix": "Also require `abs(c*c + d*d - 1) < 1e-9 and abs(a*c + b*d) < 1e-9`, and extend test_rigid_only with a shear case."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/sheet.py layered_svg(under=) / fig-AS-*.svg; README.md 'Knockout lines inside solid pips'",
+    "problem": "The A\u2660 context SVGs (and cells f00/f01) put the Aquifer spade (#15242B) in <g id='paper'> so the gold lion shows above it. In a real card the spade belongs in `ink`, which sits above `gold` in the \u00a7K stack, so a line-mode gold lion would be hidden. The README gives no recipe for gold inside an ink solid.",
+    "evidence": "Layer dump of build/motifs/fig-AS-limestone.svg and cells/f00-line.svg: the paper group has fills ['#15242B', '#F4EFE3']; gold has only #B08D57; ink is empty.",
+    "fix": "Document the A\u2660 recipe in the README: `fill(knockout(spade_d, lion), color=T.INK)` in ink plus `lion` in gold, so the gold sits exactly in the ink's holes (add a trap if the printer wants one). Render the A\u2660 specimen that way instead of with a paper-group underlay."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/fauna.py:303 SALAMANDER['gills'] / gill_plume at seal size",
+    "problem": "On the seal the external gills are about twice the head width and branch like antlers above the head. The reference photo shows short bushy tufts about half the head width. The size is forced by \u00a7G.15 (6\u20138 barbs at \u2265 6.3 px spacing needs a spine of about 50 px), so this needs a CD decision rather than a silent fix.",
+    "evidence": "build/review/mlib/t_sal2.py at radius 74: gill spine lengths 37\u201353 px vs head width \u2248 22 px. Crops: build/review/mlib/sal-seal-4x.png vs ref-sal.png.",
+    "fix": "Ask the CD to allow 4-barb plumes for the salamander's gills (spine \u2248 28 px), or widen the head (hw 10.6 \u2192 about 14) so the gills read in proportion."
+   },
+   {
+    "severity": "minor",
+    "target": "deck/motifs/README.md:117,269; fauna.py:151",
+    "problem": "README and docstring inaccuracies. The running_wave_d2 row shows `gap=36` as the signature default, but the code default is 30.0. The ribbon_leaf row shows `ratio=11`, but RIBBON_RATIO = 10.0. The fountain_darter docstring says the saddles stop '4.2 px clear' of the stitch, but DARTER uses stitch_clear=3.0. The rigid-transform claim and lock_band's 'no raw edge' claim are covered in the findings above.",
+    "evidence": "build/review/mlib/t_readme.py output: 'running_wave_d2: README gap=36 but code default gap=30.0'; 'ribbon_leaf: README ratio=11 but code default ratio=10.0'.",
+    "fix": "Update the two README rows to the real defaults (keep gap=36 only in the back-band example) and correct the darter docstring."
+   }
+  ]
+ }
+]

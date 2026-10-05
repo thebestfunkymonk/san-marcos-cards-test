@@ -1,0 +1,324 @@
+{
+ "back": [
+  {
+   "corner": "TL",
+   "bbox": [
+    44.45,
+    44.45,
+    98.55,
+    98.55
+   ],
+   "centroid": [
+    71.5,
+    71.5
+   ],
+   "side_gap": 6.95,
+   "tb_gap": 6.95,
+   "side_line": 6.95,
+   "tb_line": 6.95,
+   "min_to_flood_outline": 6.95
+  },
+  {
+   "corner": "TR",
+   "bbox": [
+    651.45,
+    44.45,
+    705.55,
+    98.55
+   ],
+   "centroid": [
+    678.5,
+    71.5
+   ],
+   "side_gap": 6.95,
+   "tb_gap": 6.95,
+   "side_line": 6.95,
+   "tb_line": 6.95,
+   "min_to_flood_outline": 6.95
+  },
+  {
+   "corner": "BL",
+   "bbox": [
+    44.45,
+    951.45,
+    98.55,
+    1005.55
+   ],
+   "centroid": [
+    71.5,
+    978.5
+   ],
+   "side_gap": 6.95,
+   "tb_gap": 6.95,
+   "side_line": 6.95,
+   "tb_line": 6.95,
+   "min_to_flood_outline": 6.95
+  },
+  {
+   "corner": "BR",
+   "bbox": [
+    651.45,
+    951.45,
+    705.55,
+    1005.55
+   ],
+   "centroid": [
+    678.5,
+    978.5
+   ],
+   "side_gap": 6.95,
+   "tb_gap": 6.95,
+   "side_line": 6.95,
+   "tb_line": 6.95,
+   "min_to_flood_outline": 6.95
+  }
+ ],
+ "front": [
+  {
+   "corner": "BL",
+   "bbox": [
+    28.95,
+    985.95,
+    83.05,
+    1040.05
+   ],
+   "centroid": [
+    56.0,
+    1013.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "BR",
+   "bbox": [
+    685.95,
+    985.95,
+    740.05,
+    1040.05
+   ],
+   "centroid": [
+    713.0,
+    1013.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "TL",
+   "bbox": [
+    28.95,
+    28.95,
+    83.05,
+    83.05
+   ],
+   "centroid": [
+    56.0,
+    56.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "TR",
+   "bbox": [
+    685.95,
+    28.95,
+    740.05,
+    83.05
+   ],
+   "centroid": [
+    713.0,
+    56.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  }
+ ],
+ "tback": [
+  {
+   "corner": "BL",
+   "bbox": [
+    53.95,
+    960.95,
+    108.05,
+    1015.05
+   ],
+   "centroid": [
+    81.0,
+    988.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "BR",
+   "bbox": [
+    660.95,
+    960.95,
+    715.05,
+    1015.05
+   ],
+   "centroid": [
+    688.0,
+    988.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "TL",
+   "bbox": [
+    53.95,
+    53.95,
+    108.05,
+    108.05
+   ],
+   "centroid": [
+    81.0,
+    81.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "TR",
+   "bbox": [
+    660.95,
+    53.95,
+    715.05,
+    108.05
+   ],
+   "centroid": [
+    688.0,
+    81.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  }
+ ],
+ "flat_front": [
+  {
+   "corner": "BL",
+   "bbox": [
+    28.95,
+    985.95,
+    83.05,
+    1040.05
+   ],
+   "centroid": [
+    56.0,
+    1013.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "BR",
+   "bbox": [
+    685.95,
+    985.95,
+    740.05,
+    1040.05
+   ],
+   "centroid": [
+    713.0,
+    1013.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "TL",
+   "bbox": [
+    28.95,
+    28.95,
+    83.05,
+    83.05
+   ],
+   "centroid": [
+    56.0,
+    56.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  },
+  {
+   "corner": "TR",
+   "bbox": [
+    685.95,
+    28.95,
+    740.05,
+    83.05
+   ],
+   "centroid": [
+    713.0,
+    56.0
+   ],
+   "side_to_fold": 28.95,
+   "tb_to_fold": 28.95
+  }
+ ],
+ "flat_back": [
+  {
+   "corner": "BL",
+   "bbox": [
+    53.95,
+    960.95,
+    108.05,
+    1015.05
+   ],
+   "centroid": [
+    81.0,
+    988.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "BR",
+   "bbox": [
+    660.95,
+    960.95,
+    715.05,
+    1015.05
+   ],
+   "centroid": [
+    688.0,
+    988.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "TL",
+   "bbox": [
+    53.95,
+    53.95,
+    108.05,
+    108.05
+   ],
+   "centroid": [
+    81.0,
+    81.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  },
+  {
+   "corner": "TR",
+   "bbox": [
+    660.95,
+    53.95,
+    715.05,
+    108.05
+   ],
+   "centroid": [
+    688.0,
+    81.0
+   ],
+   "side_to_fold": 53.95,
+   "tb_to_fold": 53.95
+  }
+ ]
+}

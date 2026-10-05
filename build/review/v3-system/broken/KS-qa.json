@@ -1,0 +1,275 @@
+{
+ "id": "KS",
+ "stem": "KS",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    56.16,
+    46.0,
+    111.83,
+    142.0
+   ],
+   "index-rank/br": [
+    638.17,
+    908.0,
+    693.84,
+    1004.0
+   ],
+   "index-pip/tl": [
+    53.0,
+    164.0,
+    115.0,
+    239.64
+   ],
+   "index-pip/br": [
+    635.0,
+    810.36,
+    697.0,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 86.45,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 7e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 1.8,
+  "balance": {
+   "ink": 7.1,
+   "gold": 1.8,
+   "red": 18.7,
+   "jade": 4.7,
+   "paper": 67.7
+  },
+  "window_px2": 443879,
+  "detail": [
+   "balance: paper 67.7% (target 45-50); jade 4.7% (target 15-20); red 18.7% (target 12-16); gold 1.8% (target 10-15); ink 7.1% (target 8-16)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     518.7,
+     451.7,
+     522.0,
+     459.7
+    ],
+    "area": 19.1,
+    "layer": "red",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     228.0,
+     590.3,
+     231.3,
+     598.3
+    ],
+    "area": 19.1,
+    "layer": "red",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "red hidden under the ink solid at [518.7, 451.7, 522.0, 459.7]",
+   "red hidden under the ink solid at [228.0, 590.3, 231.3, 598.3]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": "warn",
+  "vector": [],
+  "raster": {
+   "ink": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       519.7,
+       463.0,
+       521.7,
+       471.3
+      ],
+      "area": 9.0
+     },
+     {
+      "bbox": [
+       228.3,
+       578.7,
+       230.3,
+       587.0
+      ],
+      "area": 9.0
+     }
+    ]
+   }
+  },
+  "pieces": 50,
+  "detail": [
+   "ink: 0 thin, 2 narrow-gap region(s) (raster)"
+  ]
+ },
+ "10b": {
+  "ok": true,
+  "mode": "continuous",
+  "parts": {
+   "band-rule": 0,
+   "partition": 0,
+   "medallion": 0
+  },
+  "detail": []
+ },
+ "10s": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     234.0,
+     577.0,
+     281.7,
+     606.0
+    ],
+    "area": 245.8,
+    "card": "red",
+    "drawn": "jade",
+    "seam_at": [
+     252.1,
+     590.3
+    ]
+   },
+   {
+    "bbox": [
+     471.0,
+     451.3,
+     517.7,
+     479.3
+    ],
+    "area": 231.8,
+    "card": "jade",
+    "drawn": "red",
+    "seam_at": [
+     490.2,
+     463.8
+    ]
+   },
+   {
+    "bbox": [
+     456.7,
+     477.0,
+     469.7,
+     488.0
+    ],
+    "area": 61.6,
+    "card": "jade",
+    "drawn": "red",
+    "seam_at": [
+     464.5,
+     477.4
+    ]
+   },
+   {
+    "bbox": [
+     283.3,
+     569.7,
+     293.3,
+     579.3
+    ],
+    "area": 48.2,
+    "card": "red",
+    "drawn": "jade",
+    "seam_at": [
+     285.8,
+     572.4
+    ]
+   }
+  ],
+  "seam_len": 532.3,
+  "broken_len": 136.0,
+  "legacy_cut": {
+   "runs": [],
+   "width": 0.0
+  },
+  "detail": [
+   "break at seam [252.1, 590.3]: card shows red, the top half drew jade (245.8 px\u00b2 in [234.0, 577.0, 281.7, 606.0])",
+   "break at seam [490.2, 463.8]: card shows jade, the top half drew red (231.8 px\u00b2 in [471.0, 451.3, 517.7, 479.3])",
+   "break at seam [464.5, 477.4]: card shows jade, the top half drew red (61.6 px\u00b2 in [456.7, 477.0, 469.7, 488.0])",
+   "break at seam [285.8, 572.4]: card shows red, the top half drew jade (48.2 px\u00b2 in [283.3, 569.7, 293.3, 579.3])"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/KS.png",
+ "seconds": 7.49
+}

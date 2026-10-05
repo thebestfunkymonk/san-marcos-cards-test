@@ -1,0 +1,2 @@
+# courts2 audit KS/QS/JS — progress
+- 2026-09-25: audit complete (read-only). Renders + crops in build/review/courts2-audit/KS-QS-JS/ (750/188/3x/6x/8-12x zooms; hands_all_3x.png, wrists_zoom.png, small_hands_x4.png, ctx_*_hands.png, ref_*.png Drifters crops). Hand geometry measured from the art modules (wrist bend vs forearm, thumb vs finger-line overlap, finger-block size). Findings returned to the orchestrator via structured output. No project files edited.

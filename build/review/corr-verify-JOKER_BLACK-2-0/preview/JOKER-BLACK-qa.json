@@ -1,0 +1,112 @@
+{
+ "id": "JOKER_BLACK",
+ "stem": "JOKER-BLACK",
+ "kind": "joker",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-joker/tl": [
+    71.23,
+    46.0,
+    96.76,
+    290.0
+   ],
+   "index-joker/br": [
+    653.24,
+    760.0,
+    678.77,
+    1004.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 75.01,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 4e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "detail": []
+ },
+ "4c": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": true,
+  "vector": [],
+  "raster": {},
+  "pieces": 95,
+  "detail": []
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": null,
+ "seconds": 5.08
+}

@@ -1,0 +1,6 @@
+# courts2 verify QH (2)
+- iter 1: rendered BEFORE vs AFTER at 750, 188, 3x, 5-40x (crops in courts2-verify-QH-2/); preview rebuild in scratch identical to cards/QH.svg; 180-degree copy pixel-identical to the top half; deck.qa QH 14 pass / 0 fail / 0 warn (gold 8.7 %, ink 16.2 %).
+- Hands: bodice hand (thumb diverges 32 deg with web V, 3 finger lines 4.6-4.7 px paper, wrist into bracelet) and kit palm-view fist (hand='L', wrist out along axis via fist_wrist bend 44, fingers in front of stem, thumb on index, no boot, heel off the shaft) meet the bar; same construction as the QC/KD fists.
+- Audit items resolved: near-temple pinhole, cap knuckle, node (now ~30 px below the sleeve crown), leaf sliver, petiole root; round-1 items resolved: far-temple face contour (P|K3.0-3.4|G5.3-7.5|K6.2-6.5 at y 181-211), lower collar slits (K3.1|G21.9|K3.1), petiole arc, right armlet 2 pearls. Pearl C's and flower sliver fixed too.
+- Minor residue (non-blocking): paper wedge at the right cuff (482-487,454-464) tapering to 0 with 1.6-1.9 px jade tips; ~5 px wave stub under the fist heel (525-530,461-465); both already present at the courts2 start (kit wrist re-route). Pre-existing leaf-notch paper fleck (559.5-562,272-282). Cap nubs of ~0.5-1 px at the fist/stem and bracelet junctions (kit).
+- VERDICT: pass=true.

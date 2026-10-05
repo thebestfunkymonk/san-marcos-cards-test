@@ -1,0 +1,9 @@
+# courts2-verify-JC-2 (adversarial verify of JC, fixer round 2)
+- cards/JC.svg sha256 bd387652… == sandbox rebuild (tools/preview.py) == r2/final copy; art/JC.py,_jc_body.py,_jc_hands.py == r2/final. deck.qa JC: 14 pass / 0 fail / 0 warn (rebuild identical sha). White stock matches sandbox.
+- pixel diff 750 top half: changes only at plume, pupils, near-hair terminals, left forearm/cuff/belt hand, reed belt, jerkin near edge, right forearm/fist. Face/cap/collar/clasp/buckle/paddle unchanged.
+- Audit items: all resolved (belt-hand thumb/index, stiff thumb, root bulge, size 65 px; fist thumb/lines, heel across loom, cuff/loom collision 13 px clear, nick; reed hook; right forearm read; gaze).
+- JC-1 items: thumb/belt-top tangency FIXED (crosses at ~33°, 10x); wrist taper FIXED (~5 px inside both cuff corners, both hands); reed chain FIXED; plume FIXED; loom cuff/belt convergence FIXED (belt top 9.5 px under cuff corner).
+- Hands vs bar: belt hand OK (back mass, thumb 26° with web crease, finger lengths middle>ring>index>little, lines end clean, wrist taper, correct chirality); fist = kit palm-view fist, consistent with K♣.
+- NEW: belt-hand ulnar edge / jerkin left armhole seam continuation at (274,458.5): seam (to (260,540), ~10° left of vertical) runs on into the ulnar edge (to cuff (267.5,437), ~17° left) with a ~27° kink, reading as one line cuff→band; ~39° red wedge (271-284, 459-476). Visible at 750 and in the 180° copy. Crops: TANGENCY_ulnar_jerkin_3x.png, _750x6.png, _bottomcopy_750x6.png, ulnar_jerkin_after_10x.png, waistL_750x3_before-after.png.
+- nits: puff spray foot 2.5 px short of the raised elbow contour at (183,421) (spray_elbow_after_10x.png); belt omitted across jade side strip x247-268 y442-453 (jade-on-jade, invisible); red 11.7 % (pre-existing); J♦ twin pupils (not JC).
+- verdict: pass=false (new tangency, minor; one-line fix in jerk()).

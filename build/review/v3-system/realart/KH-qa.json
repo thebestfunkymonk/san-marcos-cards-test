@@ -1,0 +1,453 @@
+{
+ "id": "KH",
+ "stem": "KH",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    56.16,
+    46.0,
+    111.83,
+    142.0
+   ],
+   "index-rank/br": [
+    638.17,
+    908.0,
+    693.84,
+    1004.0
+   ],
+   "index-pip/tl": [
+    51.76,
+    164.0,
+    116.24,
+    223.32
+   ],
+   "index-pip/br": [
+    633.76,
+    826.68,
+    698.24,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 30.95,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 6e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 9.7,
+  "balance": {
+   "ink": 13.5,
+   "gold": 9.7,
+   "red": 12.4,
+   "jade": 13.4,
+   "paper": 51.0
+  },
+  "window_px2": 443879,
+  "detail": [
+   "balance: paper 51.0% (target 45-50); jade 13.4% (target 15-20); gold 9.7% (target 10-15)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": false,
+  "vector": [
+   {
+    "at": [
+     543.0,
+     436.1
+    ],
+    "gap": 0.29,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "red"
+    ],
+    "what": [
+     "art"
+    ]
+   },
+   {
+    "at": [
+     207.0,
+     613.9
+    ],
+    "gap": 0.29,
+    "need": 1.6,
+    "rule": "fill thinner than HAIRLINE",
+    "layers": [
+     "red"
+    ],
+    "what": [
+     "art"
+    ]
+   }
+  ],
+  "raster": {
+   "ink": {
+    "thin": [
+     {
+      "bbox": [
+       474.0,
+       467.0,
+       483.0,
+       472.7
+      ],
+      "area": 7.3
+     },
+     {
+      "bbox": [
+       267.0,
+       577.3,
+       276.0,
+       583.0
+      ],
+      "area": 7.3
+     },
+     {
+      "bbox": [
+       487.3,
+       462.0,
+       492.3,
+       465.7
+      ],
+      "area": 5.9
+     },
+     {
+      "bbox": [
+       257.7,
+       584.3,
+       262.7,
+       588.0
+      ],
+      "area": 5.9
+     }
+    ],
+    "gaps": [
+     {
+      "bbox": [
+       291.3,
+       327.0,
+       295.3,
+       331.3
+      ],
+      "area": 8.9
+     },
+     {
+      "bbox": [
+       454.7,
+       718.7,
+       458.7,
+       723.0
+      ],
+      "area": 8.9
+     },
+     {
+      "bbox": [
+       421.7,
+       320.7,
+       426.3,
+       325.3
+      ],
+      "area": 8.7
+     },
+     {
+      "bbox": [
+       323.7,
+       724.7,
+       328.3,
+       729.3
+      ],
+      "area": 8.7
+     },
+     {
+      "bbox": [
+       198.0,
+       432.7,
+       203.7,
+       435.3
+      ],
+      "area": 8.6
+     },
+     {
+      "bbox": [
+       546.3,
+       614.7,
+       552.0,
+       617.3
+      ],
+      "area": 8.6
+     },
+     {
+      "bbox": [
+       327.7,
+       202.3,
+       329.7,
+       210.3
+      ],
+      "area": 8.3
+     },
+     {
+      "bbox": [
+       420.3,
+       202.3,
+       422.3,
+       210.3
+      ],
+      "area": 8.3
+     },
+     {
+      "bbox": [
+       327.7,
+       839.7,
+       329.7,
+       847.7
+      ],
+      "area": 8.3
+     },
+     {
+      "bbox": [
+       420.3,
+       839.7,
+       422.3,
+       847.7
+      ],
+      "area": 8.3
+     }
+    ]
+   }
+  },
+  "pieces": 372,
+  "detail": [
+   "0.29 px < 1.6 (fill thinner than HAIRLINE; art / art) at [543.0, 436.1]",
+   "0.29 px < 1.6 (fill thinner than HAIRLINE; art / art) at [207.0, 613.9]",
+   "ink: 4 thin, 10 narrow-gap region(s) (raster)"
+  ]
+ },
+ "10b": {
+  "ok": true,
+  "mode": "continuous",
+  "parts": {
+   "band-rule": 0,
+   "partition": 0,
+   "medallion": 0
+  },
+  "detail": []
+ },
+ "10s": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     224.7,
+     545.0,
+     348.7,
+     611.3
+    ],
+    "area": 560.0,
+    "card": "ink",
+    "drawn": "paper",
+    "seam_at": [
+     286.5,
+     572.1
+    ]
+   },
+   {
+    "bbox": [
+     410.3,
+     446.0,
+     528.0,
+     510.7
+    ],
+    "area": 556.9,
+    "card": "paper",
+    "drawn": "ink",
+    "seam_at": [
+     462.8,
+     478.3
+    ]
+   },
+   {
+    "bbox": [
+     542.3,
+     410.3,
+     594.0,
+     441.0
+    ],
+    "area": 253.8,
+    "card": "paper",
+    "drawn": "red",
+    "seam_at": [
+     567.2,
+     422.8
+    ]
+   },
+   {
+    "bbox": [
+     156.7,
+     623.3,
+     192.7,
+     647.3
+    ],
+    "area": 186.0,
+    "card": "red",
+    "drawn": "paper",
+    "seam_at": [
+     171.1,
+     633.4
+    ]
+   },
+   {
+    "bbox": [
+     194.7,
+     614.3,
+     212.3,
+     627.3
+    ],
+    "area": 59.1,
+    "card": "red",
+    "drawn": "paper",
+    "seam_at": [
+     203.7,
+     616.1
+    ]
+   },
+   {
+    "bbox": [
+     217.0,
+     611.3,
+     224.7,
+     614.0
+    ],
+    "area": 14.2,
+    "card": "ink",
+    "drawn": "paper",
+    "seam_at": [
+     216.4,
+     609.3
+    ]
+   },
+   {
+    "bbox": [
+     142.0,
+     508,
+     339.0,
+     514
+    ],
+    "area": 0,
+    "card": "paper",
+    "drawn": "paper",
+    "seam_at": null,
+    "kind": "legacy-cut"
+   },
+   {
+    "bbox": [
+     411.0,
+     536,
+     608.0,
+     542
+    ],
+    "area": 0,
+    "card": "paper",
+    "drawn": "paper",
+    "seam_at": null,
+    "kind": "legacy-cut"
+   }
+  ],
+  "seam_len": 532.3,
+  "broken_len": 406.0,
+  "legacy_cut": {
+   "runs": [
+    [
+     142.0,
+     339.0
+    ]
+   ],
+   "width": 198.0
+  },
+  "detail": [
+   "break at seam [286.5, 572.1]: card shows ink, the top half drew paper (560.0 px\u00b2 in [224.7, 545.0, 348.7, 611.3])",
+   "break at seam [462.8, 478.3]: card shows paper, the top half drew ink (556.9 px\u00b2 in [410.3, 446.0, 528.0, 510.7])",
+   "break at seam [567.2, 422.8]: card shows paper, the top half drew red (253.8 px\u00b2 in [542.3, 410.3, 594.0, 441.0])",
+   "break at seam [171.1, 633.4]: card shows red, the top half drew paper (186.0 px\u00b2 in [156.7, 623.3, 192.7, 647.3])",
+   "art ends on the legacy band line y 511 for 198 px (x 142\u2013339\u2026): band-mode art; continuous art must run past the seam (draw to frames.seam_draw_d(SEAM)) \u2014 paper meets paper there, so the strip diff alone cannot see it"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 0,
+  "limestone_blobs": 0,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/KH.png",
+ "seconds": 10.48
+}
