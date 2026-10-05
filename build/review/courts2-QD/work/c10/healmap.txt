@@ -1,0 +1,26 @@
+0 drop fill (289.4, 238.2) None
+1 drop fill (429.9, 257.9) None
+2 drop lion-nose (383.1, 318.4) None
+3 drop fill (186.1, 472.9) None
+4 drop fill (239.8, 425.4) None
+5 fill-hole fill (331.0, 258.6) None
+6 fill-hole fill (331.0, 249.0) None
+7 trim current (303.9, 234.1) ['fill']
+8 trim fill (312.4, 300.5) ['current']
+9 trim fill (452.8, 301.3) ['fold', 'outline']
+10 trim outline (467.8, 239.5) ['fill']
+11 trim fold (467.8, 239.5) ['fill']
+12 trim outline (467.8, 239.5) ['fill']
+13 trim fill (545.0, 485.4) ['fill']
+14 trim fill (545.0, 485.4) ['outline']
+15 trim current (310.9, 235.5) ['fill']
+16 trim outline (467.8, 239.5) ['cord', 'outline']
+17 trim fold (467.8, 239.5) ['cord', 'outline']
+18 trim outline (467.8, 239.5) ['cord', 'outline']
+19 trim current (310.9, 235.5) ['ear', 'outline']
+20 trim outline (476.6, 383.3) ['_band']
+21 trim fold (476.6, 383.3) ['_band']
+22 trim neck (476.6, 383.3) ['_band']
+23 trim outline (343.1, 146.0) ['joint', 'oculus']
+24 trim stone (323.6, 169.6) ['contour']
+25 trim current (318.6, 201.4) ['ear', 'outline']

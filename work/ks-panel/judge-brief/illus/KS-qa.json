@@ -1,0 +1,179 @@
+{
+ "id": "KS",
+ "stem": "KS",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    56.16,
+    46.0,
+    111.83,
+    142.0
+   ],
+   "index-rank/br": [
+    638.17,
+    908.0,
+    693.84,
+    1004.0
+   ],
+   "index-pip/tl": [
+    53.0,
+    164.0,
+    115.0,
+    239.64
+   ],
+   "index-pip/br": [
+    635.0,
+    810.36,
+    697.0,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 44.39,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 7e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 11.6,
+  "balance": {
+   "ink": 17.4,
+   "gold": 11.6,
+   "red": 11.2,
+   "jade": 14.4,
+   "paper": 45.4
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: jade 14.4% (target 15-20); red 11.2% (target 12-16); ink 17.4% (target 8-16)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": "warn",
+  "vector": [],
+  "raster": {
+   "ink": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       355.0,
+       210.0,
+       360.3,
+       212.7
+      ],
+      "area": 8.6
+     },
+     {
+      "bbox": [
+       389.7,
+       210.0,
+       395.0,
+       212.7
+      ],
+      "area": 8.6
+     },
+     {
+      "bbox": [
+       355.0,
+       837.3,
+       360.3,
+       840.0
+      ],
+      "area": 8.6
+     },
+     {
+      "bbox": [
+       389.7,
+       837.3,
+       395.0,
+       840.0
+      ],
+      "area": 8.6
+     }
+    ]
+   }
+  },
+  "pieces": 352,
+  "detail": [
+   "ink: 0 thin, 4 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": true,
+  "limestone_px": 28,
+  "detail": []
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/work/ks-panel/judge-brief/qa/flags/KS.png",
+ "seconds": 8.33
+}

@@ -1,0 +1,108 @@
+"""art/_jh_face.py — the Spring Minstrel's strict profile, facing LEFT
+(§H.0 face kit; §H.6 'young, eyes lowered to the strings'; the one-eyed J♥).
+
+The same construction as the kit's profile (``courtkit._profile_face``) and
+the J♠ page's (``art/_js_face.py``) — ONE G1 biarc silhouette through pinned
+points with pinned tangents: crown, forehead, brow, nose root, a straight
+ridge, the tip, subnasale, lips, chin, throat, the neck down under the
+collar, nape, occiput — so all three profile courts read as one hand. Re-pinned
+for a youth who is not the page:
+
+* a round, upright forehead and a soft brow (no brow ridge);
+* a straight, slender nose, the tip barely lifted — longer than the page's;
+* full lips, a small round chin set a little back, no jaw line;
+* the eye LOWERED: the RULE lid flattened and drooping toward the front
+  corner, the Ø6 pupil tucked low under it at the front — looking down and
+  forward, at the bow in his hand (the bow's hair are the strings he reads);
+* a calm, low brow arc; the ear ONE MEDIUM stroke — a C from the lobe round
+  the helix, rolling in at the top (the beret leaves it bare; the bob of hair
+  falls behind it); the mouth line lifts a little at the cheek.
+
+Strokes: lid, lower lid, pupil, brow, nostril, mouth, ear = 7 (≤ 14).
+"""
+from __future__ import annotations
+
+import numpy as np
+
+from deck import courtkit as K
+from deck.motifs import core as C
+from deck.motifs import forms as FM
+
+MEDIUM, FINE, RULE, CONTOUR = K.MEDIUM, K.FINE, K.RULE, K.CONTOUR
+P = K.P
+
+
+def minstrel_profile(center, *, r=42.5, eye_dy=6.0, nose_len=9.6, eye_w=16.4, lid_sag=3.0, low_sag=2.2,
+                     front_drop=2.4, pupil_d=6.0, pupil_x=4.3, pupil_tuck=1.6, brow_dy=-13.6, brow_sag=2.4,
+                     mouth_len=10.5, mouth_lift=1.2, ear_r=9.8, ear_in=4.2, ear_dx=0.20, ear_dy=9.0, neck_drop=64.0, nape=21.0):
+    """→ courtkit.Face facing LEFT (head d incl. the neck, skin region,
+    feature lines, anchors, stroke count)."""
+    cx, cy = float(center[0]), float(center[1])
+    ey = cy + eye_dy
+    fr = cx - r * 0.84                    # the face's front line (brow / lips)
+    top = cy - r
+    nb = ey + 17.8                        # nose base (subnasale)
+    my = ey + 38.5                        # mouth corner line
+    tip = (fr - nose_len, nb - 3.6)
+    root = (fr + 3.4, ey + 0.6)
+    ridge = K._hd(root, tip)
+    chain_pts = [
+        ((cx + 4.0, top), 180.0),                    # crown of the skull
+        ((fr + 6.8, cy - 27.0), 114.0),              # a round, upright forehead
+        ((fr + 0.9, ey - 9.2), 100.0),               # soft brow
+        (root, ridge + 8.0),                         # a shallow nose root
+        (tip, ridge - 4.0),                          # a straight slender ridge, the tip barely lifted
+        ((fr - nose_len + 2.8, nb + 0.4), 16.0),     # round the tip, under the nose
+        ((fr - 0.6, nb + 2.0), 78.0),                # subnasale
+        ((fr - 2.7, my - 3.9), 102.0),               # full upper lip
+        ((fr + 0.3, my + 0.4), 58.0),                # mouth corner (a soft notch)
+        ((fr - 1.2, my + 4.8), 112.0),               # full lower lip
+        ((fr + 2.3, my + 9.8), 82.0),                # the hollow under the lip
+        ((fr + 1.0, my + 15.8), 108.0),              # a small round chin, set back
+        ((fr + 9.5, my + 22.8), 22.0),               # under the chin
+        ((fr + 19.5, my + 27.4), 66.0),              # throat
+        ((fr + 22.5, my + neck_drop), 88.0),         # neck front (under the collar)
+        ((cx + nape - 3.0, my + neck_drop), -94.0),  # neck back
+        ((cx + nape, ey + 33.0), -116.0),            # nape
+        ((cx + r + 5.0, cy + 2.0), -88.0),           # occiput
+    ]
+    pts = [P(q) for q, _ in chain_pts]
+    hs = [h for _, h in chain_pts]
+    d, _ = FM.biarc_chain(pts, hs, closed=True)
+    lines = C.Frag()
+    # ---- the eye: its front ≥ 3 px + RULE/2 clear of the contour's inner edge
+    ex0 = fr + 3.4 + CONTOUR / 2 + K.GAP_MARK + RULE / 2 + 1.2
+    front, back = P(ex0, ey + front_drop), P(ex0 + eye_w, ey - 0.4)
+    # lowered: a flattened RULE lid drooping to a LOW front corner
+    lines += K.line(K.arc_sag(front, back, lid_sag), RULE, role="lid")
+    lo0 = P(front[0] + 2.3, front[1] + 3.1)
+    lines += K.line(K.arc_sag(lo0, back + P(-0.8, 2.2), -low_sag), FINE, role="lid-lo")
+    # the pupil tucked under the lid at the front: looking down and forward
+    t = pupil_x / eye_w
+    lid_y = front[1] + (back[1] - front[1]) * t - lid_sag * 4 * t * (1 - t)
+    pu = P(front[0] + pupil_x, lid_y + RULE / 2 + pupil_d / 2 - 0.9 + pupil_tuck)
+    lines += K.dot(pu, pupil_d, role="pupil")
+    # ---- brow: a calm, low MEDIUM arc over the eye
+    bx0 = fr + 0.9 + CONTOUR / 2 + K.GAP_MARK + MEDIUM / 2 + 1.3
+    by = ey + brow_dy
+    lines += K.line(K.arc_sag(P(bx0, by + 1.0), P(ex0 + eye_w + 2.6, by + 2.6), brow_sag), MEDIUM, role="brow")
+    # ---- nostril: a small hook springing from the contour under the nose
+    tn = C.Turtle(fr - nose_len + 5.6, nb + 1.0, -62.0)
+    tn.arc(3.1, 150.0)
+    lines += K.line(tn.d(), MEDIUM, role="nose")
+    # ---- mouth: from the corner notch on the contour back into the cheek, a faint lift
+    lines += K.line(K.arc_sag(P(fr + 0.3, my + 0.4), P(fr + mouth_len, my - mouth_lift), -1.5), MEDIUM, role="mouth")
+    # ---- ear: a C opening toward the face + the FINE inner arc (the helix fold)
+    ear_c = P(cx + r * ear_dx, ey + ear_dy)
+    # one stroke: from the lobe round the back of the helix to the top, then
+    # curling in and down inside it (the helix rolled into the concha)
+    te = C.Turtle(*K.polar(ear_c, ear_r, 104.0), 104.0 - 90.0)
+    te.arc(ear_r, -178.0)
+    te.arc(ear_in, -150.0)
+    lines += K.line(te.d(), MEDIUM, role="ear")
+    anchors = dict(center=P(cx, cy), axis=ex0 + eye_w / 2, front=fr, eye=P(ex0 + eye_w / 2, ey), eye_y=ey,
+                   brow_y=by, nose_y=nb, mouth_y=my, lip_y=my + 4.8, chin=P(fr + 1.0, my + 15.8), top=top, r=r,
+                   nape=P(cx + nape, ey + 33.0), neck_y=my + neck_drop, throat=P(fr + 19.5, my + 27.4),
+                   neck_front=P(fr + 22.5, my + neck_drop), neck_back=P(cx + nape - 3.0, my + neck_drop),
+                   ear=ear_c, ear_r=ear_r, crown_y=cy - r * 0.55, turn=0, facing=-1, forehead=P(fr + 6.8, cy - 27.0))
+    return K.Face(d, K.R(d), lines, anchors, K._count(lines))

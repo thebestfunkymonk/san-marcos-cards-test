@@ -1,0 +1,6098 @@
+{
+ "generated": "2026-09-23 07:50:03",
+ "seconds": 60.7,
+ "thresholds": {
+  "gap_parallel": 4.2,
+  "gap_mark": 3.0,
+  "ko_line_min": 2.5,
+  "ko_line_min_back": 1.6,
+  "parallel_run": 12.0,
+  "raster_line_min": 1.5,
+  "raster_gap_min": 2.5,
+  "raster_scale": 3,
+  "render_diff_max": 0.002,
+  "sym_cluster_px2": 4.0
+ },
+ "deck": {
+  "index_overlay": {
+   "ok": true,
+   "worst_px": 4,
+   "detail": []
+  },
+  "e2_clearances": {
+   "S": {
+    "field_pip_vs_10_index": 35.01,
+    "centre_vs_side": 37.0
+   },
+   "H": {
+    "field_pip_vs_10_index": 32.69,
+    "centre_vs_side": 32.36
+   },
+   "C": {
+    "field_pip_vs_10_index": 32.69,
+    "centre_vs_side": 32.36
+   },
+   "D": {
+    "field_pip_vs_10_index": 46.61,
+    "centre_vs_side": 60.2
+   }
+  }
+ },
+ "pieces": [
+  {
+   "id": "2S",
+   "stem": "2S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.29,
+      44.9,
+      109.71,
+      142.0
+     ],
+     "index-rank/br": [
+      640.29,
+      908.0,
+      691.71,
+      1005.1
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.12
+  },
+  {
+   "id": "3S",
+   "stem": "3S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.39,
+      46.0,
+      108.62,
+      143.1
+     ],
+     "index-rank/br": [
+      641.38,
+      906.9,
+      690.61,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 7,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.6
+  },
+  {
+   "id": "4S",
+   "stem": "4S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.79,
+      46.0,
+      113.21,
+      142.0
+     ],
+     "index-rank/br": [
+      636.79,
+      908.0,
+      695.21,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 8,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.76
+  },
+  {
+   "id": "5S",
+   "stem": "5S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.24,
+      46.0,
+      108.75,
+      143.1
+     ],
+     "index-rank/br": [
+      641.25,
+      906.9,
+      690.76,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 9,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.97
+  },
+  {
+   "id": "6S",
+   "stem": "6S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 10,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.68
+  },
+  {
+   "id": "7S",
+   "stem": "7S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.04,
+      46.0,
+      108.96,
+      142.0
+     ],
+     "index-rank/br": [
+      641.04,
+      908.0,
+      690.96,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 11,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.83
+  },
+  {
+   "id": "8S",
+   "stem": "8S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.45,
+      44.36,
+      108.55,
+      143.1
+     ],
+     "index-rank/br": [
+      641.45,
+      906.9,
+      690.55,
+      1005.64
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 7e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 12,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.89
+  },
+  {
+   "id": "9S",
+   "stem": "9S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 13,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.73
+  },
+  {
+   "id": "10S",
+   "stem": "10S",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      39.02,
+      44.49,
+      128.99,
+      143.51
+     ],
+     "index-rank/br": [
+      621.01,
+      906.49,
+      710.98,
+      1005.51
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 16,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.06
+  },
+  {
+   "id": "2H",
+   "stem": "2H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.29,
+      44.9,
+      109.71,
+      142.0
+     ],
+     "index-rank/br": [
+      640.29,
+      908.0,
+      691.71,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.93
+  },
+  {
+   "id": "3H",
+   "stem": "3H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.39,
+      46.0,
+      108.62,
+      143.1
+     ],
+     "index-rank/br": [
+      641.38,
+      906.9,
+      690.61,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 7,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.78
+  },
+  {
+   "id": "4H",
+   "stem": "4H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.79,
+      46.0,
+      113.21,
+      142.0
+     ],
+     "index-rank/br": [
+      636.79,
+      908.0,
+      695.21,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 8,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.97
+  },
+  {
+   "id": "5H",
+   "stem": "5H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.24,
+      46.0,
+      108.75,
+      143.1
+     ],
+     "index-rank/br": [
+      641.25,
+      906.9,
+      690.76,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 9,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.77
+  },
+  {
+   "id": "6H",
+   "stem": "6H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 10,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.85
+  },
+  {
+   "id": "7H",
+   "stem": "7H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.04,
+      46.0,
+      108.96,
+      142.0
+     ],
+     "index-rank/br": [
+      641.04,
+      908.0,
+      690.96,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 11,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.74
+  },
+  {
+   "id": "8H",
+   "stem": "8H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.45,
+      44.36,
+      108.55,
+      143.1
+     ],
+     "index-rank/br": [
+      641.45,
+      906.9,
+      690.55,
+      1005.64
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 12,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.43
+  },
+  {
+   "id": "9H",
+   "stem": "9H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 13,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.57
+  },
+  {
+   "id": "10H",
+   "stem": "10H",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      39.02,
+      44.49,
+      128.99,
+      143.51
+     ],
+     "index-rank/br": [
+      621.01,
+      906.49,
+      710.98,
+      1005.51
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 16,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.22
+  },
+  {
+   "id": "2C",
+   "stem": "2C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.29,
+      44.9,
+      109.71,
+      142.0
+     ],
+     "index-rank/br": [
+      640.29,
+      908.0,
+      691.71,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.98
+  },
+  {
+   "id": "3C",
+   "stem": "3C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.39,
+      46.0,
+      108.62,
+      143.1
+     ],
+     "index-rank/br": [
+      641.38,
+      906.9,
+      690.61,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 7,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.05
+  },
+  {
+   "id": "4C",
+   "stem": "4C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.79,
+      46.0,
+      113.21,
+      142.0
+     ],
+     "index-rank/br": [
+      636.79,
+      908.0,
+      695.21,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 8,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.82
+  },
+  {
+   "id": "5C",
+   "stem": "5C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.24,
+      46.0,
+      108.75,
+      143.1
+     ],
+     "index-rank/br": [
+      641.25,
+      906.9,
+      690.76,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 9,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.97
+  },
+  {
+   "id": "6C",
+   "stem": "6C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 10,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.97
+  },
+  {
+   "id": "7C",
+   "stem": "7C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.04,
+      46.0,
+      108.96,
+      142.0
+     ],
+     "index-rank/br": [
+      641.04,
+      908.0,
+      690.96,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 11,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.9
+  },
+  {
+   "id": "8C",
+   "stem": "8C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.45,
+      44.36,
+      108.55,
+      143.1
+     ],
+     "index-rank/br": [
+      641.45,
+      906.9,
+      690.55,
+      1005.64
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 7e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 12,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.44
+  },
+  {
+   "id": "9C",
+   "stem": "9C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 13,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.48
+  },
+  {
+   "id": "10C",
+   "stem": "10C",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      39.02,
+      44.49,
+      128.99,
+      143.51
+     ],
+     "index-rank/br": [
+      621.01,
+      906.49,
+      710.98,
+      1005.51
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 16,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 12.1
+  },
+  {
+   "id": "2D",
+   "stem": "2D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.29,
+      44.9,
+      109.71,
+      142.0
+     ],
+     "index-rank/br": [
+      640.29,
+      908.0,
+      691.71,
+      1005.1
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 5e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.18
+  },
+  {
+   "id": "3D",
+   "stem": "3D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.39,
+      46.0,
+      108.62,
+      143.1
+     ],
+     "index-rank/br": [
+      641.38,
+      906.9,
+      690.61,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 7,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 10.49
+  },
+  {
+   "id": "4D",
+   "stem": "4D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.79,
+      46.0,
+      113.21,
+      142.0
+     ],
+     "index-rank/br": [
+      636.79,
+      908.0,
+      695.21,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 8,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.2
+  },
+  {
+   "id": "5D",
+   "stem": "5D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.24,
+      46.0,
+      108.75,
+      143.1
+     ],
+     "index-rank/br": [
+      641.25,
+      906.9,
+      690.76,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 9,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.44
+  },
+  {
+   "id": "6D",
+   "stem": "6D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 10,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 12.06
+  },
+  {
+   "id": "7D",
+   "stem": "7D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.04,
+      46.0,
+      108.96,
+      142.0
+     ],
+     "index-rank/br": [
+      641.04,
+      908.0,
+      690.96,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 11,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.6
+  },
+  {
+   "id": "8D",
+   "stem": "8D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.45,
+      44.36,
+      108.55,
+      143.1
+     ],
+     "index-rank/br": [
+      641.45,
+      906.9,
+      690.55,
+      1005.64
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 12,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.16
+  },
+  {
+   "id": "9D",
+   "stem": "9D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      59.18,
+      44.9,
+      108.82,
+      143.1
+     ],
+     "index-rank/br": [
+      641.18,
+      906.9,
+      690.82,
+      1005.1
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 13,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.55
+  },
+  {
+   "id": "10D",
+   "stem": "10D",
+   "kind": "number",
+   "status": "system",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "red"
+    ],
+    "budget": [
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      39.02,
+      44.49,
+      128.99,
+      143.51
+     ],
+     "index-rank/br": [
+      621.01,
+      906.49,
+      710.98,
+      1005.51
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": true,
+    "detail": []
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 16,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 12.11
+  },
+  {
+   "id": "KS",
+   "stem": "KS",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      56.16,
+      46.0,
+      111.83,
+      142.0
+     ],
+     "index-rank/br": [
+      638.17,
+      908.0,
+      693.84,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.7,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.3
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 20,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 28,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 18.21
+  },
+  {
+   "id": "QS",
+   "stem": "QS",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      44.9,
+      114.81,
+      152.86
+     ],
+     "index-rank/br": [
+      635.19,
+      897.14,
+      691.44,
+      1005.1
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.7,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.3
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 27,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 26,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 20.82
+  },
+  {
+   "id": "JS",
+   "stem": "JS",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      46.0,
+      109.44,
+      143.1
+     ],
+     "index-rank/br": [
+      640.56,
+      906.9,
+      691.44,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.7,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.3
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 12,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 26,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 21.06
+  },
+  {
+   "id": "KH",
+   "stem": "KH",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      56.16,
+      46.0,
+      111.83,
+      142.0
+     ],
+     "index-rank/br": [
+      638.17,
+      908.0,
+      693.84,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 0.3,
+     "gold": 0.0,
+     "red": 2.3,
+     "jade": 0.0,
+     "paper": 97.4
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 19,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 28,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 24.31
+  },
+  {
+   "id": "KC",
+   "stem": "KC",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      56.16,
+      46.0,
+      111.83,
+      142.0
+     ],
+     "index-rank/br": [
+      638.17,
+      908.0,
+      693.84,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.5,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.5
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 35,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 28,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 21.1
+  },
+  {
+   "id": "QC",
+   "stem": "QC",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      44.9,
+      114.81,
+      152.86
+     ],
+     "index-rank/br": [
+      635.19,
+      897.14,
+      691.44,
+      1005.1
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.5,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.5
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 44,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 26,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 20.32
+  },
+  {
+   "id": "JC",
+   "stem": "JC",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      46.0,
+      109.44,
+      143.1
+     ],
+     "index-rank/br": [
+      640.56,
+      906.9,
+      691.44,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 2.5,
+     "gold": 0.0,
+     "red": 0.0,
+     "jade": 0.0,
+     "paper": 97.5
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 30,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 26,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 19.67
+  },
+  {
+   "id": "KD",
+   "stem": "KD",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      56.16,
+      46.0,
+      111.83,
+      142.0
+     ],
+     "index-rank/br": [
+      638.17,
+      908.0,
+      693.84,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 0.3,
+     "gold": 0.0,
+     "red": 1.5,
+     "jade": 0.0,
+     "paper": 98.2
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 28,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 30,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 24.56
+  },
+  {
+   "id": "QD",
+   "stem": "QD",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      44.9,
+      114.81,
+      152.86
+     ],
+     "index-rank/br": [
+      635.19,
+      897.14,
+      691.44,
+      1005.1
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 0.3,
+     "gold": 0.0,
+     "red": 1.5,
+     "jade": 0.0,
+     "paper": 98.2
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 37,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 30,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 24.48
+  },
+  {
+   "id": "JD",
+   "stem": "JD",
+   "kind": "court",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "ink",
+     "jade",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      58.56,
+      46.0,
+      109.44,
+      143.1
+     ],
+     "index-rank/br": [
+      640.56,
+      906.9,
+      691.44,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": true,
+    "diff": 0.0,
+    "clusters": [],
+    "detail": []
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": true,
+    "gold_pct": 0.0,
+    "balance": {
+     "ink": 0.3,
+     "gold": 0.0,
+     "red": 1.5,
+     "jade": 0.0,
+     "paper": 98.2
+    },
+    "window_px2": 430811,
+    "detail": []
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 23,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 26,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 23.78
+  },
+  {
+   "id": "AS",
+   "stem": "AS",
+   "kind": "ace",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.62,
+      46.0,
+      113.39,
+      142.0
+     ],
+     "index-rank/br": [
+      636.61,
+      908.0,
+      695.38,
+      1004.0
+     ],
+     "index-pip/tl": [
+      53.0,
+      164.0,
+      115.0,
+      239.64
+     ],
+     "index-pip/br": [
+      635.0,
+      810.36,
+      697.0,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": null,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 5,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 0,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.6
+  },
+  {
+   "id": "AH",
+   "stem": "AH",
+   "kind": "ace",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.62,
+      46.0,
+      113.39,
+      142.0
+     ],
+     "index-rank/br": [
+      636.61,
+      908.0,
+      695.38,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      223.32
+     ],
+     "index-pip/br": [
+      633.76,
+      826.68,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 49,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 20.09
+  },
+  {
+   "id": "AC",
+   "stem": "AC",
+   "kind": "ace",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "ink"
+    ],
+    "budget": [
+     "gold",
+     "ink"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.62,
+      46.0,
+      113.39,
+      142.0
+     ],
+     "index-rank/br": [
+      636.61,
+      908.0,
+      695.38,
+      1004.0
+     ],
+     "index-pip/tl": [
+      51.76,
+      164.0,
+      116.24,
+      228.48
+     ],
+     "index-pip/br": [
+      633.76,
+      821.52,
+      698.24,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": true,
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 59,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 11.57
+  },
+  {
+   "id": "AD",
+   "stem": "AD",
+   "kind": "ace",
+   "status": "placeholder",
+   "17": {
+    "ok": true,
+    "detail": []
+   },
+   "1": {
+    "ok": true,
+    "detail": []
+   },
+   "4": {
+    "ok": true,
+    "detail": []
+   },
+   "4b": {
+    "ok": true,
+    "used": [
+     "gold",
+     "red"
+    ],
+    "budget": [
+     "gold",
+     "red"
+    ],
+    "detail": []
+   },
+   "6": {
+    "ok": true,
+    "detail": [],
+    "bbox": {
+     "index-rank/tl": [
+      54.62,
+      46.0,
+      113.39,
+      142.0
+     ],
+     "index-rank/br": [
+      636.61,
+      908.0,
+      695.38,
+      1004.0
+     ],
+     "index-pip/tl": [
+      59.2,
+      164.0,
+      108.8,
+      233.44
+     ],
+     "index-pip/br": [
+      641.2,
+      816.56,
+      690.8,
+      886.0
+     ]
+    }
+   },
+   "9": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "10c": {
+    "ok": null,
+    "detail": [
+     "n/a (placeholder)"
+    ]
+   },
+   "25": {
+    "ok": true,
+    "diff": 4e-05,
+    "detail": []
+   },
+   "10a": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "8": {
+    "ok": true,
+    "detail": []
+   },
+   "5": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "5r": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "4c": {
+    "ok": true,
+    "regions": [],
+    "detail": []
+   },
+   "11": {
+    "ok": null,
+    "detail": [
+     "n/a"
+    ]
+   },
+   "12": {
+    "ok": true,
+    "vector": [],
+    "raster": {},
+    "pieces": 6,
+    "detail": []
+   },
+   "24": {
+    "ok": true,
+    "limestone_px": 38,
+    "detail": []
+   },
+   "flags_png": null,
+   "seconds": 9.36
+  }
+ ]
+}

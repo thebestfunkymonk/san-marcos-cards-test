@@ -1,0 +1,14 @@
+[preview] art module raised — rendered as PLACEHOLDER:
+Traceback (most recent call last):
+  File "/home/luke/Projects/design/san-marcos-deck/deck/build.py", line 155, in build_piece
+    art = C.layers_merge(mod.build())
+                         ^^^^^^^^^^^
+  File "/home/luke/Projects/design/san-marcos-deck/art/JS.py", line 75, in build
+    return figure().layers()
+           ^^^^^^^^
+  File "/home/luke/Projects/design/san-marcos-deck/art/JS.py", line 52, in figure
+    vis = hg.outer.union(tor.shape).buffer(1.0).union(K.box(0, 350.0, 2000, 2000))
+          ^^^^^^^^
+AttributeError: 'HoodGeo' object has no attribute 'outer'
+
+[preview] JS: status=placeholder -> /home/luke/Projects/design/san-marcos-deck/work/qs/peers2/JS/JS{.svg,.png,-188.png,-1500.png,-white.png}

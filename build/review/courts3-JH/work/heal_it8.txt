@@ -1,0 +1,18 @@
+drop lion-nose ink [388.0, 334.9] fill piece thinner than HAIRLINE None
+drop fill gold [424.9, 190.2] fill piece thinner than HAIRLINE None
+drop fill gold [425.8, 190.3] fill piece thinner than HAIRLINE None
+drop fill gold [258.1, 474.7] fill piece thinner than HAIRLINE None
+drop fill gold [264.8, 476.4] fill piece thinner than HAIRLINE None
+drop fill gold [536.3, 198.2] fill piece thinner than HAIRLINE None
+drop fill gold [523.4, 207.3] fill piece thinner than HAIRLINE None
+drop fill gold [537.0, 216.5] fill piece thinner than HAIRLINE None
+drop fill gold [537.2, 220.9] fill piece thinner than HAIRLINE None
+drop fill gold [521.7, 239.7] fill piece thinner than HAIRLINE None
+trim fill gold [544.8, 218.8] fill 0.45 px from a neighbour (needs 3.0 ['fill']
+delete outline ink [413.7, 177.2] stub 2.6 px, 2.19 px from a neighbour ['fill']
+trim current ink [427.1, 231.2] stroke 1.48 px from a neighbour (needs 3 ['outline']
+trim ripple ink [367.9, 183.7] stroke 3.10 px from a neighbour (needs 4 ['outline']
+trim ripple ink [367.9, 183.7] stroke 1.51 px from a neighbour (needs 3 ['contour']
+trim current ink [446.1, 131.4] stroke 0.65 px from a neighbour (needs 3 ['current']
+trim nut ink [530.0, 222.2] stroke 1.54 px from a neighbour (needs 3 ['fill']
+trim ripple ink [367.9, 183.7] stroke 3.10 px from a neighbour (needs 4 ['contour']

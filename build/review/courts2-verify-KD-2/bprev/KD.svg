@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="1050" viewBox="0 0 750 1050">
+<title>HEADWATERS KD</title>
+<defs><clipPath id="card" clipPathUnits="userSpaceOnUse"><path d="M37.5 0l675 0c20.71 0 37.5 16.79 37.5 37.5l0 975c0 20.71 -16.79 37.5 -37.5 37.5l-675 0c-20.71 0 -37.5 -16.79 -37.5 -37.5l0 -975c0 -20.71 16.79 -37.5 37.5 -37.5z"/></clipPath></defs>
+<g id="paper" clip-path="url(#card)">
+<path d="M37.5 0l675 0c20.71 0 37.5 16.79 37.5 37.5l0 975c0 20.71 -16.79 37.5 -37.5 37.5l-675 0c-20.71 0 -37.5 -16.79 -37.5 -37.5l0 -975c0 -20.71 16.79 -37.5 37.5 -37.5z" fill="#F4EFE3" class="stock"/>
+</g>
+<g id="jade" clip-path="url(#card)"></g>
+<g id="red" clip-path="url(#card)">
+<path d="M190 62c9.72 17.78 21.54 34.32 35.2 49.28 -13.66 14.96 -25.48 31.5 -35.2 49.28 -9.72 -17.78 -21.54 -34.32 -35.2 -49.28 13.66 -14.96 25.48 -31.5 35.2 -49.28z" fill="#AE2F2B" class="corner-pip" data-corner="tl"/>
+<path d="M560 988c-9.72 -17.78 -21.54 -34.32 -35.2 -49.28 13.66 -14.96 25.48 -31.5 35.2 -49.28 9.72 17.78 21.54 34.32 35.2 49.28 -13.66 14.96 -25.48 31.5 -35.2 49.28z" fill="#AE2F2B" class="corner-pip" data-corner="br"/>
+<path d="M56.16 140.35l0 -92.7q0 -.69 .48 -1.17 .48 -.48 1.16 -.48l12.62 0q.68 0 1.16 .48 .48 .48 .48 1.17l0 37.85q0 .55 .28 .62 .27 .06 .55 -.35l20.57 -38.53q.68 -1.24 2.05 -1.24l13.58 0q.96 0 1.24 .55 .27 .55 -.14 1.37l-20.57 38.54q-.14 .55 -.14 .82l22.22 52.8q.13 .27 .13 .82 0 1.1 -1.37 1.1l-13.57 0q-1.51 0 -1.92 -1.23l-16.19 -39.64q-.13 -.41 -.41 -.34 -.27 .07 -.55 .34l-5.48 9.19q-.28 .55 -.28 .82l0 29.21q0 .69 -.48 1.17 -.48 .48 -1.16 .48l-12.62 0q-.68 0 -1.16 -.48 -.48 -.48 -.48 -1.17z" fill="#AE2F2B" class="index-rank" data-corner="tl"/>
+<path d="M693.84 909.65l0 92.7q0 .69 -.48 1.17 -.48 .48 -1.16 .48l-12.62 0q-.68 0 -1.16 -.48 -.48 -.48 -.48 -1.17l0 -37.85q0 -.55 -.28 -.62 -.27 -.06 -.55 .35l-20.57 38.53q-.68 1.24 -2.05 1.24l-13.58 0q-.96 0 -1.24 -.55 -.27 -.55 .14 -1.37l20.57 -38.54q.14 -.55 .14 -.82l-22.22 -52.8q-.13 -.27 -.13 -.82 0 -1.1 1.37 -1.1l13.57 0q1.51 0 1.92 1.23l16.19 39.64q.13 .41 .41 .34 .27 -.07 .55 -.34l5.48 -9.19q.28 -.55 .28 -.82l0 -29.21q0 -.69 .48 -1.17 .48 -.48 1.16 -.48l12.62 0q.68 0 1.16 .48 .48 .48 .48 1.17z" fill="#AE2F2B" class="index-rank" data-corner="br"/>
+<path d="M84 164c6.85 12.52 15.17 24.18 24.8 34.72 -9.63 10.54 -17.95 22.2 -24.8 34.72 -6.85 -12.52 -15.17 -24.18 -24.8 -34.72 9.63 -10.54 17.95 -22.2 24.8 -34.72z" fill="#AE2F2B" class="index-pip" data-corner="tl"/>
+<path d="M666 886c-6.85 -12.52 -15.17 -24.18 -24.8 -34.72 9.63 -10.54 17.95 -22.2 24.8 -34.72 6.85 12.52 15.17 24.18 24.8 34.72 -9.63 10.54 -17.95 22.2 -24.8 34.72z" fill="#AE2F2B" class="index-pip" data-corner="br"/>
+</g>
+<g id="gold" clip-path="url(#card)">
+<path d="M148.9 51l452.2 0 13.9 13.9 0 920.2 -13.9 13.9 -452.2 0 -13.9 -13.9 0 -920.2z" fill="none" stroke="#B08D57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="frame-inner"/>
+<path d="M353.3 525a21.7 21.7 0 1 1 43.4 0a21.7 21.7 0 1 1 -43.4 0z" fill="none" stroke="#B08D57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="round" class="medallion"/>
+<path d="M375 512l9 13 -9 13 -9 -13z" fill="none" stroke="#B08D57" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" class="house-mark"/>
+<path d="M372.9 525a2.1 2.1 0 1 1 4.2 0a2.1 2.1 0 1 1 -4.2 0z" fill="#B08D57" class="house-mark"/>
+</g>
+<g id="ink" clip-path="url(#card)">
+<path d="M146 44l458 0 18 18 0 926 -18 18 -458 0 -18 -18 0 -926z" fill="none" stroke="#15242B" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="frame"/>
+<path d="M135 511l209.87 0M135 539l209.87 0M405.13 511l209.87 0M405.13 539l209.87 0" fill="none" stroke="#15242B" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="band-rule"/>
+<path d="M143 520l199.17 0M143 530l199.17 0M407.83 520l199.17 0M407.83 530l199.17 0" fill="none" stroke="#15242B" stroke-width="3.1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" class="partition"/>
+<path d="M175 520l6 5 -6 5 -6 -5zM215 520l6 5 -6 5 -6 -5zM255 520l6 5 -6 5 -6 -5zM295 520l6 5 -6 5 -6 -5zM455 520l6 5 -6 5 -6 -5zM495 520l6 5 -6 5 -6 -5zM535 520l6 5 -6 5 -6 -5zM575 520l6 5 -6 5 -6 -5z" fill="#15242B" class="partition"/>
+<path d="M347 525a28 28 0 1 1 56 0a28 28 0 1 1 -56 0z" fill="none" stroke="#15242B" stroke-width="2.1" stroke-linecap="butt" stroke-linejoin="round" class="medallion"/>
+</g>
+</svg>

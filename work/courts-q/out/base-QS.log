@@ -1,0 +1,17 @@
+[preview] QS: status=art -> /home/luke/Projects/design/san-marcos-deck/work/courts-q/out/base/QS{.svg,.png,-188.png,-1500.png,-white.png}
+    17 ✓ 
+     1 ✓ 
+     4 ✓ 
+    4b ✓ 
+     6 ✓ 
+     9 n/a n/a
+   10c ✓ 
+    25 ✓ 
+   10a ✓ 
+     8 ✓ 
+     5 ✓ balance: paper 50.8% (target 45-50); jade 14.6% (target 15-20); red 10.6% (target 12-16); gold 8.0% (target 10-15)
+    5r ✓ 
+    4c ✗ red hidden under the ink solid at [277.0, 239.3, 289.0, 251.7]; red hidden under the ink solid at [461.0, 798.3, 473.0, 810.7]; gold hidden under the ink solid at [425.7, 871.7, 432.0, 885.7]
+    11 n/a n/a
+    12 ✗ 2.66 px < 3 (strokes; art / art) at [349.5, 170.7]; 2.66 px < 3 (strokes; art / art) at [400.5, 879.3]; red: 0 thin, 4 narrow-gap region(s) (raster); ink: 0 thin, 12 narrow-gap region(s) (raster)
+    24 ✓ 
