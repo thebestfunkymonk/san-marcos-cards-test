@@ -35,8 +35,9 @@ Sections
                                 egg, moss_egg, vesica, rrect, line_circle, circle_circle, unwrap
     2  regions and marks        R, D, U, mirror, bi, box, halfplane, line, seg, fill, dot, outline,
                                 hatch_in, clip_in, atomic, clip_out
-    3  Part and Scene           Part, Scene (add / part / compose / layers; rank= clips + heals
-                                against the band), flatten_fills, silhouette_line,
+    3  Part and Scene           Part, Scene (add / part / compose / layers; rank=None leaves
+                                full-scene continuous art unclipped by the band), flatten_fills, silhouette_line,
+    3a C2 court helpers         rot180, c2, s_curve, seam_half
                                 heal (logs every change, with the neighbour it fled)
     4  current lines (§G.24)    current_lines (safe curled terminals), lock_fan
     5  faces (§H.0)             FaceSpec, Face, face(center, gaze=frontal | 3/4-left | 3/4-right |
@@ -117,6 +118,89 @@ def ang(c, p):
 def unit(deg):
     a = math.radians(deg)
     return np.array([math.cos(a), math.sin(a)])
+
+
+def rot180(value, cx=T.CX, cy=T.CY):
+    """Rotate a point, path, region, Frag or Part 180° about ``(cx, cy)``."""
+    if isinstance(value, Part):
+        return Part(shapely.affinity.rotate(value.shape, 180.0, origin=(cx, cy)),
+                    value.fills.rot180(cx, cy), value.lines.rot180(cx, cy), dict(value.meta))
+    if isinstance(value, C.Frag):
+        return value.rot180(cx, cy)
+    if isinstance(value, np.ndarray) and value.shape == (2,):
+        return P(2 * cx - value[0], 2 * cy - value[1])
+    if isinstance(value, (tuple, list)) and len(value) == 2 and all(
+            isinstance(v, (int, float, np.integer, np.floating)) for v in value):
+        return P(2 * cx - value[0], 2 * cy - value[1])
+    if isinstance(value, list) and value and all(
+            isinstance(point, (tuple, list, np.ndarray)) and len(point) == 2 for point in value):
+        return G.rotate180(np.asarray(value, dtype=float), cx, cy)
+    return G.rotate180(value, cx, cy)
+
+
+def c2(value, cx=T.CX, cy=T.CY):
+    """C2-close geometry or drawable art: ``value ∪ rot180(value)``."""
+    if isinstance(value, Part):
+        rotated = rot180(value, cx, cy)
+        return Part(U(value.shape, rotated.shape), value.fills + rotated.fills,
+                    value.lines + rotated.lines, dict(value.meta))
+    if isinstance(value, C.Frag):
+        return value + rot180(value, cx, cy)
+    return U(value, rot180(value, cx, cy))
+
+
+def _catmull_rom(points, samples=24):
+    """Sample a Catmull-Rom curve through points with end-chord tangents."""
+    points = np.asarray(points, dtype=float)
+    if points.ndim != 2 or points.shape[1] != 2 or len(points) < 2:
+        raise ValueError("Catmull-Rom needs at least two (x, y) points")
+    if not isinstance(samples, (int, np.integer)) or samples < 1:
+        raise ValueError("samples must be a positive integer")
+    padded = np.vstack([2 * points[0] - points[1], points, 2 * points[-1] - points[-2]])
+    out = []
+    for i in range(1, len(padded) - 2):
+        p0, p1, p2, p3 = padded[i - 1], padded[i], padded[i + 1], padded[i + 2]
+        for t in np.linspace(0.0, 1.0, samples, endpoint=False):
+            t2, t3 = t * t, t * t * t
+            out.append(0.5 * ((2 * p1) + (-p0 + p2) * t
+                              + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2
+                              + (-p0 + 3 * p1 - 3 * p2 + p3) * t3))
+    out.append(padded[-2])
+    return np.asarray(out)
+
+
+def s_curve(left_half, n=24):
+    """Build a C2 Catmull-Rom S-curve from left-side control points.
+
+    ``left_half`` runs left-to-centre but excludes the centre. Its rotated
+    reflection is appended automatically, yielding a full symmetric seam.
+    """
+    left = [tuple(map(float, point)) for point in left_half]
+    if len(left) < 2:
+        raise ValueError("s_curve needs at least two left-half control points")
+    centre = (float(T.CX), float(T.CY))
+    right = [(2 * T.CX - x, 2 * T.CY - y) for x, y in reversed(left)]
+    return _catmull_rom(left + [centre] + right, samples=n)
+
+
+def seam_half(curve, centre=(T.CX, T.CY)):
+    """Return the sampled curve's left half as a ``SEAM`` point list.
+
+    The returned points run from the left edge/control point to the exact
+    card centre, ready for ``frames.seam_points`` or ``SEAM = ...``.
+    """
+    points = np.asarray(curve, dtype=float)
+    if points.ndim != 2 or points.shape[1] != 2 or len(points) < 2:
+        raise ValueError("seam curve must contain at least two (x, y) points")
+    centre = P(centre)
+    idx = int(np.argmin(np.hypot(points[:, 0] - centre[0], points[:, 1] - centre[1])))
+    if np.hypot(*(points[idx] - centre)) > 0.5:
+        raise ValueError(f"curve must pass through its centre {tuple(centre)}")
+    half = points[:idx + 1].copy()
+    half[-1] = centre
+    if len(half) < 2 or np.any(np.diff(half[:, 0]) < -1e-7):
+        raise ValueError("left seam half must run monotonically from left to centre")
+    return [tuple(map(float, point)) for point in half]
 
 
 def circ3(p0, p1, p2):
@@ -636,7 +720,12 @@ class Scene:
     clipped to what is visible, plus the figure silhouette (the union of the
     ``sil`` items' regions) stroked once at CONTOUR — so every interior edge
     stays MEDIUM automatically (§B.2: 2 : 1) — and then ``heal``s the §I.12
-    near-misses clipping leaves. ``heal_log`` lists every change."""
+    near-misses clipping leaves. ``heal_log`` lists every change.
+
+    ``rank=None`` is full-scene mode: no court-band clip or special band-rule
+    healing is applied. Continuous court art should be composed this way,
+    then clipped and rotated by ``deck.build``.
+    """
     items: list = field(default_factory=list)
     clip_tol: float = 0.05
     heal_log: list = field(default_factory=list)
@@ -3190,10 +3279,15 @@ def lens(s: LensSpec = LensSpec()):
     return {"R": Rr, "cL": cL, "cR": cR, "top": P(s.cx, s.throat_y)}
 
 
-def tunic(s: LensSpec = LensSpec(), *, pattern_kind="karst_flooded", clear_below=None, **kw) -> Part:
+_DEFAULT_TUNIC_CLEAR_BELOW = object()
+
+
+def tunic(s: LensSpec = LensSpec(), *, pattern_kind="karst_flooded",
+          clear_below=_DEFAULT_TUNIC_CLEAR_BELOW, **kw) -> Part:
     """The lens tunic (paper), patterned (default: §G.12 karst voids whose
-    largest cavities are flooded jade — the aquifer). ``clear_below``: keep
-    the pattern above this y (the band / medallion)."""
+    largest cavities are flooded jade — the aquifer). By default pattern
+    stops above the band; set ``clear_below`` to a chosen y to move the
+    cutoff, or ``None`` to omit the band cutoff for a continuous court."""
     g = lens(s)
     reg = R(circle(g["cL"], g["R"])).intersection(R(circle(g["cR"], g["R"])))
     reg = reg.intersection(box(0, 0, 750, 545))
@@ -3201,8 +3295,9 @@ def tunic(s: LensSpec = LensSpec(), *, pattern_kind="karst_flooded", clear_below
     fills = C.Frag()
     if pattern_kind:
         prg = reg.buffer(-(MEDIUM / 2 + 3.2))
-        yb = (T.BAND_Y0 - 0.55 - 3.2) if clear_below is None else clear_below
-        prg = prg.intersection(box(0, 0, 750, yb))
+        yb = (T.BAND_Y0 - 0.55 - 3.2) if clear_below is _DEFAULT_TUNIC_CLEAR_BELOW else clear_below
+        if yb is not None:
+            prg = prg.intersection(box(0, 0, 750, yb))
         pf = pattern(prg, pattern_kind, origin=(s.cx, s.throat_y + 22.0), **kw)
         fills += pf.select(lambda m: m.kind == "fill" and m.layer != "ink")
         lines += pf.select(lambda m: not (m.kind == "fill" and m.layer != "ink"))
@@ -3679,7 +3774,7 @@ class SceptreSpec:
     collar_h: float = 7.4
     kinds: tuple = ("marl", "strata", "chert")
     color: str = GOLD
-    visible_to: float = 511.0      # the band's top rule: segment detail stops 4.5 px above it
+    visible_to: float | None = 511.0  # segment detail stops above this y; None disables the band cutoff
 
 
 def _segment(kind, x, y0, y1, hw, edge=CONTOUR):
@@ -3731,7 +3826,8 @@ def sceptre(s: SceptreSpec = SceptreSpec()) -> Part:
         y1 = ys[k + 1] - s.collar_h / 2
         seg_f += _segment(s.kinds[k % len(s.kinds)], x, y0 + 3.0, y1 - 3.0, s.hw)
     # detail never ends a hair above the band rule (§I.12): drop what the band cuts
-    lines += clip_in(seg_f, box(0, 0, 2000, s.visible_to - 4.5 - MEDIUM))
+    if s.visible_to is not None:
+        lines += clip_in(seg_f, box(0, 0, 2000, s.visible_to - 4.5 - MEDIUM))
     for cd in collars:
         lines += outline(cd)
     lines += clip_out(outline(knop), fin, eps=-0.5, trap=0.0)
@@ -4011,20 +4107,24 @@ def lion_clasp(c, size=40.0) -> Part:
     return Part(shape, fills, lines, {"strokes": 11, "silhouette": sil, "head": hc, "face": face})
 
 
-def band_guard(sc: "Scene", rank="K", cx=AX):
+def band_guard(sc: "Scene", rank="K", cx=AX, *, band_y0=T.BAND_Y0, center_y=T.CY):
     """Add the rank medallion's invisible occluder to a Scene (add it LAST).
-    The system clips court art at y 511 and masks a disc round the medallion;
+    The system clips band-mode court art at ``band_y0`` and masks a disc round the medallion;
     a line cut by that disc just above y 511 would end < 3 px from the band
     rule (a QA 12 failure). The guard (the mask disc plus a strip down from
-    y 504.5 as wide as the disc) makes everything behind it stop ≥ 3 px
+    ``band_y0 - 7`` as wide as the disc) makes everything behind it stop ≥ 3 px
     above the rule there, and fills stop 3 px short. Jacks have no
-    medallion: nothing to guard."""
+    medallion: nothing to guard. A full/continuous ``Scene(rank=None)`` has
+    no band and is left untouched."""
+    if sc.rank is None:
+        return sc
     from deck import frames as _F
     rm = _F.medallion_radius(rank)
     if not rm:
         return sc
     rmask = rm + 4.2
-    g = U(circle((cx, T.CY), rmask + 0.6), box(cx - rmask - 3.0, 504.0, cx + rmask + 3.0, T.CY + 40))
+    g = U(circle((cx, center_y), rmask + 0.6),
+          box(cx - rmask - 3.0, band_y0 - 7.0, cx + rmask + 3.0, center_y + 40))
     sc.add("band-guard", C.Frag(), g, sil=False)
     return sc
 

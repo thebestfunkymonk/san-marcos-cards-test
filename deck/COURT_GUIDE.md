@@ -5,6 +5,23 @@ How to draw a court so that all twelve look drawn by one hand. The brief
 `deck/courtkit.py`; the worked example is `art/KS.py` (K♠ · The King Beneath).
 Read `deck/ART_CONTRACT.md` first for how a module plugs into the deck.
 
+### Continuous courts
+
+The recipe below describes the existing band-mode courts. For a continuous
+double-head, compose the full C2 scene with `K.Scene(rank=None)`, do not add
+`K.band_guard`, and set `DOUBLE_HEAD = "continuous"` plus a `SEAM` accepted by
+`deck.frames`. `rank=None` means no band clip or band-rule healing; the build
+system clips and rotates the finished art. Build every seam-crossing garment
+as C2 art with `K.c2(...)`, or extend it past the seam so both halves meet.
+`K.rot180(...)` supplies the partner; `K.s_curve(left_half)` and
+`K.seam_half(curve)` create a C2 S-curve `SEAM` point list.
+For band-dependent kit pieces, raise `tunic(clear_below=...)` and
+`SceptreSpec(visible_to=...)` to the seam, or pass `None` to omit those
+cutoffs.
+Prefer a negative seam angle or a custom C2 S-curve through the robes: the
+default +28° seam can cross the viewer-right attribute fists around
+y=404–456. The seam is not drawn.
+
 Contents
 
 1. The one-page recipe
