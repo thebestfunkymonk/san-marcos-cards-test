@@ -82,6 +82,24 @@ def test_sceptre_visible_to_can_extend_segment_detail_past_old_band_limit():
     assert clipping.call_count == 0
 
 
+def test_sceptre_without_cutoff_preserves_every_segment_pattern():
+    spec = K.SceptreSpec(visible_to=None)
+    result = K.sceptre(spec)
+    expected = K.C.Frag()
+    for i, (y0, y1) in enumerate(zip(result.meta["ys"], result.meta["ys"][1:])):
+        expected += K._segment(spec.kinds[i % len(spec.kinds)], spec.x,
+                               y0 + spec.collar_h / 2 + 3,
+                               y1 - spec.collar_h / 2 - 3, spec.hw)
+    details = [mark for mark in result.lines.marks
+               if mark.role in {mark.role for mark in expected.marks}]
+    assert expected.marks
+    assert [(mark.role, mark.d, mark.w) for mark in details] == [
+        (mark.role, mark.d, mark.w) for mark in expected.marks
+    ]
+    assert max(points[:, 1].max() for mark in details
+               for points, _closed in G.flatten(mark.d)) > 511
+
+
 def test_zoom_crop_rerenders_exact_vector_region(tmp_path):
     svg = tmp_path / "crop.svg"
     out = tmp_path / "crop.png"

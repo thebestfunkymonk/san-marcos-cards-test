@@ -207,7 +207,10 @@ grip.add_to(sc, "handR", halo=0)
   visible side. The thumb side follows both, so don't flip the geometry by
   hand. The hand has four tapered fingers with a small knuckle rhythm and one
   opposing thumb; use at most three short MEDIUM inner lines, each beginning
-  at least 7.3 px clear of a fingertip notch.
+  at least 7.3 px clear of a fingertip notch. Returned lines keep at least
+  7.3 px centre-to-centre (4.2 px paper); crowded lines are shortened or
+  dropped at small sizes. Positive spread fans outward in all hand/view
+  combinations, including the reflected palm view.
 * `hand5(..., sleeve=sleeve)` and `hand.with_sleeve(sleeve)` return a single
   hand+sleeve Part and a shared outer contour; the cuff is only a colour edge.
   Without a pre-composed sleeve, add the sleeve/cuff first and use

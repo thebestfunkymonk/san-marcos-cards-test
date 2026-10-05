@@ -1,7 +1,10 @@
 import math
 
 import numpy as np
+from scipy.signal import find_peaks
 from shapely.geometry import Point, Polygon
+from shapely.geometry.polygon import orient
+from shapely.ops import substring
 
 from deck import courtkit as K
 from deck import tokens as T
@@ -68,6 +71,88 @@ def test_interior_lines_are_short_clear_of_notches_and_at_most_three():
                 assert all(5.0 <= line.length <= 0.30 * meta["size"] for line in lines)
                 assert all(line.distance(notch) >= 7.3 for line in lines for notch in meta["notch_points"])
                 assert all(mark.w == T.MEDIUM for mark in meta["inner"].marks)
+
+
+def _visible_digit_lobes(result):
+    """Detect convex tip caps on the actual outline, not the metadata count.
+
+    Distal digit neighbourhoods exclude wrist/palm corners. Each convex
+    maximum can belong to only one digit. A recess of at least half a
+    MEDIUM stroke must separate adjacent caps; tiny scallops in a merged
+    finger mass are not five visible digits.
+    """
+    boundary = orient(result.shape, sign=1).exterior
+    count = math.ceil(boundary.length / 0.25)
+    points = np.array([boundary.interpolate(i * boundary.length / count).coords[0]
+                       for i in range(count)])
+    step = round(2.0 / (boundary.length / count))
+    incoming = points - np.roll(points, step, axis=0)
+    outgoing = np.roll(points, -step, axis=0) - points
+    turns = np.arctan2(incoming[:, 0] * outgoing[:, 1] - incoming[:, 1] * outgoing[:, 0],
+                      np.sum(incoming * outgoing, axis=1))
+    peaks, _ = find_peaks(np.tile(turns, 3), height=0.4, prominence=0.25,
+                         distance=round(5.0 / (boundary.length / count)))
+    distal = [substring(line, 0.5, 1.0, normalized=True)
+              for line in result.hand.meta["digit_centerlines"]]
+    radii = np.array(result.hand.meta["digit_tip_radii"])
+    detected = {}
+    for peak in peaks:
+        if count <= peak < 2 * count:
+            cap = Point(points[peak % count])
+            distances = np.array([line.distance(cap) for line in distal])
+            digit = int(np.argmin(distances / radii))
+            if distances[digit] <= 2.0 * radii[digit]:
+                if digit not in detected or distances[digit] < detected[digit][1]:
+                    detected[digit] = (peak % count, distances[digit])
+    visible = len(detected)
+    for first, second in ((4, 0), (0, 1), (1, 2), (2, 3)):
+        if first not in detected or second not in detected:
+            continue
+        start, end = detected[first][0], detected[second][0]
+        if (end - start) % count > count / 2:
+            start, end = end, start
+        arc = points[np.arange(start, start + (end - start) % count + 1) % count]
+        chord = points[end] - points[start]
+        offsets = arc - points[start]
+        recess = np.max((chord[0] * offsets[:, 1] - chord[1] * offsets[:, 0])
+                        / np.linalg.norm(chord))
+        if recess < T.MEDIUM / 2:
+            visible -= 1
+    return visible
+
+
+def test_five_visible_silhouette_digits_with_spread_and_curl_in_every_pose():
+    for pose in POSES:
+        for hand in HANDS:
+            for view in VIEWS:
+                for size in SIZES:
+                    for spread, curl in ((0.0, 0.0), (12.0, 4.0), (7.0, 25.0), (18.0, 45.0)):
+                        result = _hand(pose, hand=hand, view=view, size=size,
+                                       spread=spread, curl=curl,
+                                       grip_w=0.72 * size if pose == "cup" else 28.0)
+                        assert _visible_digit_lobes(result) == 5, (
+                            pose, hand, view, size, spread, curl)
+
+
+def test_inner_lines_keep_four_point_two_pixels_of_paper_at_specimen_sizes():
+    for pose in POSES:
+        for hand in HANDS:
+            for view in VIEWS:
+                for size in SIZES:
+                    for spread, curl in ((0.0, 0.0), (12.0, 4.0), (7.0, 25.0), (18.0, 45.0)):
+                        result = _hand(pose, hand=hand, view=view, size=size,
+                                       spread=spread, curl=curl)
+                        lines = result.hand.meta["inner_lines"]
+                        assert len(lines) == len(result.hand.meta["inner"].marks) <= 3
+                        for i, first in enumerate(lines):
+                            for second in lines[i + 1:]:
+                                assert first.distance(second) >= T.MEDIUM + 4.2 - 1e-8, (
+                                    pose, hand, view, size, spread, curl,
+                                    first.distance(second))
+                        drawn = [line for mark in result.hand.meta["inner"].marks
+                                 for line in K._stroke_lines(mark.d)]
+                        assert all(first.distance(second) >= T.MEDIUM + 4.2 - 1e-8
+                                   for i, first in enumerate(drawn) for second in drawn[i + 1:])
 
 
 def test_sleeve_is_merged_into_one_outline_with_a_cuff_colour_edge():

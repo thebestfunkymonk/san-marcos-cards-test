@@ -168,6 +168,11 @@ def rows():
                for pose, v in (("wrap", "back"), ("cup", "palm"), ("rest", "back"),
                                ("hold_flat", "palm"), ("open", "back"))
                for c in ("L", "R")]))
+    for pose in ("wrap", "cup", "rest", "hold_flat", "open"):
+        for view in ("back", "palm"):
+            hand5_row(f"hand5 {pose} · {view} · spread 12° + curl 4°", pose,
+                      view=view, spread=12.0, curl=4.0,
+                      grip_w=62.0 if pose == "cup" else 28.0)
     return R
 
 
@@ -238,8 +243,10 @@ def _scene(c):
         sc.part("orb", K.orb(tuple(hand.hand.meta["object_center"]), hand.hand.meta["object_radius"]))
     elif obj and obj[0] == "flat-meta":
         center = tuple(hand.hand.meta["object_center"])
-        slab = K.box(center[0] - obj[1] / 2, center[1] - obj[2] / 2,
-                     center[0] + obj[1] / 2, center[1] + obj[2] / 2)
+        width = hand.hand.meta["object_width"]
+        height = hand.hand.meta["object_height"]
+        slab = K.box(center[0] - width / 2, center[1] - height / 2,
+                     center[0] + width / 2, center[1] + height / 2)
         slab = shapely.affinity.rotate(slab, float(a[1]), origin=center)
         sc.part("scroll", K.Part(slab, K.fill(slab, K.GOLD), K.outline(slab)))
     W = _pt(hand.wrist)

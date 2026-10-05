@@ -3182,13 +3182,15 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     for wrap it is the centre of the shaft at the grip.
 
     ``curl`` adjusts finger bend/wrap (0–60°); ``spread`` fans them and opens
-    the cup scallop (0–18°). ``grip_w`` is shaft width for wrap and the
-    held-object diameter/width for cup/hold_flat; cup uses a minimum rim
+    the cup scallop (0–18°), outward for either hand and view. ``grip_w`` is
+    shaft width for wrap and the held-object diameter/width for cup/hold_flat;
+    cup uses a minimum rim
     diameter of 0.72 × ``size`` to keep the thumb web open. ``view`` is ``back`` or
     ``palm``; ``hand`` is the figure's anatomical ``L`` or ``R``. The thumb
     leaves from the palm edge on an open V and ends beside the index tip,
     never across the four-finger band. At most three short MEDIUM lines are
-    drawn, with the finger lines starting clear of the tip notches.
+    drawn, with the finger lines starting clear of the tip notches and at
+    least 4.2 px of paper between them. Crowded lines are shortened or omitted.
 
     When ``sleeve`` is a Part or region, the returned Hand carries the merged
     hand+sleeve Part and one continuous outer outline; its cuff is a colour
@@ -3225,6 +3227,10 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     M, Mf = _rigid(at, rot, mirror_x=False)
     ys = np.linspace(-0.3375 * hb, 0.3375 * hb, 4)
     ys = list(ys[::-1] if thumb_side > 0 else ys)
+    if is_wrap:
+        # Enough pitch for open webs even after the silhouette is stroked.
+        ys = [y * (0.525 / 0.3375) for y in ys]
+    fan_side = -thumb_side  # digit order reverses with the visible thumb side
     widths = (0.19, 0.205, 0.20, 0.18)
     lengths = (0.94, 0.99, 1.0, 0.87)
     centerlines = []
@@ -3238,17 +3244,14 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         # cross the shaft and turn only a little around its far edge.
         for i, y in enumerate(ys):
             fw = widths[i] * hb
-            y_shift = (i - 1.5) * (spread / 18.0) * 0.035 * hb
+            y_shift = fan_side * (i - 1.5) * (spread / 18.0) * 0.035 * hb
             root = P(0.43 * hb + (i in (0, 3)) * 0.025 * hb, y + y_shift)
-            tip_y = y + y_shift + thumb_side * (i - 1.5) * (0.012 + 0.03 * spread / 18.0) * hb
+            tip_y = y + y_shift + fan_side * (i - 1.5) * (0.012 + 0.03 * spread / 18.0) * hb
             tip = P(-a - (0.055 + 0.025 * math.sin(math.radians(curl))) * hb
                     - 0.012 * hb * lengths[i], tip_y)
             ctrl = P(-a - (0.19 + 0.10 * math.sin(math.radians(curl))) * hb,
-                     y + y_shift + thumb_side * (i - 1.5) * 0.018 * hb)
+                     y + y_shift + fan_side * (i - 1.5) * 0.018 * hb)
             cen = _qbez(root, ctrl, tip, 18)
-            # A small additional bend gives the fingertips a wrapped, not
-            # ruler-straight, rhythm around a cylinder.
-            cen[-4:, 0] += np.linspace(0.0, 0.035 * hb, 4)
             digit = _digit(cen, np.linspace(fw * 0.88, fw * 0.80, len(cen)))
             digits.append(digit)
             centerlines.append(cen)
@@ -3258,16 +3261,17 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         # A tapered palm quad joins the four bases. Its heel grows into a real
         # wrist on the forearm side, not a boxed-off finger block.
         palm = Polygon([
-            (0.26 * hb, -0.405 * hb), (0.72 * hb, -0.43 * hb),
-            (1.10 * hb, -0.30 * hb), (1.18 * hb, 0.12 * hb),
-            (0.89 * hb, 0.43 * hb), (0.29 * hb, 0.405 * hb),
+            (0.26 * hb, -0.60 * hb), (0.72 * hb, -0.62 * hb),
+            (1.10 * hb, -0.42 * hb), (1.18 * hb, 0.12 * hb),
+            (0.89 * hb, 0.62 * hb), (0.29 * hb, 0.60 * hb),
         ]).buffer(1.3, quad_segs=10).buffer(-1.3, quad_segs=10)
-        thumb_root = P(0.39 * hb, thumb_side * 0.50 * hb)
-        thumb_mcp = P(0.02 * hb, thumb_side * 0.70 * hb)
-        thumb_tip = P(-a - 0.075 * hb, thumb_side * 0.56 * hb)
+        thumb_fan = 1.5 * (spread / 18.0) * 0.065 * hb
+        thumb_root = P(0.39 * hb, thumb_side * 0.68 * hb)
+        thumb_mcp = P(0.02 * hb, thumb_side * (0.90 * hb + thumb_fan))
+        thumb_tip = P(-a - 0.075 * hb, thumb_side * (0.76 * hb + thumb_fan))
         thumb_cen = np.vstack([
-            _qbez(thumb_root, P(0.22 * hb, thumb_side * 0.63 * hb), thumb_mcp, 12)[:-1],
-            _qbez(thumb_mcp, P(-0.20 * hb, thumb_side * 0.64 * hb), thumb_tip, 14),
+            _qbez(thumb_root, P(0.22 * hb, thumb_side * (0.83 * hb + thumb_fan)), thumb_mcp, 12)[:-1],
+            _qbez(thumb_mcp, P(-0.20 * hb, thumb_side * (0.84 * hb + thumb_fan)), thumb_tip, 14),
         ])
         thumb = _digit(thumb_cen, np.linspace(0.18 * hb, 0.12 * hb, len(thumb_cen)))
         wrist = P(0.96 * hb, 0.16 * hb)
@@ -3280,8 +3284,8 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         web_lines = []
         for i in range(3):
             gap_y = (ys[i] + ys[i + 1]) / 2.0
-            start_x = 0.22 * hb
-            end_x = 0.45 * hb
+            start_x = 0.40 * hb
+            end_x = 0.80 * hb
             if end_x > start_x + 4.0:
                 web_lines.append(LineString([(start_x, gap_y), (end_x, gap_y)]))
         object_center = P(0.0, 0.0)
@@ -3292,7 +3296,7 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         wrist = P(0.0, 0.0)
         wrist_dir = P(-1.0, 0.0)
         width_default = 0.95 * hb
-        object_center = (P(0.88 * size, thumb_side * (0.55 * hb - object_height / 2.0))
+        object_center = (P(0.88 * size, thumb_side * (0.80 * hb - object_height / 2.0))
                          if pose == "hold_flat" else P(1.08 * size, 0.0))
         base_spread = math.radians(spread)
         curl_rad = math.radians(curl)
@@ -3302,7 +3306,7 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
             root = P(x_kn - (0.014 * hb if i in (0, 3) else 0.0), y * 0.94)
             # A slight anatomical fan remains at spread=0; explicit spread
             # adds to it while leaving room between the fingertip lobes.
-            fan = side_from_mid * (base_spread / 2.0 + math.radians(2.0))
+            fan = fan_side * side_from_mid * (base_spread / 2.0 + math.radians(2.0))
             direction = P(math.cos(fan), math.sin(fan))
             if pose == "cup":
                 radius = max(object_radius, 0.36 * size)
@@ -3311,7 +3315,7 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
                 tip_y = min(max(y * (1.08 + 0.12 * spread / 18.0), -0.82 * radius), 0.82 * radius)
                 # Let each tapered tip overlap the orb just enough that its
                 # outline meets the rim without a paper sliver at the contact.
-                tip_x = (object_center[0] - math.sqrt(max(radius * radius - tip_y * tip_y, 0.0)) - 5.0
+                tip_x = (object_center[0] - math.sqrt(max(radius * radius - tip_y * tip_y, 0.0)) + 1.5
                          - 0.10 * hb * math.sin(math.radians(curl)))
                 tip = P(tip_x, tip_y)
                 ctrl = P(root[0] + 0.68 * (tip_x - root[0]), (root[1] + tip_y) / 2)
@@ -3356,14 +3360,13 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
                 (0.22 * size, 0.43 * hb), (-stub, 0.23 * hb),
             ]).buffer(2.0, quad_segs=10).buffer(-2.0, quad_segs=10)
             if pose == "hold_flat":
-                root = P(0.18 * size, thumb_side * 0.55 * hb)
+                root = P(0.28 * size, thumb_side * 0.28 * hb)
                 thumb_tip_x = object_center[0] - object_width / 2.0 + 1.2
                 thumb_tip_y = object_center[1] + thumb_side * object_height / 2.0
-                mcp = P(0.5 * (root[0] + thumb_tip_x), thumb_side * 0.57 * hb)
+                mcp = P(0.49 * size, thumb_side * 0.80 * hb)
                 thumb_tip = P(thumb_tip_x, thumb_tip_y)
-                thumb_controls = (P(0.29 * size, thumb_side * 0.56 * hb),
-                                  P(0.75 * (mcp[0] + thumb_tip_x),
-                                    object_center[1] + thumb_side * 0.78 * object_height))
+                thumb_controls = (P(0.37 * size, thumb_side * 0.67 * hb),
+                                  (mcp + thumb_tip) / 2.0)
             else:
                 root = P(0.16 * size, thumb_side * 0.16 * hb)
                 mcp = P(0.27 * size, thumb_side * 0.25 * size)
@@ -3417,6 +3420,10 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         for tip, radius in zip(tips, tip_radii)
     ] + [Point(*thumb_cen[-1]).buffer(0.075 * hb + 2.0, quad_segs=12)])
     softened = raw.buffer(1.25, quad_segs=10).buffer(-1.25, quad_segs=10)
+    if pose == "cup":
+        # Fill narrow proximal webs under the rim without erasing the tips.
+        softened = raw.buffer(CONTOUR / 2 + 0.4, quad_segs=12).buffer(
+            -CONTOUR / 2 - 0.4, quad_segs=12)
     local_shape = _clean(raw.union(softened.difference(tip_keepout)), r_open=0.35, r_close=0.35)
     if local_shape.geom_type != "Polygon":
         local_shape = _biggest(local_shape)
@@ -3427,7 +3434,12 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     inner_zone = local_shape.buffer(-MEDIUM / 2 - GAP_MARK - 0.4)
     for candidate in web_lines:
         clipped = candidate.intersection(inner_zone)
+        for accepted in inner_lines:
+            # Preserve the minimum after path coordinates round to 0.001 px.
+            clipped = clipped.difference(accepted.buffer(MEDIUM + GAP + 0.002))
         pieces = [g for g in _lines_of(clipped) if g.length >= 5.0]
+        pieces = [g for g in pieces
+                  if all(g.distance(accepted) >= MEDIUM + GAP for accepted in inner_lines)]
         if pieces:
             piece = max(pieces, key=lambda g: g.length)
             # On wrap the start is the palmward endpoint. On the other poses
@@ -4139,6 +4151,8 @@ def sceptre(s: SceptreSpec = SceptreSpec()) -> Part:
     # detail never ends a hair above the band rule (§I.12): drop what the band cuts
     if s.visible_to is not None:
         lines += clip_in(seg_f, box(0, 0, 2000, s.visible_to - 4.5 - MEDIUM))
+    else:
+        lines += seg_f
     for cd in collars:
         lines += outline(cd)
     lines += clip_out(outline(knop), fin, eps=-0.5, trap=0.0)
