@@ -1,0 +1,291 @@
+{
+ "id": "QH",
+ "stem": "QH",
+ "kind": "court",
+ "status": "art",
+ "17": {
+  "ok": true,
+  "detail": []
+ },
+ "1": {
+  "ok": true,
+  "detail": []
+ },
+ "4": {
+  "ok": true,
+  "detail": []
+ },
+ "4b": {
+  "ok": true,
+  "used": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "budget": [
+   "gold",
+   "ink",
+   "jade",
+   "red"
+  ],
+  "detail": []
+ },
+ "6": {
+  "ok": true,
+  "detail": [],
+  "bbox": {
+   "index-rank/tl": [
+    58.56,
+    44.9,
+    114.81,
+    152.86
+   ],
+   "index-rank/br": [
+    635.19,
+    897.14,
+    691.44,
+    1005.1
+   ],
+   "index-pip/tl": [
+    51.76,
+    164.0,
+    116.24,
+    223.32
+   ],
+   "index-pip/br": [
+    633.76,
+    826.68,
+    698.24,
+    886.0
+   ]
+  }
+ },
+ "9": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "10c": {
+  "ok": true,
+  "min_clear": 78.84,
+  "detail": []
+ },
+ "25": {
+  "ok": true,
+  "diff": 5e-05,
+  "detail": []
+ },
+ "10a": {
+  "ok": true,
+  "diff": 0.0,
+  "clusters": [],
+  "detail": []
+ },
+ "8": {
+  "ok": true,
+  "detail": []
+ },
+ "5": {
+  "ok": true,
+  "gold_pct": 8.2,
+  "balance": {
+   "ink": 16.8,
+   "gold": 8.2,
+   "red": 12.5,
+   "jade": 16.2,
+   "paper": 46.3
+  },
+  "window_px2": 430811,
+  "detail": [
+   "balance: gold 8.2% (target 10-15); ink 16.8% (target 8-16)"
+  ]
+ },
+ "5r": {
+  "ok": true,
+  "regions": [],
+  "detail": []
+ },
+ "4c": {
+  "ok": "warn",
+  "regions": [
+   {
+    "bbox": [
+     400.0,
+     158.3,
+     409.0,
+     166.0
+    ],
+    "area": 14.4,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     341.0,
+     884.0,
+     350.0,
+     891.7
+    ],
+    "area": 14.4,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     579.3,
+     293.3,
+     584.7,
+     296.3
+    ],
+    "area": 12.6,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     165.3,
+     753.7,
+     170.7,
+     756.7
+    ],
+    "area": 12.6,
+    "layer": "jade",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     332.0,
+     188.3,
+     343.7,
+     194.0
+    ],
+    "area": 23.7,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     406.3,
+     856.0,
+     418.0,
+     861.7
+    ],
+    "area": 23.7,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     564.7,
+     265.0,
+     570.0,
+     268.0
+    ],
+    "area": 12.9,
+    "layer": "gold",
+    "under": "ink"
+   },
+   {
+    "bbox": [
+     180.0,
+     782.0,
+     185.3,
+     785.0
+    ],
+    "area": 12.9,
+    "layer": "gold",
+    "under": "ink"
+   }
+  ],
+  "detail": [
+   "jade hidden under the ink solid at [400.0, 158.3, 409.0, 166.0]",
+   "jade hidden under the ink solid at [341.0, 884.0, 350.0, 891.7]",
+   "jade hidden under the ink solid at [579.3, 293.3, 584.7, 296.3]"
+  ]
+ },
+ "11": {
+  "ok": null,
+  "detail": [
+   "n/a"
+  ]
+ },
+ "12": {
+  "ok": "warn",
+  "vector": [],
+  "raster": {
+   "ink": {
+    "thin": [],
+    "gaps": [
+     {
+      "bbox": [
+       539.7,
+       276.7,
+       541.7,
+       295.3
+      ],
+      "area": 20.9
+     },
+     {
+      "bbox": [
+       208.3,
+       754.7,
+       210.3,
+       773.3
+      ],
+      "area": 20.9
+     },
+     {
+      "bbox": [
+       249.3,
+       345.7,
+       258.3,
+       348.0
+      ],
+      "area": 14.3
+     },
+     {
+      "bbox": [
+       491.7,
+       702.0,
+       500.7,
+       704.3
+      ],
+      "area": 14.3
+     },
+     {
+      "bbox": [
+       525.7,
+       95.7,
+       529.0,
+       103.3
+      ],
+      "area": 12.7
+     },
+     {
+      "bbox": [
+       221.0,
+       946.7,
+       224.3,
+       954.3
+      ],
+      "area": 12.7
+     }
+    ]
+   }
+  },
+  "pieces": 788,
+  "detail": [
+   "ink: 0 thin, 6 narrow-gap region(s) (raster)"
+  ]
+ },
+ "24": {
+  "ok": false,
+  "detail": [
+   "white-stock build missing"
+  ]
+ },
+ "flags_png": "/home/luke/Projects/design/san-marcos-deck/build/qa/flags/QH.png",
+ "seconds": 20.46
+}

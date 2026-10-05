@@ -1,0 +1,123 @@
+"""art/JC.py — J♣ · The River Squire (House of the Reed), creative brief §H.9.
+
+Built with deck.courtkit (the K♠'s hand) plus art/_jc_face.py (the 3/4-left
+face), art/_jc_head.py (hair, heron plume), art/_jc_body.py (jerkin, sleeves,
+pecan work, hands), art/_jc_paddle.py (the paddle) and art/_jc_parts.py (cap,
+husk buckle).
+"""
+from __future__ import annotations
+
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from deck import courtkit as K  # noqa: E402
+from deck.motifs import core as C  # noqa: E402
+import _jc_body as B  # noqa: E402
+import _jc_face as F  # noqa: E402
+import _jc_head as H  # noqa: E402
+import _jc_paddle as PD  # noqa: E402
+import _jc_parts as J  # noqa: E402
+
+HEAD = (385.0, 207.0)
+PADDLE_X = 548.0
+FIST = (548.0, 408.0)
+WL, WR = (266.0, 437.0), (524.0, 440.0)
+BELT_Y = 440.0
+FACE_LOWER = [(429, 207), (427, 234), (418, 256), (398, 273), (377, 280), (362, 275), (351, 259), (345, 234),
+              (341, 207)]
+LEAF = dict(length=96.0, pairs=4, leaflet=(26.0, 6.6), angle=65.0, step=15.0, first=15.0, falcate=-3.0, bend=9.0,
+            shrink=0.08, alt=5.0)
+LEAF_L = dict(origin=(296.0, 372.0), heading=-112.0, pitch=(64.0, 74.0))
+LEAF_R = dict(origin=(454.0, 372.0), heading=-68.0, pitch=(64.0, 74.0))
+
+
+def figure():
+    sc = K.Scene(rank="J")
+    fc = F.face_jc(HEAD, contour=FACE_LOWER, lids="level", mouth=(-2.5, 37.0, 8.5, 11.0, 1.4, -0.8),
+                   lip=(-1.5, 44.5, 5.5, -1.8), near_brow=((8.0, -11.5), (37.0, -10.0), 5.0),
+                   far_brow=((-8.0, -11.5), (-26.0, -9.0), 3.6), nose=((-3.0, -5.0), (-13.0, 19.5), 4.4, 3.0),
+                   wing=(3.6, -130.0), far_eye=(-17.5, 17.0), near_pdx=-3.5)
+
+    # ---- sleeves (behind the jerkin): puffed, paned by comb sprays -----------------
+    arm_l = B.region([(266, 322), (226, 324), (190, 342), (170, 378), (166, 414), (176, 444)],
+                     ("L", [(176, 444), (240, 452)]), [(240, 452), (246, 420), (252, 370), (266, 322)])
+    sc.part("armL", B.sleeve_part(arm_l, ["M236 336L214 440", "M204 348L186 436"]))
+    arm_r = B.region([(508, 316), (552, 318), (586, 342), (601, 384), (600, 440), (592, 530)],
+                     ("L", [(592, 530), (534, 530)]), [(534, 530), (540, 440), (532, 370), (508, 316)])
+    sc.part("armR", B.sleeve_part(arm_r, ["M548 334L562 520", "M578 352L584 520"]))
+
+    # ---- body -------------------------------------------------------------------
+    torso = B.region([(342, 301), (300, 310), (266, 322), (244, 340)],
+                     [(244, 340), (246, 420), (244, 530)], ("L", [(244, 530), (536, 530)]),
+                     [(536, 530), (538, 420), (536, 340)],
+                     [(536, 340), (512, 322), (466, 308), (418, 300)], ("L", [(418, 300), (342, 301)]))
+    e_l = [(334, 302), (338, 350), (358, BELT_Y - 4.0)]
+    e_r = [(410, 300), (390, 360), (358, BELT_Y - 4.0)]
+    s_l = [(358, BELT_Y + 8.0), (345, 490), (330, 530)]
+    s_r = [(358, BELT_Y + 8.0), (372, 490), (388, 530)]
+    v_top = B.region(e_l, e_r[::-1], ("L", [(410, 300), (334, 302)]))
+    v_bot = B.region(s_l, ("L", [(330, 530), (388, 530)]), s_r[::-1])
+    vee = K.U(v_top, v_bot)
+    sc.add("doublet", K.fill(torso, K.JADE) + K.outline(torso), torso)
+    jer = torso.difference(vee)
+    BUCKLE = (358.0, BELT_Y + 4.0)
+    bl = B.reed_belt(torso, y=BELT_Y, h=24.0, sag=4.0, x0=220.0, x1=560.0, front=358.0,
+                     skip=K.circle(BUCKLE, 40.0))
+    g_parts = [B.ladder_guard(e_l, 15.0, side=-1, extend=(8.0, 0.0), clip=jer),
+               B.ladder_guard(e_r, 15.0, side=+1, extend=(8.0, 0.0), clip=jer),
+               B.ladder_guard(s_l, 14.0, side=+1, extend=(0.0, 8.0), clip=jer, node_every=0),
+               B.ladder_guard(s_r, 14.0, side=-1, extend=(0.0, 8.0), clip=jer, node_every=0)]
+    guards = K.U(*[g.shape for g in g_parts])
+    field = jer.difference(bl.shape.buffer(3.0)).difference(guards.buffer(3.0))
+    lf_l = B.leaf_field(field.intersection(K.box(0, 0, 358, 2000)), leaf_kw=LEAF, **LEAF_L)
+    lf_r = B.leaf_field(field.intersection(K.box(358, 0, 2000, 2000)), leaf_kw=dict(LEAF, bend=-LEAF["bend"]),
+                        **LEAF_R)
+    sc.add("jerkin", K.fill(C.knockout(K.D(jer), lf_l + lf_r), K.RED) + K.outline(jer), jer)
+    for k, g in enumerate(g_parts):
+        sc.part(f"guard{k}", g)
+    sc.part("belt", bl)
+
+    # ---- head -------------------------------------------------------------------
+    sc.part("hair", H.pageboy(outer=[(446, 170), (470, 194), (480, 228), (478, 266), (470, 296), (452, 316)],
+                              inner=[(420, 320), (396, 300), (392, 262), (398, 226), (412, 190), (430, 172),
+                                     (446, 170)], n=4, ends=[168.0, 148.0, 128.0, 108.0], curl_deg=120.0))
+    sc.part("neck", K.neck(fc, bottom=312.0, width=40.0))
+    sc.add("head", fc.lines + K.outline(fc.head), fc.skin)
+    sc.part("collar", B.falling_collar(cf=(369, 300), L0=(348, 290), Lo=(318, 316), Lt=(346, 340), R0=(408, 288),
+                                       Ro=(438, 308), Rt=(394, 342), ci_dy=10.0, hem=7.0))
+    sc.part("ear", J.ear(fc))
+    vane, quill = H.heron_plume3([(458, 150), (460, 118), (472, 92), (498, 76), (532, 72), (564, 78), (588, 74),
+                                  (603, 60)], w_max=32.0, w_root=11.0, quill=48.0, quill_w=9.0, quill_back=20.0,
+                                 swell=0.45, tip_pow=0.7, vane_from=28.0,
+                                 lines=((3.6, 44.0, -62.0, -1), (-3.6, 48.0, -90.0, 0)), curl_deg=80.0)
+    sc.part("plume", vane)
+    sc.part("quill", quill)
+    sc.part("cap", J.cap(fc, tip=(292.0, 171.0), top=(393.0, 106.0), flap_tip=(473.0, 130.0), hatband=10.5))
+    sc.part("clasp", K.lion_clasp((370.0, 336.0), 40.0))
+    sc.part("buckle", J.pecan_husk(BUCKLE, style="D", s=1.25))
+    for k, y in enumerate((372.0, 400.0)):
+        x = 370.0 - (y - 336.0) * 12.0 / 100.0
+        c = K.circle((x, y), 6.3)
+        sc.add(f"button{k}", K.fill(c, K.GOLD) + K.outline(c, K.FINE), K.R(c).buffer(K.FINE / 2), sil=False)
+
+    # ---- arms, paddle, hands -------------------------------------------------------
+    fl = B.region([(204, 434), (262, 421)], ("L", [(262, 421), (262, 453)]),
+                  [(262, 453), (220, 480), (196, 482), (180, 466), (182, 446), (204, 434)])
+    sc.part("forearmL", B.sleeve_part(fl, ["M198 458L246 442"]))
+    slR, cfR = K.sleeve(K.SleeveSpec(base=(490.0, 552.0), wrist=WR, sag=-6.0, width=50.0, wrist_w=34.0, cuff=12.0,
+                                     color=K.JADE, cuff_color=K.RED))
+    sc.part("sleeveR", slR)
+    sc.part("paddle", PD.paddle3(PADDLE_X, tip=100.0, square=24.0, hw=29.0, widest=210.0, shoulder=266.0,
+                                 band=(240.0, 256.0), taper=0.70, throat=288.0, grip_rings=((318.0, 3),)),
+            halo=K.HALO, halo_only=("jerkin", "armR", "doublet"))
+    sc.part("cuffR", cfR)
+    sc.part("cuffL", B.cuff((252.0, 421.0), (253.0, 453.0), 12.0))
+    B.belt_hand((262.0, 436.0), 38.0).add_to(sc, "handL", halo=0.0)
+    K.fist(FIST, -90.0, shaft_w=22.0, back=-1, wrist=WR, wrist_w=26.0, h=36.0).add_to(sc, "handR", halo=0.0)
+    return sc
+
+
+def build():
+    return figure().layers()
