@@ -27,7 +27,7 @@ def merge(parts):
     return K.Part(shape, fills, lines + K.outline(shape))
 
 
-def garments(front, clasp):
+def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
     # Both robe and tunic boundaries are whole-card C2 Béziers, never hems
     # clipped at y511. The puffed shoulders flow into the inverted sleeves.
     shape = K.R(
@@ -40,7 +40,7 @@ def garments(front, clasp):
     # A raised mantle fold meets the neck grip's short cuff. Its matching
     # inverted fold preserves the existing robe seam and composition.
     fold = K.R("M444 318 C451 296 470 286 492 286 L510 310 L504 330 Z")
-    shape = K.U(shape, K.c2(fold))
+    shape = K.U(shape, K.c2(K.U(fold, jade_sleeve).convex_hull), K.c2(red_sleeve))
     enclosure = K.U(shape, K.c2(front))
     pockets = K.U(*[Polygon(r) for p in K._polys_of(enclosure)
                     for r in p.interiors if Polygon(r).area < 120])
@@ -56,6 +56,10 @@ def garments(front, clasp):
         "L507 744 C476 684 435 599 401 525 C367 451 326 366 295 306 Z")
     sash = sash.intersection(shape)
     tunic = K.U(tunic, sash).buffer(3).buffer(-3).intersection(shape)
+    # The bow hand's sleeve is the tunic's own region crossing the baldric.
+    red_sleeve = K.c2(red_sleeve)
+    tunic = K.U(tunic, red_sleeve)
+    sash = sash.difference(red_sleeve)
     jade = shape.difference(tunic)
     blockers = K.c2(front)
     slashes = JP.ripple_slashes([
@@ -118,6 +122,7 @@ def garments(front, clasp):
     fills += piping.select(lambda m: m.kind == "fill")
     lines = K.outline(shape) + K.outline(tunic) + K.outline(sash)
     lines = K.clip_out(lines, blockers, eps=0, trap=0)
+    lines += K.clip_out(K.c2(cuff_bands), blockers, eps=1.6, trap=0)
     detail = K.clip_out(wire + hatch + red_hatch + piping.select(lambda m: m.kind != "fill"),
                         blockers, eps=8, trap=0)
     robe = K.Part(shape, fills, lines + detail)
@@ -171,7 +176,6 @@ def trap_under_ink(frag):
     core = structural.shape().buffer(-0.4)
     contacts = {
         K.JADE: K.U(K.box(585, 430, 596, 481), K.box(490, 260, 508, 276)),
-        K.GOLD: K.box(497, 289, 524, 310),
     }
     result = frag.select(lambda m: not (m.kind == "fill" and m.color in contacts))
     for color, zone in contacts.items():

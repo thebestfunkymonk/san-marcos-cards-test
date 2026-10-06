@@ -19,6 +19,8 @@ HEAD = (386.0, 208.0)
 FX, BX = 530.0, 246.0
 FIST_R = (530.0, 280.0)
 FIST_L = (253.0, 380.0)
+FID_RUN, FID_REACH, FID_BELL = 44.0, 0.0, 12.0
+BOW_RUN, BOW_REACH, BOW_BELL, BOW_NECK = 58.0, 0.0, 8.0, 8.0
 TILT = -5.0
 PIVOT = (392.0, 296.0)
 
@@ -44,23 +46,41 @@ BOB = H((424, 196), (448, 194), (462, 214), (466, 246), (458, 272), (432, 281), 
 BOB_GUIDE = H((432, 188), (450, 212), (454, 244), (446, 274))
 
 
-def fold_cuff(hand, depth=24):
-    """A patterned opening, not a shoulder-to-hand sleeve."""
-    w, u = K.P(hand.wrist), hand.wrist_dir
+def sleeve_end(hand, *, run, reach=0.0, bell=8.0, neck=4.0, curl=-5.0):
+    """A short bell running from the cuff mouth back into the garment it
+    belongs to; the garment's fill and outline take it over."""
+    u = hand.wrist_dir
+    w = K.P(hand.wrist) - u * reach
     n = np.array([u[1], -u[0]])
-    hw = (hand.wrist_w + 10) / 2
-    base = w + u * depth
-    shape = K.R(K.Path(w - u * 2 + n * hw).line(w - u * 2 - n * hw)
-                .sag(base - n * (hw + 2), -2).line(base + n * (hw + 2))
-                .sag(w - u * 2 + n * hw, -2).close().d).buffer(-1.6).buffer(1.6)
-    hatch = K.hatch_in(shape.buffer(-4),
-                       angle=float(np.degrees(np.arctan2(u[1], u[0]))) + 45,
-                       origin=tuple(base))
-    cuff = K.Part(shape, K.fill(shape, K.JADE), hatch)
-    joined = hand.with_sleeve(cuff, cuff_line=True)
-    jade = joined.shape.difference(joined.meta["hand_region"])
-    return K.Part(joined.shape, K.fill(jade, K.JADE), joined.lines,
-                  {**joined.meta, "cuff_depth": depth, "cuff_width": 2 * hw})
+    half = hand.wrist_w / 2
+    base = w + u * run
+    shape = K.R(K.Path(w + n * (half + bell)).sag(w - n * (half + bell), curl)
+                .sag(base - n * (half + neck), -2.0).line(base + n * (half + neck))
+                .sag(w + n * (half + bell), -2.0).close().d)
+    return shape.buffer(-1.6).buffer(1.6)
+
+
+def cuff_band(hand_region, sleeve, *, offset=8.0):
+    """A bold turn-back line parallel to the cuff mouth, inside the sleeve."""
+    edge = hand_region.buffer(offset).boundary.intersection(sleeve.buffer(0.5))
+    out = C.Frag()
+    for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
+        if g.length > 8.0:
+            out += K.line(C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
+    return out
+
+
+def sleeved_hand(hand, sleeve):
+    """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
+    region = K._biggest(hand.shape.difference(sleeve))
+    # The mouth's curl can leave a thin heel tip beside the sleeve; drop it
+    # so its paper does not show through the held plate beneath.
+    near = sleeve.buffer(10)
+    region = K._biggest(K.U(region.difference(near),
+                           region.intersection(near).buffer(-2.2).buffer(2.2)))
+    inner = hand.hand.meta.get("inner", C.Frag())
+    return K.Part(region, C.Frag(), K.outline(region) + K.clip_in(inner, region.buffer(-5.0)),
+                  {**hand.hand.meta, "hand_region": region})
 
 
 def figure():
@@ -74,7 +94,8 @@ def figure():
     # Both wrists disappear immediately into local folds beside the objects.
     hand = K.hand5(FIST_R, 90, "wrap", size=K.hand_size(fc) * 0.82,
                    hand="R", view="palm", grip_w=17.5)
-    cuff = fold_cuff(hand)
+    fid_sleeve = sleeve_end(hand, run=FID_RUN, reach=FID_REACH, bell=FID_BELL)
+    cuff = sleeved_hand(hand, fid_sleeve)
     fd = JP.Fiddle(x=FX, body_top=296, volute="spiral", scroll_r=21.5,
                    pegbox_len=54, peg_t=(0.36, 0.55, 0.70, 0.88),
                    waist=(37, 100), fhole=(22, 92, 24, 140, 2.5), bridge_ext=5,
@@ -91,7 +112,9 @@ def figure():
     bow = K.Part(bow.shape, JC.merge([bow]).fills, bow.lines)
     second = K.hand5(FIST_L, -90, "wrap", size=K.hand_size(fc) * 0.82,
                      hand="R", view="back", grip_w=20, spread=3)
-    bow = JC.held(bow, fold_cuff(second))
+    bow_sleeve = sleeve_end(second, run=BOW_RUN, reach=BOW_REACH, bell=BOW_BELL, neck=BOW_NECK)
+    bow_cuff = sleeved_hand(second, bow_sleeve)
+    bow = JC.held(bow, bow_cuff)
     _, edge = JP.open_spline(H((412, 190), (419, 204), (419.5, 222), (414, 238), (407, 254), (407, 272)))
     behind = Polygon(np.vstack([edge, [H((412, 285)), H((480, 285)), H((480, 150)), H((412, 150))]]))
     collar_up = shapely.affinity.rotate(collar.shape, -TILT, origin=PIVOT)
@@ -115,7 +138,10 @@ def figure():
     brim = K.clip_in(K.outline(beret.shape, K.RULE, role="brim-edge"),
                      hair.shape.buffer(1.6))
     portrait = K.Part(portrait.shape, portrait.fills, portrait.lines + brim)
-    robes = JC.garments(K.U(held.shape, portrait.shape, bow.shape), clasp)
+    robes = JC.garments(K.U(held.shape, portrait.shape, bow.shape), clasp,
+                        jade_sleeve=fid_sleeve, red_sleeve=bow_sleeve,
+                        cuff_bands=cuff_band(cuff.shape, fid_sleeve)
+                        + cuff_band(bow_cuff.shape, bow_sleeve))
     sc.part("robes", robes)
     sc.part("bow+hand+cuff", bow, sil=False)
     sc.part("fiddle+hand+cuff", held)
@@ -141,6 +167,10 @@ def build():
         gold.buffer(-0.4).intersection(contact))
     frag = frag.select(lambda m: not (m.kind == "fill" and m.color == K.JADE))
     frag += K.fill(jade, K.JADE)
-    frag = K.heal(frag, keep_roles=("contour", "brim-edge"))
+    # Heal twice before trapping: the second pass trims outline strokes that
+    # the first still reports, and the trap must only hollow gold under ink
+    # that survives to the final plate.
+    frag = K.heal(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")),
+                  keep_roles=("contour", "brim-edge", "cuffline"))
     frag = JC.trap_under_ink(frag)
-    return K.layers(K.heal(frag, keep_roles=("contour", "brim-edge")))
+    return K.layers(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")))
