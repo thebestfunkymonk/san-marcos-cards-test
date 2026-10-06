@@ -962,7 +962,33 @@
   "rank": "K",
   "suit": "H",
   "cut_y": 511,
-  "double_head": "band",
+  "double_head": "continuous",
+  "seam": {
+   "kind": "angle",
+   "points": [
+    [
+     -60.0,
+     366.673
+    ],
+    [
+     -0.877,
+     388.192
+    ],
+    [
+     375.0,
+     525.0
+    ],
+    [
+     750.877,
+     661.808
+    ],
+    [
+     810.0,
+     683.327
+    ]
+   ],
+   "angle": -20.0
+  },
   "status": "art",
   "stock": "limestone",
   "order": [
@@ -977,7 +1003,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KH.png",
   "print": null,
   "error": null,
-  "seconds": 16.41
+  "seconds": 24.19
  },
  {
   "id": "QH",
