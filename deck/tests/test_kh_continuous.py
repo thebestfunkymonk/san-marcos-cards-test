@@ -32,8 +32,8 @@ def composition():
         for name in ("fist", "fist_geom", "fist_wrist", "sleeve", "_arm_dir"):
             patch.setattr(K, name, forbidden)
         record(K, "hand5", observed.hands)
-        record(K.Hand, "with_sleeve", observed.sleeves)
-        record(KH, "fold_cuff", observed.cuffs)
+        record(KH, "sleeve_end", observed.sleeves)
+        record(KH, "sleeved_hand", observed.cuffs)
         record(KH, "held_attribute", observed.held)
         record(KH.KP, "chalice", observed.chalices)
         record(KH.KP, "bubble_column", observed.bubbles)
@@ -57,13 +57,15 @@ def test_approved_continuous_scene_has_ten_integrated_items(composition):
 
 
 def test_two_face_scaled_wrapping_hands_without_legacy_arms(composition):
-    assert KH.FIST == (520.0, 456.0)
+    # The pole hand approaches from the tunic side, 14 px down the unchanged shaft.
+    assert KH.FIST == (527.4, 467.9)
+    assert KH.POLE_HAND_DEG == pytest.approx(KH.POLE_DEG + 180.0)
     assert KH.CHAL_GRIP == (233.5, 394.0)
     assert KH.HAND_SCALE == 0.82
     assert len(composition.hands) == 2
     face = K.face(KH.HEAD, "frontal", **KH.FACE_KW)
     expected = [
-        (KH.FIST, KH.POLE_DEG, "R", "palm", KH.POLE_WIDTH),
+        (KH.FIST, KH.POLE_HAND_DEG, "R", "back", KH.POLE_WIDTH),
         (KH.CHAL_GRIP, -90.0, "L", "back", 10.4),
     ]
     for (args, kwargs, _), (at, angle, hand, view, grip) in zip(
@@ -75,33 +77,36 @@ def test_two_face_scaled_wrapping_hands_without_legacy_arms(composition):
         assert kwargs["grip_w"] == grip
 
 
-def test_short_cuffs_emerge_from_wrists_and_share_attribute_silhouettes(composition):
+def test_sleeves_are_jade_lapel_lobes_not_separate_cuff_stubs(composition):
+    robes = next(item for item in composition.scene.items if item.name == "robes")
+    jade = robes.frag.select(lambda m: m.kind == "fill" and m.layer == "jade").shape()
     assert len(composition.sleeves) == len(composition.cuffs) == 2
-    for sleeve_call, cuff_call, held_call, name in zip(
-            composition.sleeves, composition.cuffs, composition.held,
-            ("pole+handR+cuff", "chalice+handL+cuff")):
-        (hand, sleeve), sleeve_kw, _ = sleeve_call
-        _, _, cuff = cuff_call
+    for sleeve_call, cuff_call, hand_call, held_call, name, run, reach in zip(
+            composition.sleeves, composition.cuffs, composition.hands, composition.held,
+            ("pole+handR+cuff", "chalice+handL+cuff"), (KH.POLE_RUN, KH.CHAL_RUN), (KH.POLE_REACH, KH.CHAL_REACH)):
+        (hand,), sleeve_kw, sleeve = sleeve_call
+        assert sleeve_kw["run"] == run and sleeve_kw["reach"] == reach
+        (_, cuff_sleeve), _, cuff = cuff_call
+        assert cuff_sleeve is sleeve
         (attribute, hand_cuff), _, held = held_call
-        assert sleeve_kw["cuff_line"] is True
-        expected_depth = 20.0 if name == "pole+handR+cuff" else 24.0
-        assert cuff.meta["cuff_depth"] == expected_depth
-        assert cuff.meta["cuff_width"] == pytest.approx(hand.wrist_w + 10.0)
-
-        # Check the actual opening and depth in wrist-local coordinates,
-        # not just the metadata attached to the final union.
-        wrist, direction = K.P(hand.wrist), hand.wrist_dir
-        normal = np.array([direction[1], -direction[0]])
-        opening = LineString([wrist - normal * 100, wrist + normal * 100])
-        assert hand.wrist_w + 8.0 <= sleeve.shape.intersection(opening).length \
-            <= hand.wrist_w + 13.0
-        depth = (np.asarray(sleeve.shape.exterior.coords) - wrist) @ direction
-        assert depth.min() == pytest.approx(-2.0, abs=0.01)
-        assert depth.max() == pytest.approx(expected_depth, abs=0.01)
         assert hand_cuff is cuff
+        # The sleeve is the lapel's own region: jade fill covers it and no
+        # closed outline separates it from the tunic.
+        assert sleeve.difference(jade).area < 0.1
+        # A bold turn-back band parallels the cuff mouth inside the jade sleeve.
+        assert any(mark.role == "cuffline" for mark in robes.frag.marks)
+        assert sleeve.area > 0.0
+        mouth = K.P(hand.wrist) - hand.wrist_dir * reach
+        body = mouth + hand.wrist_dir * run
+        assert np.hypot(*(body - mouth)) <= 90.0
+        # The hand ends at the cuff mouth: its region is the hand minus the
+        # sleeve, with no separate cuff fill or cuff outline of its own.
+        assert not cuff.fills.marks
+        assert cuff.shape.intersection(sleeve).area < 0.01
+        assert cuff.shape.symmetric_difference(hand.shape.difference(sleeve)).area < 1.0
+        assert not any(mark.role == "cuffline" for mark in cuff.lines.marks)
         filleted = K.U(attribute.shape, cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.2)
         assert held.shape.symmetric_difference(filleted).area < 0.01
-        assert any(mark.role == "cuffline" for mark in cuff.lines.marks)
         assert any(mark.role == "grip-edge" for mark in held.lines.marks)
         outline = held.lines.select(lambda mark: mark.role == "contour")
         assert outline.layers() == K.outline(held.shape, role="contour").layers()

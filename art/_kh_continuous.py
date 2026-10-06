@@ -30,7 +30,7 @@ def _lens(half_w, throat):
     return K.R(K.circle(g["cL"], g["R"])).intersection(K.R(K.circle(g["cR"], g["R"])))
 
 
-def garments(front, neckline, grip, *, pocket_front=None):
+def garments(front, neckline, grip, *, pocket_front=None, cuff_bands=None):
     # Union first, outline once: neither mantle carries a hidden horizontal hem.
     shape = K.R("M375 256 C310 271 240 294 195 314 "
                 "C170 322 169 340 168 365 C164 423 155 475 155 525 "
@@ -122,6 +122,8 @@ def garments(front, neckline, grip, *, pocket_front=None):
     contours = K.clip_out(contours, K.c2(neckline), eps=0.2, trap=0.0)
     contours = K.clip_out(contours, K.c2(win.shape), eps=7.3, trap=0.0)
     lines += contours
+    if cuff_bands is not None:
+        lines += K.clip_out(K.c2(cuff_bands), K.c2(front), eps=1.6, trap=0.0)
 
     # Both decorations are apertures in the jade chest, not extra Scene plates.
     fills = K.clip_out(fills, apertures, eps=0.0, trap=0.0) + decoration.fills
