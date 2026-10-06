@@ -1,4 +1,4 @@
-"""Regression checks for QH's approved seam and two short cuff openings."""
+"""Regression checks for QH's approved seam and two bell sleeves that are lobes of the mantle."""
 from types import SimpleNamespace
 
 import numpy as np
@@ -12,7 +12,7 @@ from deck import frames as F
 
 @pytest.fixture(scope="module")
 def composition():
-    observed = SimpleNamespace(hands=[], sleeves=[], cuffs=[], garments=[])
+    observed = SimpleNamespace(hands=[], with_sleeve=[], sleeves=[], cuffs=[], trims=[], garments=[])
 
     def record(owner, name, destination):
         original = getattr(owner, name)
@@ -31,8 +31,10 @@ def composition():
         for name in ("fist", "fist_geom", "fist_wrist", "sleeve", "_arm_dir"):
             patch.setattr(K, name, forbidden)
         record(K, "hand5", observed.hands)
-        record(K.Hand, "with_sleeve", observed.sleeves)
-        record(QH, "fold_cuff", observed.cuffs)
+        record(K.Hand, "with_sleeve", observed.with_sleeve)
+        record(QH, "sleeve_end", observed.sleeves)
+        record(QH, "sleeved_hand", observed.cuffs)
+        record(QH, "cuff_trim", observed.trims)
         record(QH.QC, "garments", observed.garments)
         observed.scene = QH.figure()
     return observed
@@ -57,7 +59,10 @@ def test_two_face_scaled_hands_restore_bodice_gesture(composition):
     assert kwargs == dict(size=K.hand_size(face), hand="L",
                          view="palm", grip_w=19)
     args, kwargs, _ = composition.hands[1]
-    assert args == ((322, 424), -24, "rest")
+    # Moved 12 px right (from (322,424)) so the sleeve has room between the
+    # mantle edge and the hand; still 50+ px clear of the seam.
+    assert args == (QH.REST_AT, -24, "rest")
+    assert QH.REST_AT == (334, 424)
     assert kwargs == dict(size=K.hand_size(face) * 0.82, hand="R",
                          view="back", curl=6, spread=3)
     seam = LineString(F.seam_points(QH.SEAM))
@@ -65,21 +70,30 @@ def test_two_face_scaled_hands_restore_bodice_gesture(composition):
         assert hand.hand.shape.distance(seam) >= 12
 
 
-def test_local_patterned_cuffs_hide_forearms(composition):
-    assert len(composition.cuffs) == len(composition.sleeves) == 2
-    for (_, _, cuff), ((hand, sleeve), kwargs, joined) in zip(
-            composition.cuffs, composition.sleeves):
-        assert kwargs == {"cuff_line": True}
-        assert cuff.shape.equals(joined.shape)
-        assert cuff.meta["cuff_depth"] == 24
-        assert cuff.meta["cuff_width"] == pytest.approx(hand.wrist_w + 10)
-        wrist = K.P(hand.wrist)
-        local = np.asarray(sleeve.shape.exterior.coords) - wrist
-        depth = local @ hand.wrist_dir
-        assert depth.min() == pytest.approx(-2, abs=0.01)
-        assert depth.max() == pytest.approx(24, abs=0.01)
-        assert any(mark.role.startswith("pearl") for mark in sleeve.lines.marks)
-        assert any(mark.role == "cuffline" for mark in cuff.lines.marks)
+def test_cuffs_are_short_mantle_sleeves_not_stubs(composition):
+    assert not composition.with_sleeve, "a closed with_sleeve cuff is the rejected stub"
+    assert len(composition.sleeves) == len(composition.cuffs) == len(composition.trims) == 2
+    _, _, gown = composition.garments[0]
+    jade = gown.fills.select(lambda mark: mark.layer == "jade").shape()
+    for i, ((_, kwargs, sleeve), ((hand, region_sleeve), _, cuff), (_, _, trim)) in enumerate(zip(
+            composition.sleeves, composition.cuffs, composition.trims)):
+        assert region_sleeve is sleeve
+        assert kwargs["run"] <= 54.0 <= 90.0
+        # Convex mouth toward the hand: a concave one reads as a hand pushed in.
+        assert kwargs["curl"] < 0
+        # The sleeve is the mantle's own region: jade fill covers it, and the
+        # hand region begins exactly where the sleeve's mouth ends.
+        if i == 0:
+            # The stem hand's sleeve lies on the mantle and enters through its
+            # edge: only its tip beyond that edge is not jade.
+            assert sleeve.intersection(jade).area > 0.6 * sleeve.area
+        else:
+            assert sleeve.difference(jade).area < 1.0
+        assert cuff.shape.intersection(sleeve).area < 1.0
+        assert cuff.fills.marks == []
+        assert any(mark.role == "cuffline" for mark in trim.lines.marks)
+        assert trim.fills.shape().area > 0
+    assert any(mark.role == "cuffline" for mark in gown.lines.marks)
 
 
 def test_whole_gown_and_dense_textiles_are_c2(composition):

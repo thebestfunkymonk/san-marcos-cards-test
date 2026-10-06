@@ -94,6 +94,11 @@ COLLAR = (((364.5, 283.0), (412.0, 281.0), 5.5, 370.8, 405.05, 6, 7.6, 6.4),)
 # was a wedge tapering into the face contour, and heal dropped the contour)
 FAR_SHOULDER = dict(start=(418.0, 173.6), h0=36.0, join_y=232.0, via=((429.0, 181.0), (435.0, 198.0)),
                     hidden=((410.0, 232.0), (404.0, 200.0), (408.0, 178.0), (416.5, 176.0)))
+REST_AT = (334, 424)
+RIGHT_SLEEVE = dict(run=44.0, reach=0.0, bell=4.0, neck=4.0, curl=-5.0)
+LEFT_SLEEVE = dict(run=54.0, reach=0.0, bell=8.0, neck=12.0, curl=-5.0)
+
+
 def _stem():
     # the upper collar (on paper, under the CONTOUR) keeps its gold 1 px past
     # the shaft (QA 4c); the lower one, inside the sleeve under a MEDIUM
@@ -119,26 +124,17 @@ class Scene(K.Scene):
         if heal_gaps:
             self.heal_log = []
             artwork = K.heal(artwork, log=self.heal_log,
-                             keep_roles=("contour", "grip-edge", "leaf-vein"))
+                             keep_roles=("contour", "grip-edge", "leaf-vein", "cuffline"))
         # Finish the three-way fold joins after foreground contour clipping.
-        artwork += K.c2(K.dot((491.68, 312.15), K.CONTOUR, role="contour")
-                        + K.dot((288.35, 413.82), K.RULE, role="contour"))
+        artwork += K.c2(K.dot((491.68, 312.15), K.CONTOUR, role="contour"))
         # Union just the shared junctions. Keep legal FINE textile strokes as
         # strokes, rather than interpreting them as solid knockout bridges.
         ink = artwork.select(lambda m: m.layer == "ink")
-        joins = K.c2(K.U(K.box(481, 303, 504, 342),
-                         K.box(282, 407, 295, 421)))
+        joins = K.c2(K.box(481, 303, 504, 342))
         artwork = artwork.select(lambda m: m.layer != "ink") \
             + K.clip_out(ink, joins, eps=0, trap=0) \
             + K.fill(ink.shape().buffer(1.6).buffer(-1.6).intersection(joins),
                      K.INK, role="contour")
-        # Restore the background plates in the tiny pockets where automatic
-        # foreground clipping dropped a thin cuff/robe contact.
-        pockets = K.c2(K.U(K.box(468, 435, 480, 447),
-                           K.box(285, 403, 307, 429)))
-        missing = pockets.difference(artwork.shape()).buffer(3.2).intersection(pockets)
-        artwork += K.fill(missing.intersection(K.c2(self.gown_bodice)), K.RED)
-        artwork += K.fill(missing.difference(K.c2(self.gown_bodice)), K.JADE)
         # Retract hidden plate tails only at their local hair/robe contacts.
         # Broad ink-based clipping would carve paper rims along whole edges.
         tails = {"jade": K.c2(K.box(486, 306, 501, 314.5)),
@@ -153,43 +149,55 @@ class Scene(K.Scene):
             layer = marks.marks[0].layer
             if layer in tails:
                 plate = plate.difference(ink_core.intersection(tails[layer]))
-            if layer == "red":
-                plate = K.U(plate, plate.buffer(1.0).intersection(
-                    K.c2(K.box(468, 435, 480, 447))))
-            # Serialization must not leave subpixel holes in the repaired
-            # cuff plate where the shared contour meets the gown.
-            repairs = K.U(*[Polygon(r) for pg in K._polys_of(plate)
-                            for r in pg.interiors
-                            if Polygon(r).area < 1 and pockets.intersects(Polygon(r))])
-            plate = K.U(plate, repairs)
             artwork += K.fill(plate, color)
         return artwork
 
 
-def fold_cuff(hand, *, depth=20.0):
-    """A pearl-edged opening in the gown, with the forearm hidden inside."""
-    w, u = P(hand.wrist), hand.wrist_dir
+def sleeve_end(hand, *, run, reach=0.0, bell=9.0, neck=3.0, curl=5.0, soften=3.5):
+    """A short bell of the mantle's own jade, running from the cuff mouth back
+    toward the mantle edge. It is a lobe of the garment, never a separate cuff."""
+    u = hand.wrist_dir
+    w = P(hand.wrist) - u * reach
     n = np.array([u[1], -u[0]])
-    hw = (hand.wrist_w + 10.0) / 2
-    base = w + u * depth
-    shape = K.R(K.Path(w - u * 2 + n * hw).line(w - u * 2 - n * hw)
-                .sag(base - n * (hw + 3), -2).line(base + n * (hw + 3))
-                .sag(w - u * 2 + n * hw, -2).close().d).buffer(-1.6).buffer(1.6)
-    pearls = B.pearls_on([w + u * 12 - n * (hw - 7),
-                         w + u * 12 + n * (hw - 7)],
-                        d_max=7.0, d_min=7.0, gap=0.0, even=True)
-    cuff = K.Part(shape, K.fill(shape, K.JADE) + pearls.fills,
-                  pearls.lines + K.hatch_in(shape.buffer(-4).difference(
-                      pearls.shape.buffer(3)),
-                      angle=float(np.degrees(np.arctan2(u[1], u[0]))) + 45,
-                      origin=tuple(base)))
-    joined = hand.with_sleeve(cuff, cuff_line=True)
-    jade = joined.shape.difference(joined.meta["hand_region"])
-    lines = C.Frag([replace(m, role="contour") if m.role in ("outline", "pearl") else m
-                    for m in joined.lines.marks])
-    return K.Part(joined.shape, K.fill(jade.buffer(0.4), K.JADE) + pearls.fills,
-                  lines, {**joined.meta, "cuff_depth": depth,
-                                 "cuff_width": 2 * hw})
+    half = hand.wrist_w / 2
+    base = w + u * run
+    shape = K.R(K.Path(w + n * (half + bell)).sag(w - n * (half + bell), curl)
+                .sag(base - n * (half + neck), -2.0).line(base + n * (half + neck))
+                .sag(w + n * (half + bell), -2.0).close().d)
+    return shape.buffer(-soften).buffer(soften)
+
+
+def sleeved_hand(hand, sleeve):
+    """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
+    region = K._biggest(hand.shape.difference(sleeve))
+    inner = hand.hand.meta.get("inner", C.Frag())
+    return K.Part(region, C.Frag(), K.outline(region, role="contour") + K.clip_in(inner, region.buffer(-5.0)),
+                  {**hand.hand.meta, "hand_region": region})
+
+
+def _course(hand, sleeve, sleeve_kw, offset, inset):
+    """A curve parallel to the sleeve mouth ``offset`` px behind it, cut by the
+    sleeve's edge (shrunk by ``inset``): it meets the sleeve sides squarely."""
+    u = hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    half = hand.wrist_w / 2 + sleeve_kw["bell"]
+    t = np.linspace(-half - 4.0, half + 4.0, 60)
+    sag = sleeve_kw["curl"] * np.clip(1.0 - (t / half) ** 2, 0.0, None)
+    pts = [P(hand.wrist) - u * sleeve_kw["reach"] + n * a + u * (offset + b) for a, b in zip(t, sag)]
+    cut = LineString(pts).intersection(sleeve.buffer(0.5 - inset))
+    if cut.geom_type != "LineString":
+        cut = max(K._lines_of(cut), key=lambda g: g.length)
+    return cut
+
+
+def cuff_trim(hand, sleeve, sleeve_kw, *, band=10.0, pearl_at=21.0):
+    """A turn-back band parallel to the cuff mouth with a row of pearls behind it."""
+    edge = _course(hand, sleeve, sleeve_kw, band, 1.0)
+    lines = K.line(C.polyline_d(np.asarray(edge.coords)), K.MEDIUM, role="cuffline")
+    row = _course(hand, sleeve, sleeve_kw, pearl_at, 9.0)
+    pearls = B.pearls_on(np.asarray(row.coords), d_max=7.0, d_min=7.0, gap=0.0, even=True)
+    ring = C.Frag([replace(m, role="contour") for m in pearls.lines.marks])
+    return K.Part(pearls.shape, pearls.fills, lines + ring)
 
 
 def figure():
@@ -202,40 +210,36 @@ def figure():
     hn = H.lock(HAIR_N, 54.0, n=5, taper=0.42, taper_from=0.45,
                 side=+1, bubbles=(4.2, 5.6, 7.0), bubble_lane=2, bubble_at=0.55)
     hf = H.lock([(426, 188), (437, 218), (441, 250), (440, 278), (451, 300), (469, 304)], 40.0, n=4, side=-1)
-    # Only a short opening is visible; the forearm stays inside the gown.
+    # Both hands come out of bell sleeves that are lobes of the jade mantle.
     h = K.hand5((546, 434), 90, "wrap", size=K.hand_size(fc),
                 hand="L", view="palm", grip_w=19)
-    right_cuff = fold_cuff(h, depth=24)
+    right_sleeve = sleeve_end(h, **RIGHT_SLEEVE)
+    right_hand = sleeved_hand(h, right_sleeve)
     # The original wrist (300,452) straddles the approved -42° seam.
     # Shift the same resting gesture up onto the chest, not the seam.
-    resting = K.hand5((322, 424), -24, "rest", size=K.hand_size(fc) * 0.82,
+    resting = K.hand5((REST_AT), -24, "rest", size=K.hand_size(fc) * 0.82,
                       hand="R", view="back", curl=6, spread=3)
-    left_cuff = fold_cuff(resting, depth=24)
+    left_sleeve = sleeve_end(resting, **LEFT_SLEEVE)
+    left_hand = sleeved_hand(resting, left_sleeve)
     pet = A.petiole(**PETIOLE)
     leaf = _leaf()
     flower = [p for _, p in A.flower3((546, 112), r_petal=50, petal_w=40,
                                      centre_r=12.5, squash=0.78, tilt=-10,
                                      notch=5, centre="scallop", hatch_rel=0)]
-    held = QC.held(_stem(), pet, leaf, flower, right_cuff)
-    robe = QC.garments(K.U(held.shape, left_cuff.shape, hn.shape, hf.shape),
-                       K.U(hn.shape, hf.shape))
+    held = QC.held(_stem(), pet, leaf, flower, right_hand)
+    trim = K.Part(Polygon(), C.Frag(), C.Frag())
+    for hand, sleeve, kw in ((h, right_sleeve, RIGHT_SLEEVE), (resting, left_sleeve, LEFT_SLEEVE)):
+        part = cuff_trim(hand, sleeve, kw)
+        trim = K.Part(K.U(trim.shape, part.shape), trim.fills + part.fills, trim.lines + part.lines)
+    robe = QC.garments(K.U(held.shape, left_hand.shape, hn.shape, hf.shape),
+                       K.U(hn.shape, hf.shape), sleeves=left_sleeve, inked=right_sleeve, trim=trim,
+                       hands=K.U(right_hand.shape, left_hand.shape))
     sc.gown_bodice = robe.meta["bodice"]
     clasp = K.lion_clasp((390, 330), 40)
     robe = K.Part(robe.shape,
                   K.clip_out(robe.fills, clasp.meta["silhouette"], eps=0, trap=0) + clasp.fills,
                   K.clip_out(robe.lines, clasp.meta["silhouette"], eps=0.2, trap=0) + clasp.lines)
-    robes = QC.merge([robe, left_cuff])
-    # Red prints over jade. Keep its registration trap within the MEDIUM
-    # cuff edge, not 0.05px beyond the inner edge as the general merge does.
-    red = robes.fills.select(lambda m: m.layer == "red").shape()
-    robes.fills = robes.fills.select(lambda m: m.layer != "red") + K.fill(
-        red.difference(left_cuff.shape.buffer(-1.2)), K.RED)
-    # Keep the gown's jade plate beneath thin foreground cuff contacts;
-    # automatic tail removal must not leave a paper pocket beside a cuff.
-    cuff_contacts = K.c2(K.U(K.box(468, 435, 487, 449),
-                             K.box(285, 403, 307, 429)))
-    gown_jade = robe.fills.select(lambda m: m.layer == "jade").shape()
-    robes.fills += K.fill(gown_jade.intersection(cuff_contacts), K.JADE)
+    robes = QC.merge([robe, left_hand])
     sc.part("robes", robes)
     sc.part("sagittaria+hand+cuff", held)
 

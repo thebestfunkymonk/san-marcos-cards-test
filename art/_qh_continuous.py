@@ -31,7 +31,7 @@ def merge(parts):
     return K.Part(shape, fills, inner + K.outline(shape))
 
 
-def garments(front, neckline):
+def garments(front, neckline, *, sleeves=None, inked=None, trim=None, hands=None):
     # Both necklines and every robe edge belong to one whole-card C2 path.
     shape = K.R(
         "M369 298 C318 305 266 320 236 303 "
@@ -51,6 +51,17 @@ def garments(front, neckline):
         "C472 698 464 640 458 580 C455 558 456 540 456 525 "
         "C456 510 463 492 468 470 C478 410 484 352 500 316 "
         "C472 302 452 302 406 296 Z")
+    mantle = shape.difference(bodice)
+    if sleeves is not None:
+        # The sleeves are the mantle's own lobes: union them into the jade, with
+        # a small fillet where they leave the edge, and carve them out of the
+        # bodice so the bodice contour becomes the sleeve outline.
+        # an ``inked`` sleeve lies on the mantle and enters through its edge, so
+        # it is clipped to the mantle; the others stand off it as bell lobes
+        lobes = K.c2(K.U(sleeves, inked.intersection(mantle)) if inked is not None else sleeves)
+        grown = K.U(mantle, lobes)
+        fillet = grown.buffer(10.0).buffer(-10.0).difference(grown).intersection(lobes.buffer(20.0))
+        bodice = bodice.difference(K.U(lobes, fillet))
     jade = shape.difference(bodice)
     # Two inset woven fields face their respective heads. The curved fold
     # between them carries fine stitch hatching, never a divider.
@@ -74,6 +85,18 @@ def garments(front, neckline):
                 bridge = LineString([a, b])
                 if bodice.contains(bridge) and not K.c2(front).buffer(8).intersects(bridge):
                     courses += K.line(C.polyline_d([a, b]), K.MEDIUM, role="scale")
+    # A sleeve lying wholly on the mantle needs its own edge; one standing off
+    # the bodice already has the bodice contour as its outline.
+    side = C.Frag()
+    blocker = Polygon()
+    if inked is not None:
+        edge = K.c2(inked.intersection(mantle)).boundary.intersection(mantle.buffer(-1.0)).difference(K.c2(front).buffer(1.0))
+        for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
+            if g.length > 6.0:
+                side += K.line(C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="contour")
+        blocker = K.U(blocker, side.shape().buffer(3.6))
+    if trim is not None:
+        blocker = K.U(blocker, K.c2(trim.lines).shape().buffer(4.4), K.c2(trim.shape).buffer(5.6))
     # Wave courses are constructed once on the left, then rotated as a whole.
     waves = B.wave_lines(jade.intersection(K.box(0, 0, 375, 1050)).buffer(-10),
                          pitch=9.2, wl=26, amp=2.3, origin=(375, 322))
@@ -81,9 +104,9 @@ def garments(front, neckline):
     wave_lines = []
     for m in waves.marks:
         for pts, _ in K.G.flatten(m.d, 0.05):
-            ln = LineString(pts)
-            if ln.length >= 12:
-                wave_lines.append(ln)
+            for ln in K._lines_of(LineString(pts).difference(blocker)):
+                if ln.length >= 12:
+                    wave_lines.append(ln)
     # Adjacent cropped courses must not leave near-touching free terminals.
     ends = [np.array(q) for ln in wave_lines for q in (ln.coords[0], ln.coords[-1])]
     for i, a in enumerate(ends):
@@ -112,15 +135,21 @@ def garments(front, neckline):
     bead_shape = K.c2(pearls.shape)
     beads = K.clip_out(beads, K.c2(front), eps=0, trap=0)
     waves = K.clip_out(waves, bead_shape, eps=3.2, trap=0)
+    extra = side + (K.c2(trim.lines) if trim is not None else C.Frag())
     red = B.fast_knockout(bodice, courses)
     body_window = K.box(0, 350, 750, 700)
     contours = K.outline(shape) \
         + K.clip_in(K.outline(bodice, role="contour"), body_window) \
         + K.clip_out(K.outline(bodice), body_window, eps=0, trap=0)
     contours = K.clip_out(contours, K.c2(front), eps=0, trap=0)
+    if hands is not None:
+        # the hand's own outline is the cuff mouth; the garment contour must not run beside it
+        contours = K.clip_out(contours, K.c2(hands), eps=1.2, trap=0)
     contours = K.clip_out(contours, K.c2(neckline), eps=0, trap=0)
-    return K.Part(shape, K.fill(red, K.RED) + K.fill(jade, K.JADE),
-                  contours + waves + stitches + beads, {"bodice": bodice})
+    fills = K.fill(red, K.RED) + K.fill(jade, K.JADE)
+    if trim is not None:
+        fills += K.c2(trim.fills)
+    return K.Part(shape, fills, contours + waves + stitches + beads + extra, {"bodice": bodice})
 
 
 def held(stem, petiole, leaf, flower, cuff):
