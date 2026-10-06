@@ -84,7 +84,7 @@ One row per part, in the brief's words and in numbers. The K♠ plan (from
 | clasp | gold | Lion Mark 40 px, (375, 358) |
 | orb | gold | (300, 424) r 33; one free bubble; cup hand |
 | sceptre | gold | x 540, 22 wide, seven segments, finial (540, 114) r 29 |
-| arms | red | band (222 / 472, 550) → wrists (276, 479) / (498, 455), jade cuffs |
+| hand emergence | patterned cloak folds / short cuffs | immediately beside sceptre and orb; no long visible arms or shared arm-routing helper |
 
 §H.0 body geometry to hit: crown top ≈ 80–100, eye line ≈ 200–215, chin ≈ 280,
 shoulders ≈ 330 (x ≈ 180–570), hands 380–480, waist at the band (511).
@@ -103,7 +103,7 @@ so every interior edge is automatically MEDIUM (§B.2's 2 : 1).
 standing collar  ->  mantle / torso  ->  tunic  ->  lapels / trims
 long hair (hair_fall)  ->  neck  ->  head (face)  ->  hair cap / hair back
 beard  ->  moustache  ->  crown / diadem / cap  ->  clasp (Lion Mark)
-sleeves  ->  attributes (sceptre, orb, staff …)  ->  cuffs  ->  one hand5 Part
+cloak folds / short patterned cuffs  ->  attributes  ->  two hand5 Parts
 band_guard (last, Kings and Queens)
 ```
 
@@ -111,21 +111,25 @@ Rules that fall out of it:
 
 * A **collar that stands behind the head** goes before the mantle: its foot
   hides under the neckline.
-* **One hand per half-figure.** It holds the tall attribute on the viewer's
-  right. Re-home a secondary object in the clothing without a second hand, or
-  omit it. Add the sleeve and tall attribute first, then add the hand.
-  `Hand.add_to` tucks the wrist into an arm or cuff already in the scene.
-  Alternatively, `hand5(..., sleeve=sleeve)` or
-  `hand.with_sleeve(sleeve)` makes the hand and sleeve one Part with one
+* **Two hands per half-figure.** One holds the primary attribute; restore the
+  original secondary attribute in the other (retain the resting gesture
+  where the brief specifies one). Both use `K.hand5`, each face-sized or
+  smaller, emerging directly from a cloak fold or short patterned cuff beside
+  its held attribute. No long visible arms and no shared arm-routing helper.
+  Add the fold/cuff and attribute first, then the hand.
+  `Hand.add_to` tucks the wrist into a fold or cuff already in the scene.
+  Alternatively, `hand5(..., sleeve=cuff)` or
+  `hand.with_sleeve(cuff)` makes the hand and short cuff one Part with one
   outside contour; the cuff is a colour edge, not a second outline.
 * **Knockouts near a hand** (lapel bubbles, lining drops, belt nodes, chain
   stones) are whole or hidden, never a paper crescent on the hand's contour:
   `K.clear_of_hand(holes, hand.hand.shape)` fills back the ones that would
   sit on it.
-* **Halos** (`halo=K.HALO`, 4.3 px paper channel) only for hands and
-  attributes crossing a pattern — e.g. the sceptre over the strata
-  (`halo_only=("mantle",)`). **Never** on a beard, moustache or the Lion Mark
-  (§G.2: never a halo; on a beard it reads as a bib).
+* **No halos.** Integrate hands, attributes and garments through shared
+  contours, shared edges or clean interlace; use `halo=0`. Keep dense, even
+  detail on every garment region, including folds, short cuffs, collars,
+  borders and trims: no flat mono-colour sheets. Continue that detail through
+  the undrawn C2 seam without changing the continuous layout rules.
 * `sil=False` for anything that should not join the CONTOUR silhouette.
 
 ## 4. The kit, part by part
@@ -176,11 +180,14 @@ tip, notch_dy, lines, stagger), mo=moustache)` · `moustache(fc,
 MoustacheSpec(root, tip, arch, under))`. Pass the moustache to the beard so
 its upper edge tucks under it; the chin stays paper round the mouth.
 
-**Hands (§H.0: one five-finger hand per half-figure).** Use the shared
+**Hands (§H.0: two five-digit hands per half-figure).** Use the shared
 `K.hand5(at, angle, pose, *, size, hand, view, curl, spread, grip_w,
 sleeve=None)` primitive. It returns the existing `Hand` dataclass and builds
-one smoothed silhouette from a palm mass and five digit centrelines. All
-sizes come from the face (`K.hand_size(fc)`), never from the attribute.
+one smoothed silhouette per hand from a palm mass and five digit centrelines.
+Each hand is face-sized or smaller; all sizes come from the face
+(`K.hand_size(fc)`), never from the attribute. Place both wrists in cloak
+folds or short patterned cuffs beside their attributes, not at the ends of
+long visible arms; do not add a shared arm-routing helper.
 
 ```python
 size = K.hand_size(fc)
@@ -214,9 +221,10 @@ grip.add_to(sc, "handR", halo=0)
   7.3 px centre-to-centre (4.2 px paper); crowded lines are shortened or
   dropped at small sizes. Positive spread fans outward in all hand/view
   combinations, including the reflected palm view.
-* `hand5(..., sleeve=sleeve)` and `hand.with_sleeve(sleeve)` return a single
-  hand+sleeve Part and a shared outer contour; the cuff is only a colour edge.
-  Without a pre-composed sleeve, add the sleeve/cuff first and use
+* `hand5(..., sleeve=cuff)` and `hand.with_sleeve(cuff)` return a single
+  hand+short-cuff Part and a shared outer contour; the patterned cuff has
+  a colour edge and, when needed, an interior cuff line. Without a
+  pre-composed cuff, add the cloak fold/cuff first and use
   `Hand.add_to(sc, name, halo=0)` to tuck the wrist into it.
 
 The legacy `fist`, `cup`, `flat` and `open_hand` builders remain available so
@@ -390,8 +398,7 @@ Also check `sc.heal_log` (and its `near` field) after every change, and that
 | orb vent read as a smile | a thin FINE ellipse at the pole | no mark at the pole; the bubble floats free, 4.2 px clear |
 | orb hand a white slab | wrist almost level with the sphere, or so far below it that the back is longer than the fingers | `cup` fingers from 1.14 r to ≈ 0.45 r, wrist ≈ 1.3–1.5 r below the centre (move the cuff up), tapered back |
 | thumb laid over the finger band; cup reads as a hand over the orb; doubled cuff outline | stacked thumb construction, upright cup fingers, sleeve and hand outlined separately | use one `hand5` silhouette: an open V web from the palm side, rim-following cup tips, and one shared hand+sleeve contour |
-| red forearms merging with red lapels | same colour touching | route the arms over the jade panels, jade cuffs |
-| jade arms invisible on a jade mantle | no contrast | red arms (or plain arms on a patterned panel) |
+| long forearms competing with lapels or mantle | obsolete exposed-arm construction | seat each hand directly in a cloak fold or short patterned cuff beside its attribute; no shared arm-routing helper |
 | the Lion Mark reading as a sheep / owl / bat / horned mask | round fleece scallops with droopy wing tufts; raised wings at 40 px | level wings with stepped primaries behind a scalloped mane; paper face; every face mark touches the gold rim |
 | 3/4 far eye cut by the contour; far pupil deleted | features slid over a symmetric egg | the egg turns (chin swing); the far eye joins the contour; far pupil centred |
 | diadem points crowding into a zigzag | kites wider than their pitch | `diadem` clamps widths to pitch − 3 − MEDIUM; use n ≤ 7 on a head |
@@ -406,17 +413,17 @@ have exercised; everything else is parameters.
 
 | court | head | hair / headwear | body | hands / attributes |
 |---|---|---|---|---|
-| Q♠ | `face(…, '3/4-left', sex='f', lids='closed', vestigial=True)` | `hair_fall` behind + `hair_cap`; `diadem(kind='stalactite', n=5–7, fc=)` | `standing_collar` (ruff) behind `torso(turn=-1)`; `gill_plume` ×6 on the ruff | one `hand5("hold_flat")` on the mirror frame; re-home the laurel |
-| J♠ | `face(…, 'profile-right', age='young', lids='raised')` | `cap(kind='hood')` + `lion_clasp(…, 40)` badge | `torso(turn=+1, pattern_kind=…)` | one `hand5("wrap")` on the lantern chain |
-| K♥, K♣ | frontal, `age='elder'` | `crown_band` + merlons re-parameterised / `diadem(kind='knee')` | `mantle` + `lapel`/`tunic` or `torso` | one `hand5("wrap")` on the tall attribute; re-home or drop the orb |
-| K♦ | `'profile-left'`, `age='elder'` | `hair_back` + beard adapted to profile | `torso(turn=-1)` | one `hand5("wrap")` on the key/staff |
-| Q♥ Q♣ Q♦ | 3/4, `sex='f'` | `hair_cap` + `hair_fall`; `diadem(kind='point'|'bead')` | `torso(turn=±1, pattern_kind='scales'|…)` | one `hand5("cup")` for a rim or `hand5("wrap")` for a stem |
-| J♥ | `'profile-left'`, young | `hair_back` | `torso(turn=-1)` | one `hand5("wrap")` on the fiddle neck; re-home the bow |
-| J♣ J♦ | 3/4, young | `hair_cap(parting=…)` + `cap(kind='flat')` | `torso(turn=±1, pattern_kind='rowels_solid'…)` | one `hand5("wrap")` on the tall attribute |
+| Q♠ | `face(…, '3/4-left', sex='f', lids='closed', vestigial=True)` | `hair_fall` behind + `hair_cap`; `diadem(kind='stalactite', n=5–7, fc=)` | `standing_collar` (ruff) behind `torso(turn=-1)`; `gill_plume` ×6 on the ruff | two `hand5` hands: mirror frame + restored laurel |
+| J♠ | `face(…, 'profile-right', age='young', lids='raised')` | `cap(kind='hood')` + `lion_clasp(…, 40)` badge | `torso(turn=+1, pattern_kind=…)` | two `hand5` hands: lantern chain + restored rope coil |
+| K♥, K♣ | frontal, `age='elder'` | `crown_band` + merlons re-parameterised / `diadem(kind='knee')` | `mantle` + `lapel`/`tunic` or `torso` | two `hand5` hands: pole + restored chalice (K♥); staff + restored cone orb (K♣) |
+| K♦ | `'profile-left'`, `age='elder'` | `hair_back` + beard adapted to profile | `torso(turn=-1)` | two `hand5` hands: key + sash-edge grip at the chest |
+| Q♥ Q♣ Q♦ | 3/4, `sex='f'` | `hair_cap` + `hair_fall`; `diadem(kind='point'|'bead')` | `torso(turn=±1, pattern_kind='scales'|…)` | two `hand5` hands: arrowhead + resting bodice (Q♥); sceptre + restored fan (Q♣); scales + restored paintbrush (Q♦) |
+| J♥ | `'profile-left'`, young | `hair_back` | `torso(turn=-1)` | two `hand5` hands: fiddle neck + restored parallel bow |
+| J♣ J♦ | 3/4, young | `hair_cap(parting=…)` + `cap(kind='flat')` | `torso(turn=±1, pattern_kind='rowels_solid'…)` | two `hand5` hands: paddle + resting belt (J♣); trumpet + restored map scroll (J♦) |
 
 Keep the K♠ conventions: CONTOUR silhouette, MEDIUM interiors, FINE patterns;
-gold only on regalia and hair; paper halos only on hands and attributes; the
-Lion Mark (40 px) on every court; patterns on plain-bordered panels.
+gold only on regalia and hair; no halos; the Lion Mark (40 px) on every
+court; dense, even detail across every garment region, including borders.
 
 ## 11. Known limits and open requests
 
