@@ -52,11 +52,11 @@ def garments(front, neckline):
         "C456 510 463 492 468 470 C478 410 484 352 500 316 "
         "C472 302 452 302 406 296 Z")
     jade = shape.difference(bodice)
-    # Two inset woven fields face their respective heads. The plain red fold
-    # between them is curved, not a divider at the double-head seam.
+    # Two inset woven fields face their respective heads. The curved fold
+    # between them carries fine stitch hatching, never a divider.
     fold = K.R("M375 330 C350 415 395 465 375 525 "
                "C355 585 400 635 375 720 L750 720 L750 330 Z")
-    left = bodice.buffer(-11).difference(fold.buffer(9))
+    left = bodice.buffer(-9).difference(fold.buffer(9))
     lattice = MG.scale_lattice(left, 15.0, w=K.MEDIUM, origin=(375, 380))
     lattice = K.c2(lattice)
     lattice = K.clip_out(lattice, K.c2(front), eps=8.0, trap=0.0)
@@ -65,9 +65,18 @@ def garments(front, neckline):
         for pts, _ in K.G.flatten(m.d, 0.05):
             if LineString(pts).length >= 12:
                 courses += K.line(C.polyline_d(pts), K.MEDIUM, role="scale")
+    ends = [np.array(q) for m in courses.marks
+            for pts, _ in K.G.flatten(m.d, 0.05)
+            for q in (pts[0], pts[-1])]
+    for i, a in enumerate(ends):
+        for b in ends[i + 1:]:
+            if 0.1 < np.linalg.norm(a - b) < 4.5:
+                bridge = LineString([a, b])
+                if bodice.contains(bridge) and not K.c2(front).buffer(8).intersects(bridge):
+                    courses += K.line(C.polyline_d([a, b]), K.MEDIUM, role="scale")
     # Wave courses are constructed once on the left, then rotated as a whole.
-    waves = B.wave_lines(jade.intersection(K.box(0, 0, 375, 1050)).buffer(-12),
-                         pitch=14, wl=32, amp=2.3, origin=(375, 322))
+    waves = B.wave_lines(jade.intersection(K.box(0, 0, 375, 1050)).buffer(-10),
+                         pitch=9.2, wl=26, amp=2.3, origin=(375, 322))
     waves = K.clip_out(K.c2(waves), K.c2(front), eps=10.0, trap=0.0)
     wave_lines = []
     for m in waves.marks:
@@ -86,15 +95,35 @@ def garments(front, neckline):
     waves = C.Frag()
     for ln in wave_lines:
         waves += K.line(C.polyline_d(ln.coords), K.FINE, role="wave")
+    fold_field = bodice.buffer(-9).difference(K.U(left, K.rot180(left)))
+    stitches = K.hatch_in(fold_field, origin=(375, 525))
+    stitches = K.clip_out(stitches, K.c2(front), eps=8.0, trap=0.0)
+    stitches = K.clip_out(stitches, courses.shape(), eps=3.2, trap=0.0)
+    stitch_courses = C.Frag()
+    for mark in stitches.marks:
+        for pts, _ in K.G.flatten(mark.d, 0.05):
+            if LineString(pts).length >= 7:
+                stitch_courses += K.line(C.polyline_d(pts), K.FINE, role="hatch")
+    stitches = stitch_courses
+    # Pearl armlet edging is part of the textile, not a floating strip.
+    pearls = B.pearls_on([(184, 389), (272, 389)],
+                        d_max=8.0, d_min=8.0, gap=0.0, even=True)
+    beads = K.c2(pearls.frag)
+    bead_shape = K.c2(pearls.shape)
+    beads = K.clip_out(beads, K.c2(front), eps=0, trap=0)
+    waves = K.clip_out(waves, bead_shape, eps=3.2, trap=0)
     red = B.fast_knockout(bodice, courses)
-    contours = K.outline(shape) + K.outline(bodice)
+    body_window = K.box(0, 350, 750, 700)
+    contours = K.outline(shape) \
+        + K.clip_in(K.outline(bodice, role="contour"), body_window) \
+        + K.clip_out(K.outline(bodice), body_window, eps=0, trap=0)
     contours = K.clip_out(contours, K.c2(front), eps=0, trap=0)
     contours = K.clip_out(contours, K.c2(neckline), eps=0, trap=0)
     return K.Part(shape, K.fill(red, K.RED) + K.fill(jade, K.JADE),
-                  contours + waves, {"bodice": bodice})
+                  contours + waves + stitches + beads, {"bodice": bodice})
 
 
-def held(stem, petiole, leaf, flower, arm):
+def held(stem, petiole, leaf, flower, cuff):
     shaft = K.U(petiole.shape, stem.shape)
     shaft_part = K.Part(shaft, K.clip_out(petiole.fills, stem.shape, eps=0, trap=0) + stem.fills,
                         K.outline(shaft) + stem.lines.select(lambda m: m.role != "outline"))
@@ -113,15 +142,22 @@ def held(stem, petiole, leaf, flower, arm):
     gold = K.U(old_gold, repair, sinus).difference(jade)
     gold = K.U(gold, gold.buffer(0.6).intersection(K.box(545, 250, 575, 305))
                .intersection(botanical.shape)).difference(jade)
+    # Trap jade under ink at the blade and sepal contacts; the gold plate
+    # must not leak along their exact shared edge.
+    leaf_contacts = K.U(K.box(532, 128, 563, 145), K.box(551, 195, 563, 224))
+    gold = gold.difference(jade.buffer(0.3).intersection(leaf_contacts))
     # Close the three-way contour junction at the foreshortened lobe.
     botanical = K.Part(botanical.shape,
                        botanical.fills.select(lambda m: m.color != K.GOLD) + K.fill(gold, K.GOLD),
                        botanical.lines + K.outline(leaf.shape, role="contour")
                        + K.dot((548.5, 284), K.RULE, role="leaf-junction"))
-    shape = K.U(botanical.shape, arm.shape)
+    notch = K.box(569, 258, 582, 278)
+    botanical.lines = K.clip_out(botanical.lines, notch, eps=0, trap=0) \
+        + K.clip_in(K.outline(botanical.shape, role="contour"), notch)
+    shape = K.U(botanical.shape, cuff.shape)
     # The stalk runs under the five curled digits, not through a paper halo.
-    fills = K.clip_out(botanical.fills, arm.shape, eps=0, trap=0) + arm.fills
-    lines = K.clip_out(botanical.lines, arm.shape, eps=0.2, trap=0)
-    lines += arm.lines.select(lambda m: m.role != "outline")
-    lines += K.clip_in(K.outline(arm.shape, role="grip-edge"), botanical.shape.buffer(0.2))
+    fills = K.clip_out(botanical.fills, cuff.shape, eps=0, trap=0) + cuff.fills
+    lines = K.clip_out(botanical.lines, cuff.shape, eps=0.2, trap=0)
+    lines += cuff.lines.select(lambda m: m.role != "outline")
+    lines += K.clip_in(K.outline(cuff.shape, role="grip-edge"), botanical.shape.buffer(0.2))
     return K.Part(shape, fills, lines + K.outline(shape))

@@ -1,14 +1,16 @@
-"""Q♥ · The Aquamaid Queen: continuous woven robes and one sagittaria grip."""
+"""Q♥ · The Aquamaid Queen: woven robes and two cuff-emerging hands."""
 from __future__ import annotations
 
 import numpy as np
 import shapely
+from dataclasses import replace
 from shapely.geometry import LineString, Polygon
 
 from deck import courtkit as K
 from deck.motifs import core as C
 
 from art import _qh_attr as A
+from art import _qh_body as B
 from art import _qh_cap as CP
 from art import _qh_face as QF
 from art import _qh_continuous as QC
@@ -96,12 +98,102 @@ def _stem():
     # the upper collar (on paper, under the CONTOUR) keeps its gold 1 px past
     # the shaft (QA 4c); the lower one, inside the sleeve under a MEDIUM
     # outline, is gold to its outline (a trap there left paper slits)
-    return A.stem((546, 479), (546, 116), w=19.0,
-                  nodes=((479 - 334) / 363, (479 - 185) / 363), collar_trap=(None, 1.0))
+    stem = A.stem((546, 479), (546, 116), w=19.0,
+                  nodes=((479 - 334) / 363, (479 - 185) / 363),
+                  collar_trap=(None, 1.0))
+    for y in (145, 228, 272, 378):
+        # The leaf passes over the right side at y228; keep its engraving
+        # wholly on the exposed gold, not sticking out of the blade contour.
+        x1 = 544.5 if y == 228 else 552.5
+        stem.lines += K.seg((539.5, y), (x1, y), K.FINE, role="stem-engraving")
+    return stem
+
+
+class Scene(K.Scene):
+    """Keep shared outlines intact and join touching pearl plates before healing."""
+    def compose(self, *, heal_gaps=True, **kwargs):
+        artwork = super().compose(heal_gaps=False, **kwargs)
+        gold = artwork.select(lambda m: m.kind == "fill" and m.layer == "gold")
+        artwork = artwork.select(lambda m: not (m.kind == "fill" and m.layer == "gold")) \
+            + K.fill(gold.shape().buffer(0.6).buffer(-0.6), K.GOLD)
+        if heal_gaps:
+            self.heal_log = []
+            artwork = K.heal(artwork, log=self.heal_log,
+                             keep_roles=("contour", "grip-edge", "leaf-vein"))
+        # Finish the three-way fold joins after foreground contour clipping.
+        artwork += K.c2(K.dot((491.68, 312.15), K.CONTOUR, role="contour")
+                        + K.dot((288.35, 413.82), K.RULE, role="contour"))
+        # Union just the shared junctions. Keep legal FINE textile strokes as
+        # strokes, rather than interpreting them as solid knockout bridges.
+        ink = artwork.select(lambda m: m.layer == "ink")
+        joins = K.c2(K.U(K.box(481, 303, 504, 342),
+                         K.box(282, 407, 295, 421)))
+        artwork = artwork.select(lambda m: m.layer != "ink") \
+            + K.clip_out(ink, joins, eps=0, trap=0) \
+            + K.fill(ink.shape().buffer(1.6).buffer(-1.6).intersection(joins),
+                     K.INK, role="contour")
+        # Restore the background plates in the tiny pockets where automatic
+        # foreground clipping dropped a thin cuff/robe contact.
+        pockets = K.c2(K.U(K.box(468, 435, 480, 447),
+                           K.box(285, 403, 307, 429)))
+        missing = pockets.difference(artwork.shape()).buffer(3.2).intersection(pockets)
+        artwork += K.fill(missing.intersection(K.c2(self.gown_bodice)), K.RED)
+        artwork += K.fill(missing.difference(K.c2(self.gown_bodice)), K.JADE)
+        # Retract hidden plate tails only at their local hair/robe contacts.
+        # Broad ink-based clipping would carve paper rims along whole edges.
+        tails = {"jade": K.c2(K.box(486, 306, 501, 314.5)),
+                 "red": K.c2(K.box(487.5, 330.5, 494, 338)),
+                 "gold": K.c2(K.box(551, 200, 562, 224))}
+        ink_core = artwork.select(lambda m: m.layer == "ink").shape().buffer(-0.6)
+        fills = artwork.select(lambda m: m.kind == "fill" and m.layer != "ink")
+        artwork = artwork.select(lambda m: m.kind != "fill" or m.layer == "ink")
+        for color in (K.JADE, K.RED, K.GOLD):
+            marks = fills.select(lambda m: m.color == color)
+            plate = marks.shape()
+            layer = marks.marks[0].layer
+            if layer in tails:
+                plate = plate.difference(ink_core.intersection(tails[layer]))
+            if layer == "red":
+                plate = K.U(plate, plate.buffer(1.0).intersection(
+                    K.c2(K.box(468, 435, 480, 447))))
+            # Serialization must not leave subpixel holes in the repaired
+            # cuff plate where the shared contour meets the gown.
+            repairs = K.U(*[Polygon(r) for pg in K._polys_of(plate)
+                            for r in pg.interiors
+                            if Polygon(r).area < 1 and pockets.intersects(Polygon(r))])
+            plate = K.U(plate, repairs)
+            artwork += K.fill(plate, color)
+        return artwork
+
+
+def fold_cuff(hand, *, depth=20.0):
+    """A pearl-edged opening in the gown, with the forearm hidden inside."""
+    w, u = P(hand.wrist), hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    hw = (hand.wrist_w + 10.0) / 2
+    base = w + u * depth
+    shape = K.R(K.Path(w - u * 2 + n * hw).line(w - u * 2 - n * hw)
+                .sag(base - n * (hw + 3), -2).line(base + n * (hw + 3))
+                .sag(w - u * 2 + n * hw, -2).close().d).buffer(-1.6).buffer(1.6)
+    pearls = B.pearls_on([w + u * 12 - n * (hw - 7),
+                         w + u * 12 + n * (hw - 7)],
+                        d_max=7.0, d_min=7.0, gap=0.0, even=True)
+    cuff = K.Part(shape, K.fill(shape, K.JADE) + pearls.fills,
+                  pearls.lines + K.hatch_in(shape.buffer(-4).difference(
+                      pearls.shape.buffer(3)),
+                      angle=float(np.degrees(np.arctan2(u[1], u[0]))) + 45,
+                      origin=tuple(base)))
+    joined = hand.with_sleeve(cuff, cuff_line=True)
+    jade = joined.shape.difference(joined.meta["hand_region"])
+    lines = C.Frag([replace(m, role="contour") if m.role in ("outline", "pearl") else m
+                    for m in joined.lines.marks])
+    return K.Part(joined.shape, K.fill(jade.buffer(0.4), K.JADE) + pearls.fills,
+                  lines, {**joined.meta, "cuff_depth": depth,
+                                 "cuff_width": 2 * hw})
 
 
 def figure():
-    sc = K.Scene()
+    sc = Scene()
     fc = QF.queen_face(HEAD, wing_mode="hook", wing=(4.5, 62.0, 0.8), lid_sag=2.6, low_sag=6.4)
 
     # ---- behind everything: the air rising from behind the far shoulder ------------------
@@ -110,28 +202,42 @@ def figure():
     hn = H.lock(HAIR_N, 54.0, n=5, taper=0.42, taper_from=0.45,
                 side=+1, bubbles=(4.2, 5.6, 7.0), bubble_lane=2, bubble_at=0.55)
     hf = H.lock([(426, 188), (437, 218), (441, 250), (440, 278), (451, 300), (469, 304)], 40.0, n=4, side=-1)
-    # Use the downward stem axis so the wrist runs inward to the shoulder.
+    # Only a short opening is visible; the forearm stays inside the gown.
     h = K.hand5((546, 434), 90, "wrap", size=K.hand_size(fc),
                 hand="L", view="palm", grip_w=19)
-    base = P(h.wrist) + h.wrist_dir * 84
-    sleeve, _ = K.sleeve(K.SleeveSpec(wrist=h.wrist, base=base, width=62,
-                                     wrist_w=h.wrist_w, cuff=0, color=K.JADE, folds=0))
-    arm = h.with_sleeve(sleeve)
-    arm = K.Part(arm.shape, K.fill(arm.shape.difference(arm.meta["hand_region"]), K.JADE),
-                 arm.lines, arm.meta)
+    right_cuff = fold_cuff(h, depth=24)
+    # The original wrist (300,452) straddles the approved -42° seam.
+    # Shift the same resting gesture up onto the chest, not the seam.
+    resting = K.hand5((322, 424), -24, "rest", size=K.hand_size(fc) * 0.82,
+                      hand="R", view="back", curl=6, spread=3)
+    left_cuff = fold_cuff(resting, depth=24)
     pet = A.petiole(**PETIOLE)
     leaf = _leaf()
     flower = [p for _, p in A.flower3((546, 112), r_petal=50, petal_w=40,
                                      centre_r=12.5, squash=0.78, tilt=-10,
                                      notch=5, centre="scallop", hatch_rel=0)]
-    held = QC.held(_stem(), pet, leaf, flower, arm)
-    robe = QC.garments(K.U(held.shape, hn.shape, hf.shape), K.U(hn.shape, hf.shape))
+    held = QC.held(_stem(), pet, leaf, flower, right_cuff)
+    robe = QC.garments(K.U(held.shape, left_cuff.shape, hn.shape, hf.shape),
+                       K.U(hn.shape, hf.shape))
+    sc.gown_bodice = robe.meta["bodice"]
     clasp = K.lion_clasp((390, 330), 40)
     robe = K.Part(robe.shape,
                   K.clip_out(robe.fills, clasp.meta["silhouette"], eps=0, trap=0) + clasp.fills,
                   K.clip_out(robe.lines, clasp.meta["silhouette"], eps=0.2, trap=0) + clasp.lines)
-    sc.part("robes", robe)
-    sc.part("sagittaria+hand+sleeve", held)
+    robes = QC.merge([robe, left_cuff])
+    # Red prints over jade. Keep its registration trap within the MEDIUM
+    # cuff edge, not 0.05px beyond the inner edge as the general merge does.
+    red = robes.fills.select(lambda m: m.layer == "red").shape()
+    robes.fills = robes.fills.select(lambda m: m.layer != "red") + K.fill(
+        red.difference(left_cuff.shape.buffer(-1.2)), K.RED)
+    # Keep the gown's jade plate beneath thin foreground cuff contacts;
+    # automatic tail removal must not leave a paper pocket beside a cuff.
+    cuff_contacts = K.c2(K.U(K.box(468, 435, 487, 449),
+                             K.box(285, 403, 307, 429)))
+    gown_jade = robe.fills.select(lambda m: m.layer == "jade").shape()
+    robes.fills += K.fill(gown_jade.intersection(cuff_contacts), K.JADE)
+    sc.part("robes", robes)
+    sc.part("sagittaria+hand+cuff", held)
 
     # ---- hair (behind the head), neck, head, cap ---------------------------------------------
     sc.part("hairN", hn)
@@ -177,6 +283,12 @@ def figure():
     face_region = K.R(fc.head).difference(cap_part.shape)
     portrait = K.Part(portrait.shape, portrait.fills,
                        portrait.lines + K.outline(face_region, role="face-edge"))
+    # The gold lock and gown meet here under one outline, not a paper wedge.
+    lock_gold = portrait.fills.select(lambda m: m.layer == "gold").shape()
+    portrait.fills += K.fill(lock_gold.buffer(2.5).intersection(
+        K.box(481, 306, 493, 320)).intersection(portrait.shape), K.GOLD)
+    portrait.fills += K.fill(K.box(483, 309, 488, 315).intersection(
+        K.U(portrait.shape, portrait.lines.shape())), K.GOLD)
     sc.items = sc.items[:3]
     sc.part("portrait", portrait)
     return sc
@@ -272,6 +384,16 @@ def _leaf():
     (there the two contours merge into one ink solid, and jade under it is a
     hidden plate, QA 4c)."""
     lf = A.arrow_leaf2(**LEAF)
+    hatch = C.Frag()
+    for mark in lf.lines.select(lambda m: m.role == "hatch").marks:
+        for pts, _ in K.G.flatten(mark.d, 0.05):
+            # The course at the stalk crossing would end beside its gold
+            # plate; omit that course rather than leave a crowded terminal.
+            if not 220 < pts[0][1] < 230:
+                hatch += K.line(C.polyline_d(pts), K.FINE, role="leaf-vein")
+    lf.lines = lf.lines.select(lambda m: m.role != "hatch") + hatch
+    lf.lines = lf.lines.select(lambda m: m.role != "vein") + K.clip_in(
+        lf.lines.select(lambda m: m.role == "vein"), lf.shape.buffer(-8.5))
     jade = shapely.union_all([K.R(m.d) for m in lf.fills.marks if m.kind == "fill"])
     x_edge = 546.0 + 19.0 / 2
     stem = K.box(546.0 - 19.0 / 2, 0, x_edge, 1050)
@@ -279,6 +401,8 @@ def _leaf():
     occ = lf.shape.difference(bare) if not bare.is_empty else lf.shape
     y_cross = lf.shape.intersection(LineString([(x_edge, 0.0), (x_edge, 600.0)])).bounds[1]
     cut = K.box(x_edge - K.CONTOUR / 2 - 0.6, 0, x_edge + K.CONTOUR / 2 + 0.6, y_cross + 1.0)
+    cut = cut.intersection(K.U(K.outline(lf.shape).shape(),
+                              K.outline(stem).shape()).buffer(-0.6))
     return K.Part(max(K._polys_of(occ.buffer(0)), key=lambda g: g.area), K.fill(jade.difference(cut), K.JADE),
                   lf.lines, dict(lf.meta))
 
