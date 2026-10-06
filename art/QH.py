@@ -1,7 +1,4 @@
-"""art/QH.py — Q♥ · The Aquamaid Queen (House of the Fount), brief §H.5.
-
-(draft v3 — composition plan in progress)
-"""
+"""Q♥ · The Aquamaid Queen: continuous woven robes and one sagittaria grip."""
 from __future__ import annotations
 
 import numpy as np
@@ -12,14 +9,15 @@ from deck import courtkit as K
 from deck.motifs import core as C
 
 from art import _qh_attr as A
-from art import _qh_body as B
 from art import _qh_cap as CP
 from art import _qh_face as QF
-from art import _qh_hand as QHH
+from art import _qh_continuous as QC
 from art import _qh_head as H
 from art import _qh_tidy as TD
 
 P = K.P
+DOUBLE_HEAD = "continuous"
+SEAM = -42
 HEAD = (383.0, 204.0)
 # the cap sphere sits back on the head (a 3/4-right head shows the back of the
 # skull on the viewer's left): centred left of the face so its far limb falls
@@ -84,133 +82,66 @@ ROSETTE = dict(
 # one gentle arc into the sinus — a leaf stalk springing from the stem (the
 # first round's J, square out of the stem and straight up, read as a hook)
 PETIOLE = dict(w=7.0, turtle=((546.0, 299.8), -40.0, (("fd", 20.5), ("arc", 16.0, -41.0), ("fd", 18.0))))
-PETIOLE_ORDER = "behind"          # "behind" the stem, or in "front" of it (under the leaf)
 LEAF = dict(sinus=(570.0, 259.0), tilt=9.0, blade=80.0, half_w=23.0, lobe=(21.0, 36.0), lobe_l=(18.0, 35.0),
-            notch=(13.0, 22.0), fill_open=3.3, rib_from=0.0, vein_from=-7.0, vein_dx=0.5)
-# clear gap between the neckline pearls: 3 px of red + both FINE contours
-TRIM_GAP = 3.0 + 2 * 2.1 / 2 + 0.2
-# the pearl collar: per strand the arc (p0, p1, sag). The upper strand, on the
-# neck, runs from a pearl tucked under the near neck CONTOUR to one tucked
-# under the far neck contour (first / last pearl centre x, n pearls, Ø max /
-# min; it stopped 4 px short of the far contour); the lower strand lies across
-# the neck's base on the bodice, its end pearl 3 px clear of the far lock's
-# edge (1.4 px from it, heal opened that pearl into a "C" of bare gold on red)
-COLLAR = (((364.5, 283.0), (412.0, 281.0), 5.5, 370.8, 405.05, 6, 7.6, 6.4),
-          ((363.5, 296.5), (403.5, 297.5), 6.5, 370.06, 396.0, 5, 7.6, 6.4))
-# the plain band under the pearl armlets (card y; the sleeves' wave rows lie at
-# y = 322 + 12k, so this drops the rows at 382 and 394)
-ARMLET_BAND = [(380.0, 396.0)]
-# the right armlet's arc (p0, p1, sag): the pearls right of the stem sit at
-# y ≈ 387, where the seam crosses the first ~3 px off its centre and the
-# sleeve's CONTOUR cuts the second decisively
-ARMLET_R = ((484.0, 386.0), (592.0, 384.0), -4.0)
-# the stem's collars: the lower one sat on the sleeve's crown (its paper channel
-# bit a box out of the contour); it now sits well inside the sleeve. The upper
-# one is back at its established height (t .84, y 185) with the leaf
-NODES = (0.495, 0.84)
+            notch=(13.0, 22.0), fill_open=3.3, rib_from=-8.0, vein_from=-7.0, vein_dx=0.5)
+# A single graduated pearl strand, with end beads tucked into the neck edges.
+COLLAR = (((364.5, 283.0), (412.0, 281.0), 5.5, 370.8, 405.05, 6, 7.6, 6.4),)
 # the far lock comes out beside the band's square far end with a SHOULDER: from
 # the band's top corner along its top edge, round and down into the lock's own
 # outer edge — a strip of hair ≥ 5 px wide from the band down (the lock's top
 # was a wedge tapering into the face contour, and heal dropped the contour)
 FAR_SHOULDER = dict(start=(418.0, 173.6), h0=36.0, join_y=232.0, via=((429.0, 181.0), (435.0, 198.0)),
                     hidden=((410.0, 232.0), (404.0, 200.0), (408.0, 178.0), (416.5, 176.0)))
-# the queen's right hand on the bodice (courtkit.flat via _qh_hand.bodice_hand)
-HAND_L = dict(side=-1, length=72.0, width=31.0, wrist_w=24.0, tips=(5.0, 0.0, 3.0, 10.0), knuckle=0.45,
-              thumb_deg=32.0, thumb_len=0.40, stub=K.HAND_STUB)
-
-
 def _stem():
     # the upper collar (on paper, under the CONTOUR) keeps its gold 1 px past
     # the shaft (QA 4c); the lower one, inside the sleeve under a MEDIUM
     # outline, is gold to its outline (a trap there left paper slits)
-    return A.stem((546, 548), (546, 116), w=19.0, nodes=NODES, collar_trap=(None, 1.0))
+    return A.stem((546, 479), (546, 116), w=19.0,
+                  nodes=((479 - 334) / 363, (479 - 185) / 363), collar_trap=(None, 1.0))
 
 
 def figure():
-    sc = K.Scene(rank="Q")
+    sc = K.Scene()
     fc = QF.queen_face(HEAD, wing_mode="hook", wing=(4.5, 62.0, 0.8), lid_sag=2.6, low_sag=6.4)
 
     # ---- behind everything: the air rising from behind the far shoulder ------------------
     sc.add("bubbles", A.bubble_ribbon(AIR, AIR_SIZES, growth=AIR_GROWTH), None, sil=False)
 
-    # ---- the gown -------------------------------------------------------------------------
-    gw = B.Gown(neck_l=(369, 298), neck_r=(406, 296),
-                shoulder_l=[(318, 305), (266, 320)], shoulder_r=[(452, 302), (500, 316)],
-                hole_l=[(278, 352), (286, 410), (292, 470), (294, 548)],
-                hole_r=[(488, 350), (484, 410), (480, 470), (478, 548)],
-                sweet=[(284, 376), (336, 350), (390, 370), (438, 351), (483, 374)],
-                puff_l=None, puff_r=None,
-                out_l=[(236, 303), (190, 310), (163, 336), (157, 366), (168, 392), (158, 450), (148, 548)],
-                out_r=[(528, 302), (566, 310), (590, 336), (594, 366), (583, 392), (594, 450), (602, 548)])
-    # the two wave rows under the pearl armlets are left out: the strand lies on
-    # a plain gathered band (rows at a 12 px pitch cannot clear an 11.6 px strand
-    # laid along them — their crests grazed the pearls, and heal cut paper
-    # crescents out of the gold; courts2 review)
-    slL = gw.sleeve(-1, border=17.0, pitch=12.0, skip_y=ARMLET_BAND)
-    slR = gw.sleeve(+1, border=17.0, pitch=12.0, skip_y=ARMLET_BAND)
-    # the lock over the near shoulder is in front: wave troughs that only peek
-    # out from under its edge are left out (a 2 px jade pocket there, QA 12)
     hn = H.lock(HAIR_N, 54.0, n=5, taper=0.42, taper_from=0.45,
                 side=+1, bubbles=(4.2, 5.6, 7.0), bubble_lane=2, bubble_at=0.55)
     hf = H.lock([(426, 188), (437, 218), (441, 250), (440, 278), (451, 300), (469, 304)], 40.0, n=4, side=-1)
-    slL = TD.waves_clear(slL, hn.shape)
-    # pearls PLACED, not spread: one squarely on each border seam (the seam
-    # crosses it near its middle — it was tangent to the end pearl), and the
-    # right strand breaks round the stem's paper channel with 3 px of jade each
-    # side (the channel had cut two pearls into crescents). Right of the stem
-    # the strand dips a little as it turns round the arm: one pearl on the
-    # seam and the next TUCKED under the sleeve's CONTOUR (a lone pearl there
-    # read as an orphan dot; two whole pearls cannot fit the 17 px border)
-    sx = TD.seam_x(slL, 388.0)[0]
-    armL = TD.strand(slL, (168, 385), (290, 385), sag=-5.0, d=9.5, inset=4.0,
-                     xs=[sx + 9.5 * k for k in range(-2, 13)])
-    ch = 19.0 / 2 + K.HALO + K.MEDIUM / 2 + 3.0 + 9.5 / 2 + K.FINE / 2      # stem axis → pearl centre
-    armR = TD.strand(slR, ARMLET_R[0], ARMLET_R[1], sag=ARMLET_R[2], d=9.5, inset=4.0, tuck=K.CONTOUR / 2,
-                     xs=[546.0 - ch - 9.5 * k for k in range(0, 6)] + [546.0 + ch, 546.0 + ch + 9.5])
-    # the seams stop 0.55 px short of the pearls, so their round caps end
-    # under the pearls' FINE outlines (cut at the pearl's edge they poked
-    # 0.5 px into the gold); on the right sleeve, wave crests that only peek
-    # into the strip between the stem's paper channel and the seam as stubs
-    # are dropped (≥ 10.5 px pieces stay: heal shortens them a little more)
-    slL = TD.lines_clear(slL, armL.shape.buffer(0.55), role="seam", min_len=2.0)
-    slR = TD.lines_clear(slR, armR.shape.buffer(0.55), role="seam", min_len=2.0)
-    chan = K.box(546.0 - 19.0 / 2 - K.HALO - K.MEDIUM / 2 - 0.5, 0, 546.0 + 19.0 / 2 + K.HALO + K.MEDIUM / 2 + 0.5, 1050)
-    slR = TD.lines_clear(slR, chan, role="wave", min_len=10.5)
-    sc.part("sleeveL", slL)
-    sc.part("sleeveR", slR)
-    sc.part("torso", gw.torso(scale_r=15.0))
-    # strung with red between the beads: touching beads trap red under their
-    # merged contours (4c) and the pair either side of the neckline's cusp
-    # overlapped. courts2 review: at 3.4 px the two FINE contours kept only
-    # 1.3 px of red between them, so heal opened every pearl's contour into a
-    # "C" (bare gold on red, §C.4); TRIM_GAP keeps 3 px of red between them
-    sc.part("trim", TD.beads_inside(B.pearls_on(gw.sweet_pts, d_max=9.5, d_min=6.3, gap=TRIM_GAP),
-                                    gw.torso_shape, clear_of=(hn.shape, hf.shape)))
-    sc.part("armletL", armL)
-    sc.part("armletR", armR)
+    # Use the downward stem axis so the wrist runs inward to the shoulder.
+    h = K.hand5((546, 434), 90, "wrap", size=K.hand_size(fc),
+                hand="L", view="palm", grip_w=19)
+    base = P(h.wrist) + h.wrist_dir * 84
+    sleeve, _ = K.sleeve(K.SleeveSpec(wrist=h.wrist, base=base, width=62,
+                                     wrist_w=h.wrist_w, cuff=0, color=K.JADE, folds=0))
+    arm = h.with_sleeve(sleeve)
+    arm = K.Part(arm.shape, K.fill(arm.shape.difference(arm.meta["hand_region"]), K.JADE),
+                 arm.lines, arm.meta)
+    pet = A.petiole(**PETIOLE)
+    leaf = _leaf()
+    flower = [p for _, p in A.flower3((546, 112), r_petal=50, petal_w=40,
+                                     centre_r=12.5, squash=0.78, tilt=-10,
+                                     notch=5, centre="scallop", hatch_rel=0)]
+    held = QC.held(_stem(), pet, leaf, flower, arm)
+    robe = QC.garments(K.U(held.shape, hn.shape, hf.shape), K.U(hn.shape, hf.shape))
+    clasp = K.lion_clasp((390, 330), 40)
+    robe = K.Part(robe.shape,
+                  K.clip_out(robe.fills, clasp.meta["silhouette"], eps=0, trap=0) + clasp.fills,
+                  K.clip_out(robe.lines, clasp.meta["silhouette"], eps=0.2, trap=0) + clasp.lines)
+    sc.part("robes", robe)
+    sc.part("sagittaria+hand+sleeve", held)
 
     # ---- hair (behind the head), neck, head, cap ---------------------------------------------
     sc.part("hairN", hn)
     sc.part("hairF", hf)
-    # the lower pearl strand lies across the neck's base: between its end
-    # pearls' centres the base runs along the strand's centreline, hidden
-    # through the pearls' middles (at y 299 it grazed the tops of the lower
-    # pearls between them); beyond them it stays at 299 and T's into the end
-    # pearls
+    # A single clear pearl strand, not two rows pinched by the neckline.
     nk = K.neck(fc, bottom=299.0, width=35.0)
-    c1 = COLLAR[1]
-    lo = _collar_path(1)
-    lo = lo[lo[:, 0] <= c1[4]]
-    # past the end pearl's centre the base runs straight to the far corner
-    lo = np.vstack([lo, [(412.0, 298.6)]])
-    above = Polygon(np.vstack([[(0.0, lo[0][1])], lo, [(750.0, lo[-1][1]), (750.0, 0.0), (0.0, 0.0)]])).buffer(0)
-    low = K.neck(fc, bottom=308.0, width=35.0).shape.intersection(above).intersection(K.box(c1[3], 0, 750, 1050))
-    nsh = max(K._polys_of(nk.shape.union(low).buffer(0)), key=lambda g: g.area)
-    # its line stops 0.5 px short of the pearls (its round cap then ends under
-    # a pearl's FINE outline instead of poking into the gold)
-    nk = TD.lines_clear(K.Part(nsh, C.Frag(), K.outline(nsh), {}), _collar_strand(1, K.box(0, 0, 750, 1050)).shape
-                        .buffer(0.5), role="outline", min_len=2.0)
-    sc.part("neck", nk)
+    collar = _collar_strand(0, nk.shape)
+    nk = K.Part(nk.shape, C.Frag(),
+                K.clip_out(nk.lines, collar.shape, eps=0.5, trap=0) + collar.lines)
+    sc.part("neck+pearls", K.Part(K.U(nk.shape, collar.shape), collar.fills, nk.lines))
     sc.add("head", fc.lines + K.outline(fc.head), fc.skin)
     cap = CP.Cap(CAP_C, CAP_R, **CAP_KW)
     if ROSETTE:
@@ -226,8 +157,28 @@ def figure():
     # face and lock top met within 8 px there: an ink knot by the far temple)
     TD.lock_shoulder(sc, "hairF", hf, K.GOLD, **FAR_SHOULDER, face=fc.skin)
 
-    # ---- pearl collar and the Lion Mark ---------------------------------------------------------
-    _collar_and_attrs(sc, gw, nk.shape)
+    # Petals, gold rim and pearl share one cap silhouette and trapped plates.
+    cap_items = [it for it in sc.items if it.name.startswith(("capbase", "petal", "rim", "pearl"))]
+    cap_part = QC.merge([K.Part(it.occ,
+                                it.frag.select(lambda m: m.kind == "fill"),
+                                it.frag.select(lambda m: m.kind != "fill")) for it in cap_items])
+    far_hair = next(it.occ for it in sc.items if it.name == "hairF")
+    cap_part = K.Part(cap_part.shape, cap_part.fills,
+                      K.clip_out(cap_part.lines, far_hair.buffer(-0.2), eps=0, trap=0))
+    sc.items = [it for it in sc.items if it not in cap_items]
+    sc.part("petal-cap", cap_part)
+    # Hair, skin, pearls and cap are one portrait, with one gold plate and
+    # no barely abutting same-ink patches at the temples.
+    portrait_items = sc.items[3:]
+    portrait = QC.merge([K.Part(it.occ,
+                               it.frag.select(lambda m: m.kind == "fill"),
+                               it.frag.select(lambda m: m.kind != "fill"))
+                         for it in portrait_items])
+    face_region = K.R(fc.head).difference(cap_part.shape)
+    portrait = K.Part(portrait.shape, portrait.fills,
+                       portrait.lines + K.outline(face_region, role="face-edge"))
+    sc.items = sc.items[:3]
+    sc.part("portrait", portrait)
     return sc
 
 
@@ -341,72 +292,6 @@ def _collar_strand(k, zone):
     """Strand ``k`` of the pearl collar (see COLLAR), seen inside ``zone``."""
     c = COLLAR[k]
     return TD.strand_span(_collar_path(k), c[3], c[4], c[5], c[6], c[7], zone)
-
-
-def _collar_and_attrs(sc, gw, neck):
-    # courts2 review: the strands' end pearls stopped 0.2–1 px short of the
-    # neck's contours and heal opened them into "C"s (bare gold edges). Each
-    # strand now runs from a pearl tucked under the near neck CONTOUR to one
-    # tucked under the far neck contour (it stopped 4 px short of it, and the
-    # lower strand's end pearl was a "C" with the neck's base line running
-    # into it): it wraps round behind the neck at both ends (TD.strand_span)
-    seen = (neck, neck.union(gw.torso_shape.difference(sc.region(["hairF"]))))
-    for k in range(len(COLLAR)):
-        sc.part(f"collar{k}", _collar_strand(k, seen[k]))
-    sc.part("clasp", K.lion_clasp((390.0, 330.0), 40.0))
-
-    # ---- the arrowhead sceptre ---------------------------------------------------------------------
-    # the petiole runs out from BEHIND the stem (no butt end drawn across the
-    # gold) and leaves its right edge well above the sleeve's crown
-    pet = None
-    if PETIOLE:
-        # its gold stops short of the sinus (the notch's apex is an ink knot)
-        pt = A.petiole(**PETIOLE)
-        g = pt.shape.difference(K.R(K.circle(LEAF["sinus"], K.MEDIUM + 2.0)))
-        pet = K.Part(pt.shape, K.fill(g, K.GOLD), pt.lines, pt.meta)
-    if pet is not None and PETIOLE_ORDER == "behind":
-        sc.part("petiole", pet, sil=False)
-    sc.part("stem", _stem(), halo=K.HALO, halo_only=("sleeveL", "sleeveR", "armletR"))
-    if pet is not None and PETIOLE_ORDER == "front":
-        sc.part("petiole", pet, sil=False)
-    sc.part("leaf", _leaf())
-    for nm, pt in A.flower3((546, 112), r_petal=50.0, petal_w=40.0, centre_r=12.5, squash=0.78, tilt=-10.0,
-                            notch=5.0, centre="scallop", hatch_rel=0.0):
-        sc.part("flower-" + nm, pt)
-
-    # ---- arms and hands ------------------------------------------------------------------------------
-    # the queen's LEFT hand grips the stem from the body side (palm view, courtkit.fist hand='L'),
-    # its wrist out along the hand's axis; the right hand lies on the bodice (courtkit.flat)
-    fist_r = dict(shaft_w=19.0, back=-1, hand="L", h=36.0)
-    WR = tuple(K.fist_wrist((546.0, 434.0), -90.0, bend=44.0, shaft_w=19.0, back=-1, h=36.0))
-    faL = B.forearm((232, 532), (300, 452), width=50.0, wrist_w=34.0, sag=-3.0)
-    # the right cuff opens to the left's 34 px and its bracelet sits 2.5 px up
-    # the cuff (across the wrist junction at 30 px, the end pearls hung a
-    # fraction of a px off the cuff's edges and the hand's heel, and heal
-    # opened them into "C"s of bare gold; courts2 review)
-    faR = B.forearm((474, 532), WR, width=44.0, wrist_w=34.0, sag=2.0)
-    brL = B.bracelet((300, 452), faL.meta["u"], 34.0, d=6.3)
-    brR = B.bracelet(WR, faR.meta["u"], 30.0, d=6.3, back=2.5)
-    # the cuffs' waves stop ≥ 3 px short of the bracelets' pearls (they grazed
-    # them, and heal cut paper wedges out of the gold)
-    clear = K.GAP_MARK + K.FINE + 0.2
-    faL = TD.lines_clear(faL, brL.shape.buffer(clear))
-    faR = TD.lines_clear(faR, brR.shape.buffer(clear))
-    sc.part("armL", faL, halo=K.HALO, halo_only=("sleeveL", "sleeveR"))
-    sc.part("armR", faR, halo=K.HALO, halo_only=("sleeveL", "sleeveR"))
-    # the kit's flat hand, its thumb opened off the index finger (a clear web V
-    # instead of the thumb's tip pressing the index root) with one crease from
-    # the web toward the wrist, the little-finger side one smooth edge
-    QHH.bodice_hand((300.0, 452.0), -24.0, **HAND_L).add_to(sc, "handL", halo=K.HALO, halo_only=("torso", "trim"))
-    K.fist((546.0, 434.0), -90.0, wrist=WR, wrist_w=26.0, **fist_r).add_to(sc, "handR", halo=0.0)
-    # the pearl bracelets over the wrists (the hands run on under them)
-    sc.part("braceletL", brL)
-    sc.part("braceletR", brR)
-    # the bodice's edge, cut by the hand's paper channel just above the left
-    # bracelet, ended 2 px from the first pearl's outline, and heal opened
-    # that pearl into a "C"; it now stops ≥ 3 px clear of it
-    TD.lines_short_of(sc, ("torso",), brL.shape, gap=K.GAP_MARK + K.MEDIUM / 2 + K.FINE / 2 + 0.2)
-    K.band_guard(sc, "Q")
 
 
 def build():
