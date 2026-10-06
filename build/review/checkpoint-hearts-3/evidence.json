@@ -1,0 +1,150 @@
+{
+ "source_commits": {
+  "original": "b4e26982",
+  "checkpoint2": "18b4c73f",
+  "now": "48f0d156"
+ },
+ "T_patch_px2": 6262.25,
+ "hand_zoom": 6,
+ "flags": [
+  "QH stem-hand sleeve ~37 px inside mantle, band+pearls, no waves",
+  "KH cuffs read as jade lapel/tunic sleeve, not red-cloak bell sleeve"
+ ],
+ "cards": {
+  "KH": {
+   "hand_crops_xywh": {
+    "R": [
+     438,
+     395,
+     180,
+     150
+    ],
+    "L": [
+     144,
+     325,
+     180,
+     150
+    ]
+   },
+   "scene_counts": [
+    26,
+    8,
+    10
+   ],
+   "density": {
+    "score": [
+     0.352754,
+     0.395422
+    ],
+    "low_detail_fraction": [
+     0.081761,
+     0.002058
+    ],
+    "largest_flat_patch_px2": [
+     "4116 red",
+     "1102 gold"
+    ]
+   },
+   "qa": {
+    "pass": 15,
+    "fail": 0,
+    "warn": 1
+   },
+   "sha256": {
+    "pre": "d31b916ac9118974cdc3ea5ab121d99ae7958580be52fcdffe357008c152375b",
+    "cp2": "a27d0a0b86c504452f2db78d525c4ec34ea38fa45a68fbe1b4968072c8cd9240",
+    "now": "6b74927b1012a485e6844a73b1c20ca3f143aac49898f6ff33b732064f4b1a01"
+   }
+  },
+  "QH": {
+   "hand_crops_xywh": {
+    "R": [
+     456,
+     359,
+     180,
+     150
+    ],
+    "L": [
+     244,
+     335,
+     180,
+     150
+    ]
+   },
+   "scene_counts": [
+    42,
+    4,
+    4
+   ],
+   "density": {
+    "score": [
+     0.372674,
+     0.377876
+    ],
+    "low_detail_fraction": [
+     0.016097,
+     0.005736
+    ],
+    "largest_flat_patch_px2": [
+     "1967 red",
+     "757 gold"
+    ]
+   },
+   "qa": {
+    "pass": 15,
+    "fail": 0,
+    "warn": 1
+   },
+   "sha256": {
+    "pre": "1615858d9d4c8b3b04fd89a8fd72f085d7171649f596a78a5500f11cc7fce9a1",
+    "cp2": "50ff67844589c7871671eeaee6031005314994b2d58a7eb60b388104f7176339",
+    "now": "4ba0d36b3e36e425300579f87cea7ef6ce452814e9cf36b7d2e583a39f47edc1"
+   }
+  },
+  "JH": {
+   "hand_crops_xywh": {
+    "R": [
+     420,
+     215,
+     180,
+     150
+    ],
+    "L": [
+     178,
+     305,
+     180,
+     150
+    ]
+   },
+   "scene_counts": [
+    26,
+    4,
+    4
+   ],
+   "density": {
+    "score": [
+     0.315374,
+     0.397905
+    ],
+    "low_detail_fraction": [
+     0.141104,
+     0.009524
+    ],
+    "largest_flat_patch_px2": [
+     "11145 red",
+     "511 jade"
+    ]
+   },
+   "qa": {
+    "pass": 15,
+    "fail": 0,
+    "warn": 1
+   },
+   "sha256": {
+    "pre": "24e5c5313ed6497140d8eb97ecd37128aea01988a73927b8a7898d81a7de0467",
+    "cp2": "6767738fad6de9ff63114333bc949fb63e8c61f33cbac65cae152c34d861ec3b",
+    "now": "2da14ab0f86e883c60f7c45ac49f45cea3d07dfe0bde05854afc671b9d28c6f1"
+   }
+  }
+ }
+}
