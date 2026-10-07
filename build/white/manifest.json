@@ -990,7 +990,33 @@
   "rank": "J",
   "suit": "S",
   "cut_y": 511,
-  "double_head": "band",
+  "double_head": "continuous",
+  "seam": {
+   "kind": "angle",
+   "points": [
+    [
+     -60.0,
+     448.298
+    ],
+    [
+     -18.923,
+     455.541
+    ],
+    [
+     375.0,
+     525.0
+    ],
+    [
+     768.923,
+     594.459
+    ],
+    [
+     810.0,
+     601.702
+    ]
+   ],
+   "angle": -10.0
+  },
   "status": "art",
   "stock": "white",
   "order": [
@@ -1005,7 +1031,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/JS.png",
   "print": null,
   "error": null,
-  "seconds": 30.16
+  "seconds": 104.07
  },
  {
   "id": "KH",

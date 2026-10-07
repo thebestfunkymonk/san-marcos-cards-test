@@ -89,3 +89,19 @@ def pocket(a, others, *, near=None, r=5.0, max_area=120.0):
     keep = [g for g in K._polys_of(gap) if g.area < max_area and g.distance(a) < 0.3 and g.distance(nr) < 0.3
             and not g.buffer(-0.05).is_empty]
     return shapely.union_all(keep) if keep else Polygon()
+
+
+def drop_short(f, min_len=9.0):
+    """Remove stroke pieces shorter than ``min_len`` (the stubs a hatch leaves in a pocket)."""
+    from dataclasses import replace
+    from inkkit import geom as G
+    out = []
+    for m in f.marks:
+        if m.kind == "fill" or not m.d:
+            out.append(m)
+            continue
+        d = "".join(C.polyline_d(pts, closed=cl) for pts, cl in G.flatten(m.d, 0.05)
+                    if G.Curve(np.asarray(pts), closed=cl).length >= min_len)
+        if d:
+            out.append(replace(m, d=d))
+    return C.Frag(out, f.meta)
