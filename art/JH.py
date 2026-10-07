@@ -16,11 +16,15 @@ DOUBLE_HEAD = "continuous"
 SEAM = -24
 HD = (-6.0, 2.0)
 HEAD = (386.0, 208.0)
-FX, BX = 530.0, 246.0
-FIST_R = (530.0, 280.0)
-FIST_L = (253.0, 380.0)
-FID_RUN, FID_REACH, FID_BELL = 44.0, 0.0, 12.0
-BOW_RUN, BOW_REACH, BOW_BELL, BOW_NECK = 58.0, 0.0, 8.0, 8.0
+FX, BX = 512.0, 246.0
+FID_DY = 40.0
+FIST_R = (FX, 306.0)
+FIST_L = (253.0, 392.0)
+HAND_S = 0.82
+FID_HAND = ("L", "back")
+BOW_HAND = ("R", "back")
+FID_RUN, FID_REACH, FID_FLARE = 50.0, 0.0, 14.0
+BOW_RUN, BOW_REACH, BOW_FLARE = 72.0, 0.0, 12.0
 TILT = -5.0
 PIVOT = (392.0, 296.0)
 
@@ -46,18 +50,23 @@ BOB = H((424, 196), (448, 194), (462, 214), (466, 246), (458, 272), (432, 281), 
 BOB_GUIDE = H((432, 188), (450, 212), (454, 244), (446, 274))
 
 
-def sleeve_end(hand, *, run, reach=0.0, bell=8.0, neck=4.0, curl=-5.0):
-    """A short bell running from the cuff mouth back into the garment it
-    belongs to; the garment's fill and outline take it over."""
+def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=14.0, curl=-5.0, elbow_r=9.0):
+    """The cloak's own sleeve: a bell that opens from the cuff mouth toward the elbow, running
+    to the cloak's outer edge so the garment outline is the sleeve's far end."""
     u = hand.wrist_dir
     w = K.P(hand.wrist) - u * reach
     n = np.array([u[1], -u[0]])
     half = hand.wrist_w / 2
     base = w + u * run
-    shape = K.R(K.Path(w + n * (half + bell)).sag(w - n * (half + bell), curl)
-                .sag(base - n * (half + neck), -2.0).line(base + n * (half + neck))
-                .sag(w + n * (half + bell), -2.0).close().d)
-    return shape.buffer(-1.6).buffer(1.6)
+    shape = K.R(K.Path(w + n * (half + cuff)).sag(w - n * (half + cuff), curl)
+                .sag(base - n * (half + cuff + flare), 1.5).line(base + n * (half + cuff + flare))
+                .sag(w + n * (half + cuff), 1.5).close().d)
+    shape = shape.buffer(-1.6).buffer(1.6)
+    # Round the far (elbow) end only; the mouth keeps its crisp corners beside the hand.
+    elbow = shape.buffer(-elbow_r).buffer(elbow_r)
+    mouth = shape.intersection(Polygon([w - n * 60 - u * 4, w + n * 60 - u * 4,
+                                        w + n * 60 + u * 16, w - n * 60 + u * 16]))
+    return K.U(elbow, mouth)
 
 
 def cuff_band(hand_region, sleeve, *, offset=8.0):
@@ -68,6 +77,21 @@ def cuff_band(hand_region, sleeve, *, offset=8.0):
         if g.length > 8.0:
             out += K.line(C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
     return out
+
+
+def sleeve_edges(sleeve):
+    """The sleeve's own folds: its edges run on inside the cloak to the cloak outline."""
+    out = C.Frag()
+    for g in K._lines_of(K.R(sleeve).boundary):
+        out += K.line(C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
+    return out
+
+
+def sleeve_hatch(hand, sleeve):
+    """Hatching along the forearm axis, so the sleeve grain differs from the cloak's."""
+    u = hand.wrist_dir
+    ang = float(np.degrees(np.arctan2(u[1], u[0])))
+    return K.hatch_in(sleeve.buffer(-9.0), angle=ang, origin=tuple(hand.wrist))
 
 
 def sleeved_hand(hand, sleeve):
@@ -91,15 +115,13 @@ def figure():
     collar = JP.collar(H((371, 287)), H((425, 274)), H((361, 308)), H((431, 302)), bot_sag=5.0)
     clasp = K.lion_clasp((388, 333.5), 40)
 
-    # Both wrists disappear immediately into local folds beside the objects.
-    # Legacy wrap poses: hand5's wrap now draws the named hand, so the opposite letter (and
-    # cues=False, the pre-anatomy line set) reproduces this approved render until JH is re-posed.
-    # The palm-view fiddle hand also needs angle + 180; the bow hand keeps its angle.
-    hand = K.hand5(FIST_R, -90, "wrap", size=K.hand_size(fc) * 0.82,
-                   hand="L", view="palm", grip_w=17.5, cues=False)
-    fid_sleeve = sleeve_end(hand, run=FID_RUN, reach=FID_REACH, bell=FID_BELL)
+    # Both hands are back-view fists, fingers toward the tunic, thumb up the shaft, each forearm
+    # running down and outward into a sleeve of the jade cloak (see library/courts.md, JH).
+    hand = K.hand5(FIST_R, -90, "wrap", size=K.hand_size(fc) * HAND_S,
+                   hand=FID_HAND[0], view=FID_HAND[1], grip_w=17.5)
+    fid_sleeve = sleeve_end(hand, run=FID_RUN, reach=FID_REACH, flare=FID_FLARE)
     cuff = sleeved_hand(hand, fid_sleeve)
-    fd = JP.Fiddle(x=FX, body_top=296, volute="spiral", scroll_r=21.5,
+    fd = JP.Fiddle(x=FX, body_top=296 + FID_DY, volute="spiral", scroll_r=21.5,
                    pegbox_len=54, peg_t=(0.36, 0.55, 0.70, 0.88),
                    waist=(37, 100), fhole=(22, 92, 24, 140, 2.5), bridge_ext=5,
                    pegs="T", tpeg=(0.5, 9, 8, 10))
@@ -113,9 +135,9 @@ def figure():
     bow = K.Part(bow.shape, bow.fills,
                  bow.lines.select(lambda m: m.role != "bow-hair") + hair)
     bow = K.Part(bow.shape, JC.merge([bow]).fills, bow.lines)
-    second = K.hand5(FIST_L, -90, "wrap", size=K.hand_size(fc) * 0.82,
-                     hand="L", view="back", grip_w=20, spread=3, cues=False)
-    bow_sleeve = sleeve_end(second, run=BOW_RUN, reach=BOW_REACH, bell=BOW_BELL, neck=BOW_NECK)
+    second = K.hand5(FIST_L, -90, "wrap", size=K.hand_size(fc) * HAND_S,
+                     hand=BOW_HAND[0], view=BOW_HAND[1], grip_w=20, spread=3)
+    bow_sleeve = sleeve_end(second, run=BOW_RUN, reach=BOW_REACH, flare=BOW_FLARE)
     bow_cuff = sleeved_hand(second, bow_sleeve)
     bow = JC.held(bow, bow_cuff)
     _, edge = JP.open_spline(H((412, 190), (419, 204), (419.5, 222), (414, 238), (407, 254), (407, 272)))
@@ -142,9 +164,11 @@ def figure():
                      hair.shape.buffer(1.6))
     portrait = K.Part(portrait.shape, portrait.fills, portrait.lines + brim)
     robes = JC.garments(K.U(held.shape, portrait.shape, bow.shape), clasp,
-                        jade_sleeve=fid_sleeve, red_sleeve=bow_sleeve,
+                        sleeves=K.U(fid_sleeve, bow_sleeve),
+                        sleeve_grain=sleeve_hatch(hand, fid_sleeve) + sleeve_hatch(second, bow_sleeve),
                         cuff_bands=cuff_band(cuff.shape, fid_sleeve)
-                        + cuff_band(bow_cuff.shape, bow_sleeve))
+                        + cuff_band(bow_cuff.shape, bow_sleeve)
+                        + sleeve_edges(fid_sleeve) + sleeve_edges(bow_sleeve))
     sc.part("robes", robes)
     sc.part("bow+hand+cuff", bow, sil=False)
     sc.part("fiddle+hand+cuff", held)
@@ -160,20 +184,7 @@ def build():
     contours = K.clip_out(frag.select(lambda m: m.role == "contour"),
                           bow.buffer(K.MEDIUM / 2), eps=0, trap=0)
     frag = frag.select(lambda m: m.role != "contour") + contours
-    # Unite the jade cuff and mantle plates before healing their contact.
-    jade = K.U(*[K.R(m.d) for m in frag.marks
-                 if m.kind == "fill" and m.color == K.JADE])
-    gold = K.U(*[K.R(m.d) for m in frag.marks
-                 if m.kind == "fill" and m.color == K.GOLD])
-    contact = K.box(480, 292, 523, 312)
-    jade = K.U(jade, jade.buffer(3).buffer(-3).intersection(contact)).difference(
-        gold.buffer(-0.4).intersection(contact))
-    frag = frag.select(lambda m: not (m.kind == "fill" and m.color == K.JADE))
-    frag += K.fill(jade, K.JADE)
-    # Heal twice before trapping: the second pass trims outline strokes that
-    # the first still reports, and the trap must only hollow gold under ink
-    # that survives to the final plate.
+    # Heal twice: the second pass trims outline strokes that the first still reports.
     frag = K.heal(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")),
                   keep_roles=("contour", "brim-edge", "cuffline"))
-    frag = JC.trap_under_ink(frag)
     return K.layers(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")))

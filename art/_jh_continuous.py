@@ -27,7 +27,7 @@ def merge(parts):
     return K.Part(shape, fills, lines + K.outline(shape))
 
 
-def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
+def garments(front, clasp, *, sleeves, sleeve_grain, cuff_bands):
     # Both robe and tunic boundaries are whole-card C2 Béziers, never hems
     # clipped at y511. The puffed shoulders flow into the inverted sleeves.
     shape = K.R(
@@ -37,10 +37,11 @@ def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
         "C430 740 468 744 506 736 C558 732 585 705 591 660 "
         "C598 612 592 564 590 525 C588 486 595 438 589 390 "
         "C583 345 556 318 504 314 C466 306 428 310 375 298 Z")
-    # A raised mantle fold meets the neck grip's short cuff. Its matching
-    # inverted fold preserves the existing robe seam and composition.
-    fold = K.R("M444 318 C451 296 470 286 492 286 L510 310 L504 330 Z")
-    shape = K.U(shape, K.c2(K.U(fold, jade_sleeve).convex_hull), K.c2(red_sleeve))
+    # Both cuffs belong to the cloak: each bell opens toward the cloak's outer edge, which is the
+    # sleeve's far end. The inverted copies come with the whole-card union.
+    both = K.c2(sleeves)
+    shape = K.U(shape, both)
+    shape = K.U(shape, shape.buffer(14).buffer(-14).intersection(both.buffer(30)))
     enclosure = K.U(shape, K.c2(front))
     pockets = K.U(*[Polygon(r) for p in K._polys_of(enclosure)
                     for r in p.interiors if Polygon(r).area < 120])
@@ -56,16 +57,12 @@ def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
         "L507 744 C476 684 435 599 401 525 C367 451 326 366 295 306 Z")
     sash = sash.intersection(shape)
     tunic = K.U(tunic, sash).buffer(3).buffer(-3).intersection(shape)
-    # The bow hand's sleeve is the tunic's own region crossing the baldric.
-    red_sleeve = K.c2(red_sleeve)
-    tunic = K.U(tunic, red_sleeve)
-    sash = sash.difference(red_sleeve)
     jade = shape.difference(tunic)
     blockers = K.c2(front)
     slashes = JP.ripple_slashes([
         ((232, 294), (42, 53, 67.3), 38, 142),
         ((222, 376), (38, 49, 63.3), 36, 144),
-        ((222, 458), (30, 41, 55.3), 34, 146),
+        ((206, 452), (17, 28, 39.3), 34, 146),
         ((550, 322), (40, 51, 65.3), 38, 134),
         ((558, 408), (36, 47, 61.3), 36, 144),
         ((562, 496), (30, 41, 55.3), 34, 146)])
@@ -81,8 +78,10 @@ def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
                             K.U(sash.buffer(9), blockers.buffer(9), pipe_clear)),
                         clear=9)
     bubbles = K.c2(bubbles)
+    sleeve_zone = K.c2(sleeves)
     hatch_zone = jade.buffer(-8).difference(
-        K.U(sash.buffer(7.3), blockers.buffer(8), slashes.shape().buffer(4.2)))
+        K.U(sash.buffer(7.3), blockers.buffer(8), slashes.shape().buffer(4.2),
+            sleeve_zone.buffer(5.5)))
     hatch = K.hatch_in(hatch_zone, angle=-32, origin=(375, 525))
     # A second textile, with the opposite grain, breaks up every red panel.
     # The centre-anchored whole-card courses are intrinsically C2; unlike
@@ -122,8 +121,9 @@ def garments(front, clasp, *, jade_sleeve, red_sleeve, cuff_bands):
     fills += piping.select(lambda m: m.kind == "fill")
     lines = K.outline(shape) + K.outline(tunic) + K.outline(sash)
     lines = K.clip_out(lines, blockers, eps=0, trap=0)
-    lines += K.clip_out(K.c2(cuff_bands), blockers, eps=1.6, trap=0)
-    detail = K.clip_out(wire + hatch + red_hatch + piping.select(lambda m: m.kind != "fill"),
+    lines += K.clip_in(K.clip_out(K.c2(cuff_bands), blockers, eps=1.6, trap=0), shape.buffer(-1.0))
+    grain = K.c2(sleeve_grain)
+    detail = K.clip_out(wire + hatch + grain + red_hatch + piping.select(lambda m: m.kind != "fill"),
                         blockers, eps=8, trap=0)
     robe = K.Part(shape, fills, lines + detail)
     result = merge([robe, clasp])
@@ -167,22 +167,3 @@ def held(attribute, cuff):
     lines += K.clip_in(K.outline(cuff.shape, role="grip-edge"),
                        attribute.shape.buffer(0.2))
     return K.Part(shape, fills, lines + K.outline(shape), cuff.meta)
-
-
-def trap_under_ink(frag):
-    """Remove unprinted colour islands at the fiddle's contour junctions."""
-    structural = frag.select(lambda m: m.kind == "stroke" and m.role in
-                              ("outline", "contour", "grip-edge"))
-    core = structural.shape().buffer(-0.4)
-    contacts = {
-        K.JADE: K.U(K.box(585, 430, 596, 481), K.box(490, 260, 508, 276)),
-    }
-    result = frag.select(lambda m: not (m.kind == "fill" and m.color in contacts))
-    for color, zone in contacts.items():
-        plate = K.U(*[K.R(m.d) for m in frag.marks
-                      if m.kind == "fill" and m.color == color])
-        plate = plate.difference(core.intersection(K.c2(zone)))
-        plate = K.U(*[p for p in K._polys_of(plate)
-                      if p.area >= 4 or not K.c2(zone).intersects(p)])
-        result += K.fill(plate, color)
-    return result

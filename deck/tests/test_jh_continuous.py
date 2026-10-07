@@ -1,17 +1,23 @@
 """Regression checks for the continuous Spring Minstrel composition."""
 import numpy as np
+from shapely.geometry import LineString
 
 from art import JH
 from deck import courtkit as K
+from deck import frames as F
 
 
-def test_two_face_scaled_hands_and_four_integrated_items(monkeypatch):
+def test_two_anatomical_hands_one_size_and_four_integrated_items(monkeypatch):
+    # Checkpoint 3: the minstrel's left hand (viewer's right) holds the fiddle neck back-view, thumb
+    # up the neck, fingers toward the tunic, forearm down and out; his right hand (viewer's left)
+    # holds the bow back-view, thumb up, fingers toward the tunic, forearm down and out.
     calls = []
     original = K.hand5
 
     def record(*args, **kwargs):
-        calls.append((args, kwargs))
-        return original(*args, **kwargs)
+        res = original(*args, **kwargs)
+        calls.append((args, kwargs, res))
+        return res
 
     monkeypatch.setattr(K, "hand5", record)
     scene = JH.figure()
@@ -21,17 +27,31 @@ def test_two_face_scaled_hands_and_four_integrated_items(monkeypatch):
         "robes", "bow+hand+cuff", "fiddle+hand+cuff", "portrait"]
     assert all(item.halo == 0 for item in scene.items)
     assert len(calls) == 2
-    for (args, kwargs), at, angle, view in zip(
-            calls, [JH.FIST_R, JH.FIST_L], [-90, -90], ["palm", "back"]):
-        assert args == (at, angle, "wrap")
-        assert kwargs["size"] == K.hand_size(JH.JF.minstrel_profile(JH.HEAD)) * 0.82
-        assert kwargs["view"] == view
-        # Compensated for the wrap chirality fix: opposite letter (fiddle hand: angle + 180), legacy lines.
-        assert kwargs["hand"] == "L"
-        assert kwargs["cues"] is False
+    size = K.hand_size(JH.JF.minstrel_profile(JH.HEAD)) * JH.HAND_S
+    assert JH.HAND_S == 0.82
+    (fa, fk, fid), (ba, bk, bow) = calls
+    assert fa == (JH.FIST_R, -90, "wrap") and ba == (JH.FIST_L, -90, "wrap")
+    assert JH.FID_HAND == ("L", "back") and JH.BOW_HAND == ("R", "back")
+    assert fk["hand"] == "L" and fk["view"] == "back" and bk["hand"] == "R" and bk["view"] == "back"
+    assert fk["size"] == bk["size"] == size
+    assert "cues" not in fk and "cues" not in bk
+    seam = LineString(F.seam_points(JH.SEAM))
+    for hand in (fid, bow):
+        assert hand.hand.shape.distance(seam) >= 12
+    angle = lambda h: float(np.degrees(np.arctan2(h.wrist_dir[1], h.wrist_dir[0])))
+    # forearms leave outward and down (A2): fiddle hand -10..90, bow hand 90..190
+    assert -10.0 <= angle(fid) <= 90.0 and 90.0 <= angle(bow) <= 190.0
+    for hand, axis_x, outer in ((fid, JH.FIST_R[0], 1), (bow, JH.FIST_L[0], -1)):
+        tips = hand.hand.meta["digit_tips"]
+        thumb = np.asarray(hand.hand.meta["thumb_centerline"].coords[-1])
+        # wrist on the outer side of the shaft, fingertips across it toward the axis,
+        # thumb above the index fingertip at the shaft's upper end
+        assert outer * (hand.wrist[0] - axis_x) > 20.0
+        assert outer * (np.asarray(tips[1])[0] - axis_x) < 0
+        assert thumb[1] < np.asarray(tips[0])[1] - 5.0
 
 
-def test_cuffs_are_sleeve_ends_of_the_neighbouring_garments(monkeypatch):
+def test_cuffs_are_sleeve_ends_of_the_cloak(monkeypatch):
     calls = {"sleeve": [], "cuff": []}
     for name, key in (("sleeve_end", "sleeve"), ("sleeved_hand", "cuff")):
         original = getattr(JH, name)
@@ -41,15 +61,14 @@ def test_cuffs_are_sleeve_ends_of_the_neighbouring_garments(monkeypatch):
     scene = JH.figure()
     robes = next(item for item in scene.items if item.name == "robes")
     assert len(calls["sleeve"]) == len(calls["cuff"]) == 2
-    fills = {K.JADE: robes.frag.select(lambda m: m.kind == "fill" and m.color == K.JADE).shape(),
-             K.RED: robes.frag.select(lambda m: m.kind == "fill" and m.color == K.RED).shape()}
-    # fiddle hand: jade mantle fold; bow hand: red tunic crossing the baldric
-    for (args, kw, sleeve), (cargs, _, cuff), run, colour in zip(
-            calls["sleeve"], calls["cuff"], (JH.FID_RUN, JH.BOW_RUN), (K.JADE, K.RED)):
+    jade = robes.frag.select(lambda m: m.kind == "fill" and m.color == K.JADE).shape()
+    # both sleeves belong to the jade cloak and run out to its outer edge
+    for (args, kw, sleeve), (cargs, _, cuff), run in zip(
+            calls["sleeve"], calls["cuff"], (JH.FID_RUN, JH.BOW_RUN)):
         hand = args[0]
         assert kw["run"] == run <= 90.0
         assert cargs[1] is sleeve
-        assert sleeve.difference(fills[colour].buffer(0.5)).area < 0.05 * sleeve.area
+        assert sleeve.difference(jade.buffer(0.5)).area < 0.05 * sleeve.area
         assert not cuff.fills.marks
         assert cuff.shape.intersection(sleeve).area < 0.01
         assert cuff.shape.symmetric_difference(hand.shape.difference(sleeve)).area < 30
