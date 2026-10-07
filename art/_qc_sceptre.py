@@ -31,7 +31,7 @@ from deck.motifs import core as C
 from deck.motifs import forms as FM
 from inkkit import geom as G
 
-import _qc_parts as Q
+from art import _qc_parts as Q
 
 P, R, U = K.P, K.R, K.U
 FINE, MEDIUM, HAIR = K.FINE, K.MEDIUM, K.HAIR_W
