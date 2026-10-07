@@ -1,4 +1,4 @@
-"""art/_qd_finish.py — Q♦ compose finish (a copy of _qs_finish.py): the kit's Scene.compose() with two
+"""art/_qd_finish.py — Q♦ compose finish: the kit's Scene.compose() with two
 repairs slotted in BEFORE the heal (the kit heals first, so a repair made
 after it would be unchecked):
 
@@ -21,8 +21,6 @@ from __future__ import annotations
 from dataclasses import replace
 
 import numpy as np
-from shapely.geometry import Polygon
-
 from deck import courtkit as K
 from deck.motifs import core as C
 from inkkit import geom as G
@@ -103,30 +101,11 @@ def drop_crumbs(f: C.Frag, min_area=40.0, keep_roles=("dot", "pupil", "bubble", 
     return C.Frag(out, f.meta)
 
 
-def over_contour(sc, res: C.Frag, names=("paintbrush",)) -> C.Frag:
-    """Let the named items (drawn with ``sil=False``: a delicate MEDIUM
-    outline, not the figure's CONTOUR) lie IN FRONT of the silhouette line
-    too: the CONTOUR stops at their paper halo channel, exactly as every
-    line behind them already does (Scene.compose adds the silhouette line
-    after the painter's clip, so it would otherwise cross them)."""
-    zones = [it.occ.buffer(it.halo + K.MEDIUM / 2, quad_segs=12) for it in sc.items
-             if it.name in names and it.occ is not None and not it.occ.is_empty and it.halo]
-    if not zones:
-        return res
-    ch = K.U(*zones)
-    con = res.select(lambda m: m.role == "contour")
-    rest = res.select(lambda m: m.role != "contour")
-    return rest + K.clip_out(con, Polygon(), halo=ch)
-
-
-def compose(sc, cut_y=511.0, trap=True):
+def compose(sc):
     res = sc.compose(heal_gaps=False)
-    res = over_contour(sc, res)
     res = close_rings(res)
-    if trap:
-        res = trap_cut(res)
-    band = C.stroke(f"M100 {cut_y:g}L650 {cut_y:g}", K.FINE, style="rule", role="_band")
+    res = trap_cut(res)
     log = []
-    res = K.heal(res + band, log=log, keep_roles=("contour", "_band"))
+    res = K.heal(res, log=log, keep_roles=("contour",))
     sc.heal_log = log
-    return drop_crumbs(res.select(lambda m: m.role != "_band"))
+    return drop_crumbs(res)
