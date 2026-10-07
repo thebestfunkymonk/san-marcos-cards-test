@@ -65,8 +65,9 @@ def test_two_face_scaled_wrapping_hands_without_legacy_arms(composition):
     assert len(composition.hands) == 2
     face = K.face(KH.HEAD, "frontal", **KH.FACE_KW)
     expected = [
-        (KH.FIST, KH.POLE_HAND_DEG, "R", "back", KH.POLE_WIDTH),
-        (KH.CHAL_GRIP, -90.0, "L", "back", 10.4),
+        # Compensated for the wrap chirality fix: opposite letter (chalice: angle + 180), legacy lines.
+        (KH.FIST, KH.POLE_HAND_DEG, "L", "back", KH.POLE_WIDTH),
+        (KH.CHAL_GRIP, 90.0, "R", "back", 10.4),
     ]
     for (args, kwargs, _), (at, angle, hand, view, grip) in zip(
             composition.hands, expected):
@@ -75,6 +76,7 @@ def test_two_face_scaled_wrapping_hands_without_legacy_arms(composition):
         assert kwargs["hand"] == hand
         assert kwargs["view"] == view
         assert kwargs["grip_w"] == grip
+        assert kwargs["cues"] is False
 
 
 def test_sleeves_are_jade_lapel_lobes_not_separate_cuff_stubs(composition):

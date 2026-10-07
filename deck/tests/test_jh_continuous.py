@@ -22,11 +22,13 @@ def test_two_face_scaled_hands_and_four_integrated_items(monkeypatch):
     assert all(item.halo == 0 for item in scene.items)
     assert len(calls) == 2
     for (args, kwargs), at, angle, view in zip(
-            calls, [JH.FIST_R, JH.FIST_L], [90, -90], ["palm", "back"]):
+            calls, [JH.FIST_R, JH.FIST_L], [-90, -90], ["palm", "back"]):
         assert args == (at, angle, "wrap")
         assert kwargs["size"] == K.hand_size(JH.JF.minstrel_profile(JH.HEAD)) * 0.82
         assert kwargs["view"] == view
-        assert kwargs["hand"] == "R"
+        # Compensated for the wrap chirality fix: opposite letter (fiddle hand: angle + 180), legacy lines.
+        assert kwargs["hand"] == "L"
+        assert kwargs["cues"] is False
 
 
 def test_cuffs_are_sleeve_ends_of_the_neighbouring_garments(monkeypatch):

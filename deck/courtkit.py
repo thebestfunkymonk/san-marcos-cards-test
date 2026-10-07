@@ -3168,7 +3168,7 @@ def open_hand(at, angle=-90.0, *, size, hand="R", view="back", spread=0.0, curl=
 
 
 def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0, spread=0.0,
-          grip_w=22.0, sleeve=None, wrist_w=None, stub=HAND_STUB) -> Hand:
+          grip_w=22.0, sleeve=None, wrist_w=None, stub=HAND_STUB, cues=True) -> Hand:
     """The shared five-digit court hand: one smoothed silhouette, either hand
     and either view, sized from the face (pass ``hand_size(face)``).
 
@@ -3177,9 +3177,25 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     ``grip_w``; the rim has a small proportional minimum for an open thumb
     web), ``rest`` (flat against the body), ``hold_flat`` (thumb
     lightly opposed to a flat object of width ``grip_w``), or ``open``.
-    ``angle`` is the shaft axis for ``wrap`` and the wrist-to-fingertip
-    direction for the other poses. For non-wrap poses ``at`` is the wrist;
-    for wrap it is the centre of the shaft at the grip.
+    For non-wrap poses ``at`` is the wrist and ``angle`` the wrist-to-fingertip
+    direction (screen degrees, y down); the forearm leaves at ``angle + 180``.
+    For ``wrap`` ``at`` is the centre of the shaft at the grip and ``angle``
+    is the shaft axis pointing toward the thumb end, for every hand and view.
+    The fingertips then point along ``angle + 90`` (R/back, L/palm) or
+    ``angle - 90`` (L/back, R/palm), and the forearm leaves 24.2 degrees off
+    the shaft perpendicular, toward the little finger (``angle - 114.2`` for
+    R/back and L/palm, ``angle + 114.2`` for L/back and R/palm). A vertical
+    shaft (``angle=-90``) in back view gives R: fingers right, thumb up,
+    forearm down-left; L: fingers left, thumb up, forearm down-right.
+    ``hand`` and ``view`` always name the anatomical hand and the side seen:
+    the thumb sits left of an upright hand's fingers for R/back and L/palm,
+    right for L/back and R/palm.
+
+    ``cues`` (default True) gives each view its own interior marks. Back:
+    finger-separation (tendon) lines running with the fingers. Palm: a thenar
+    crease round the thumb mound and a transverse palm crease, no separation
+    lines. ``cues=False`` keeps the original line set (back: three separation
+    lines; palm: two plus a thenar crease; cup: none) for art that predates it.
 
     ``curl`` adjusts finger bend/wrap (0–60°); ``spread`` fans them and opens
     the cup scallop (0–18°), outward for either hand and view. ``grip_w`` is
@@ -3226,7 +3242,15 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     thumb_side = -1.0 if (hand == "R") == (view == "back") else 1.0
     is_wrap = pose == "wrap"
     rot = float(angle) + (90.0 if is_wrap else 0.0)
-    M, Mf = _rigid(at, rot, mirror_x=False)
+    mirror = False
+    if is_wrap:
+        # Wrap fingers run along local -x, opposite to the open family, so the
+        # shared thumb rule would draw the other hand. Mirror the frame instead
+        # and keep the thumb on local -y: ``angle`` then always points toward
+        # the thumb end of the shaft.
+        mirror = thumb_side < 0
+        thumb_side = -1.0
+    M, Mf = _rigid(at, rot, mirror_x=mirror)
     ys = np.linspace(-0.3375 * hb, 0.3375 * hb, 4)
     ys = list(ys[::-1] if thumb_side > 0 else ys)
     if is_wrap:
@@ -3313,11 +3337,19 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
                 (a + (0.32, 0.24, 0.16)[i] * hb, gap_y + thumb_side * (0.05, 0.02, 0.015)[i] * hb),
             ]))
         if view == "palm":
-            web_lines = web_lines[:2]
-            web_lines.append(LineString([
+            thenar = LineString([
                 (a + 0.56 * hb, thumb_side * 0.22 * hb),
                 (a + 0.73 * hb, -thumb_side * 0.04 * hb),
-            ]))
+            ])
+            if cues:
+                # Palm: no finger-separation stripes; a thenar crease and a
+                # heel crease run across the palm instead.
+                web_lines = [web_lines[1], thenar, LineString([
+                    (a + 0.62 * hb, -thumb_side * 0.30 * hb),
+                    (a + 0.66 * hb, -thumb_side * 0.07 * hb),
+                ])]
+            else:
+                web_lines = web_lines[:2] + [thenar]
         object_center = P(0.0, 0.0)
     else:
         # Open-family poses share one palm quad and the same four anatomical
@@ -3413,13 +3445,17 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
         if pose not in {"cup", "hold_flat"}:
             object_center = P(0.0, 0.0)
         web_lines = []
-        for i in range(0 if pose == "cup" else 3):
+        for i in range(0 if pose == "cup" and not cues else 3):
             pa, pb = tips[i], tips[i + 1]
             # Interior lines approach each notch from the palm and stop at least
             # 7.3 px clear, so no rounded line cap sits in the web.
             mid = (ys[i] + ys[i + 1]) / 2.0
             start_x = 0.56 * size
             end_x = 0.72 * size
+            if pose == "cup":
+                # The cup's fingers curl away round the orb: back-of-hand
+                # tendon lines lie on the palm instead.
+                start_x, end_x = 0.16 * size, 0.36 * size
             if end_x - start_x >= 5.0:
                 web_lines.append(LineString([(start_x, mid), (end_x, mid)]))
             elif pose != "cup":
@@ -3427,7 +3463,7 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
                 start = P(0.54 * size, mid)
                 end = P(0.69 * size, mid)
                 web_lines.append(LineString([start, end]))
-        if view == "palm" and pose != "cup":
+        if view == "palm" and pose != "cup" and not cues:
             # The thenar crease replaces the outermost finger separation so
             # palm views stay within the three-line maximum.
             web_lines = web_lines[:2]
@@ -3435,6 +3471,16 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
                 (0.20 * size, thumb_side * 0.13 * hb),
                 (0.39 * size, thumb_side * 0.22 * hb),
             ]))
+        elif view == "palm" and cues:
+            # Palm: a thenar crease curving round the thumb mound and a
+            # transverse crease across the palm, no finger-separation stripes.
+            web_lines = [
+                LineString([(0.40 * size, thumb_side * 0.22 * hb),
+                            (0.27 * size, thumb_side * 0.13 * hb),
+                            (0.17 * size, thumb_side * 0.01 * hb)]),
+                LineString([(0.37 * size, -thumb_side * 0.31 * hb),
+                            (0.34 * size, -thumb_side * 0.06 * hb)]),
+            ]
 
     # The palm joins the four digit roots; the thumb is a distinct centreline
     # from the palm edge, then all five digit masses become one closed region.
@@ -3501,6 +3547,8 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     meta = {
         "kind": "hand5", "pose": pose, "hand": hand, "view": view, "size": size,
         "curl": curl, "spread": spread, "grip_w": grip_w, "thumb_side": thumb_side,
+        "cues": bool(cues),
+        "finger_dir": _unit(_vec(M, P(-1.0, 0.0) if is_wrap else P(1.0, 0.0))),
         "inner": inner_s, "digit_centerlines": [_xf(LineString(cen), M) for cen in centerlines]
         + [_xf(LineString(thumb_cen), M)],
         "digit_tips": tips_s, "digit_tip_radii": tip_radii + [0.075 * hb],
@@ -3519,7 +3567,7 @@ def hand5(at, angle=-90.0, pose="wrap", *, size, hand="R", view="back", curl=0.0
     # preserve the pose if it needs to follow a sleeve's cuff edge.
     def build_part(direction):
         nonlocal wrist_dir
-        wrist_dir = _unit(_to_local(P(at) + P(direction), at, rot, False))
+        wrist_dir = _unit(_to_local(P(at) + P(direction), at, rot, mirror))
         current_u = _unit(_vec(M, wrist_dir))
         part_meta = {**meta, "rebuild": rebuild, "wrist_dir": current_u}
         base = Part(shape, C.Frag(), outline(shape) + inner_s, part_meta)

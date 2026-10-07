@@ -92,8 +92,11 @@ def figure():
     clasp = K.lion_clasp((388, 333.5), 40)
 
     # Both wrists disappear immediately into local folds beside the objects.
-    hand = K.hand5(FIST_R, 90, "wrap", size=K.hand_size(fc) * 0.82,
-                   hand="R", view="palm", grip_w=17.5)
+    # Legacy wrap poses: hand5's wrap now draws the named hand, so the opposite letter (and
+    # cues=False, the pre-anatomy line set) reproduces this approved render until JH is re-posed.
+    # The palm-view fiddle hand also needs angle + 180; the bow hand keeps its angle.
+    hand = K.hand5(FIST_R, -90, "wrap", size=K.hand_size(fc) * 0.82,
+                   hand="L", view="palm", grip_w=17.5, cues=False)
     fid_sleeve = sleeve_end(hand, run=FID_RUN, reach=FID_REACH, bell=FID_BELL)
     cuff = sleeved_hand(hand, fid_sleeve)
     fd = JP.Fiddle(x=FX, body_top=296, volute="spiral", scroll_r=21.5,
@@ -111,7 +114,7 @@ def figure():
                  bow.lines.select(lambda m: m.role != "bow-hair") + hair)
     bow = K.Part(bow.shape, JC.merge([bow]).fills, bow.lines)
     second = K.hand5(FIST_L, -90, "wrap", size=K.hand_size(fc) * 0.82,
-                     hand="R", view="back", grip_w=20, spread=3)
+                     hand="L", view="back", grip_w=20, spread=3, cues=False)
     bow_sleeve = sleeve_end(second, run=BOW_RUN, reach=BOW_REACH, bell=BOW_BELL, neck=BOW_NECK)
     bow_cuff = sleeved_hand(second, bow_sleeve)
     bow = JC.held(bow, bow_cuff)

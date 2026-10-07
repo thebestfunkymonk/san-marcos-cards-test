@@ -22,7 +22,7 @@ POLE_BUTT = (543.2, 493.4)
 POLE_DEG = float(np.degrees(np.arctan2(POLE_TOP[1] - 456.0, POLE_TOP[0] - 520.0)))
 # The palm lies on the tunic side of the shaft, so the sleeve is the jade lapel.
 POLE_HAND_DEG = POLE_DEG + 180.0
-POLE_HAND = ("R", "back")
+POLE_HAND = ("L", "back")
 POLE_RUN = 40.0
 POLE_REACH = 16.0
 CHAL_RUN = 40.0
@@ -129,12 +129,15 @@ def figure():
     # hair/robe junction into detached rounded contour fragments.
     for part in [*hair, beard]:
         part.lines = part.lines.select(lambda m: m.role != "outline") + K.outline(part.shape, role="contour")
-    h = K.hand5(FIST, POLE_HAND_DEG, "wrap", size=K.hand_size(fc) * HAND_SCALE, hand=POLE_HAND[0],
-                view=POLE_HAND[1], grip_w=POLE_WIDTH)
+    # Legacy wrap poses: hand5's wrap now draws the named hand, so the opposite letter (and
+    # cues=False, the pre-anatomy line set) reproduces this approved render until KH is re-posed.
+    # The pole hand keeps its angle; the chalice hand needs angle + 180 as well.
+    h = K.hand5(FIST, POLE_HAND_DEG, "wrap", size=K.hand_size(fc) * HAND_SCALE,
+                hand=POLE_HAND[0], view=POLE_HAND[1], grip_w=POLE_WIDTH, cues=False)
     right_sleeve = sleeve_end(h, run=POLE_RUN, reach=POLE_REACH)
     right_cuff = sleeved_hand(h, right_sleeve)
-    left = K.hand5(CHAL_GRIP, -90.0, "wrap", size=K.hand_size(fc) * HAND_SCALE,
-                   hand="L", view="back", grip_w=10.4, spread=4.0)
+    left = K.hand5(CHAL_GRIP, 90.0, "wrap", size=K.hand_size(fc) * HAND_SCALE,
+                   hand="R", view="back", grip_w=10.4, spread=4.0, cues=False)
     left_sleeve = sleeve_end(left, run=CHAL_RUN, reach=CHAL_REACH, bell=5.0)
     left_cuff = sleeved_hand(left, left_sleeve)
     u = K.unit(POLE_DEG)

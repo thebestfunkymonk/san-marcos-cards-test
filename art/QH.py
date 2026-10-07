@@ -211,14 +211,16 @@ def figure():
                 side=+1, bubbles=(4.2, 5.6, 7.0), bubble_lane=2, bubble_at=0.55)
     hf = H.lock([(426, 188), (437, 218), (441, 250), (440, 278), (451, 300), (469, 304)], 40.0, n=4, side=-1)
     # Both hands come out of bell sleeves that are lobes of the jade mantle.
+    # Legacy wrap pose: hand5's wrap now draws the named hand, so the opposite letter (and
+    # cues=False, the pre-anatomy line set) reproduces this approved render until QH is re-posed.
     h = K.hand5((546, 434), 90, "wrap", size=K.hand_size(fc),
-                hand="L", view="palm", grip_w=19)
+                hand="R", view="palm", grip_w=19, cues=False)
     right_sleeve = sleeve_end(h, **RIGHT_SLEEVE)
     right_hand = sleeved_hand(h, right_sleeve)
     # The original wrist (300,452) straddles the approved -42° seam.
     # Shift the same resting gesture up onto the chest, not the seam.
     resting = K.hand5((REST_AT), -24, "rest", size=K.hand_size(fc) * 0.82,
-                      hand="R", view="back", curl=6, spread=3)
+                      hand="R", view="back", curl=6, spread=3, cues=False)
     left_sleeve = sleeve_end(resting, **LEFT_SLEEVE)
     left_hand = sleeved_hand(resting, left_sleeve)
     pet = A.petiole(**PETIOLE)

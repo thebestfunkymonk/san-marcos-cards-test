@@ -55,16 +55,17 @@ def test_two_face_scaled_hands_restore_bodice_gesture(composition):
                            wing=(4.5, 62.0, 0.8), lid_sag=2.6, low_sag=6.4)
     assert len(composition.hands) == 2
     args, kwargs, _ = composition.hands[0]
+    # Compensated for the wrap chirality fix: opposite letter, same angle, legacy lines.
     assert args == ((546, 434), 90, "wrap")
-    assert kwargs == dict(size=K.hand_size(face), hand="L",
-                         view="palm", grip_w=19)
+    assert kwargs == dict(size=K.hand_size(face), hand="R",
+                         view="palm", grip_w=19, cues=False)
     args, kwargs, _ = composition.hands[1]
     # Moved 12 px right (from (322,424)) so the sleeve has room between the
     # mantle edge and the hand; still 50+ px clear of the seam.
     assert args == (QH.REST_AT, -24, "rest")
     assert QH.REST_AT == (334, 424)
     assert kwargs == dict(size=K.hand_size(face) * 0.82, hand="R",
-                         view="back", curl=6, spread=3)
+                         view="back", curl=6, spread=3, cues=False)
     seam = LineString(F.seam_points(QH.SEAM))
     for _, _, hand in composition.hands:
         assert hand.hand.shape.distance(seam) >= 12

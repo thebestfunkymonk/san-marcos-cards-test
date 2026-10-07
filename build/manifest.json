@@ -20,7 +20,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AS.png",
   "print": null,
   "error": null,
-  "seconds": 2.15
+  "seconds": 2.1
  },
  {
   "id": "AH",
@@ -43,7 +43,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AH.png",
   "print": null,
   "error": null,
-  "seconds": 1.11
+  "seconds": 0.99
  },
  {
   "id": "AC",
@@ -66,7 +66,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AC.png",
   "print": null,
   "error": null,
-  "seconds": 1.4
+  "seconds": 1.37
  },
  {
   "id": "AD",
@@ -89,7 +89,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AD.png",
   "print": null,
   "error": null,
-  "seconds": 1.14
+  "seconds": 1.1
  },
  {
   "id": "2S",
@@ -133,7 +133,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/3S.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "4S",
@@ -155,7 +155,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/4S.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "5S",
@@ -419,7 +419,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/7H.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "8H",
@@ -441,7 +441,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/8H.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "9H",
@@ -463,7 +463,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/9H.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "10H",
@@ -573,7 +573,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/5C.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "6C",
@@ -595,7 +595,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/6C.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "7C",
@@ -617,7 +617,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/7C.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "8C",
@@ -639,7 +639,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/8C.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "9C",
@@ -727,7 +727,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/3D.png",
   "print": null,
   "error": null,
-  "seconds": 0.06
+  "seconds": 0.07
  },
  {
   "id": "4D",
@@ -905,7 +905,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KS.png",
   "print": null,
   "error": null,
-  "seconds": 6.36
+  "seconds": 6.27
  },
  {
   "id": "QS",
@@ -929,7 +929,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QS.png",
   "print": null,
   "error": null,
-  "seconds": 18.87
+  "seconds": 18.46
  },
  {
   "id": "JS",
@@ -953,7 +953,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JS.png",
   "print": null,
   "error": null,
-  "seconds": 30.03
+  "seconds": 30.29
  },
  {
   "id": "KH",
@@ -1003,7 +1003,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KH.png",
   "print": null,
   "error": null,
-  "seconds": 23.85
+  "seconds": 21.35
  },
  {
   "id": "QH",
@@ -1053,7 +1053,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QH.png",
   "print": null,
   "error": null,
-  "seconds": 83.73
+  "seconds": 86.89
  },
  {
   "id": "JH",
@@ -1103,7 +1103,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JH.png",
   "print": null,
   "error": null,
-  "seconds": 21.36
+  "seconds": 21.72
  },
  {
   "id": "KC",
@@ -1127,7 +1127,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KC.png",
   "print": null,
   "error": null,
-  "seconds": 11.67
+  "seconds": 11.97
  },
  {
   "id": "QC",
@@ -1151,7 +1151,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QC.png",
   "print": null,
   "error": null,
-  "seconds": 20.33
+  "seconds": 20.05
  },
  {
   "id": "JC",
@@ -1175,7 +1175,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JC.png",
   "print": null,
   "error": null,
-  "seconds": 14.93
+  "seconds": 14.48
  },
  {
   "id": "KD",
@@ -1199,7 +1199,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KD.png",
   "print": null,
   "error": null,
-  "seconds": 6.15
+  "seconds": 6.04
  },
  {
   "id": "QD",
@@ -1223,7 +1223,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QD.png",
   "print": null,
   "error": null,
-  "seconds": 10.08
+  "seconds": 9.72
  },
  {
   "id": "JD",
@@ -1247,7 +1247,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JD.png",
   "print": null,
   "error": null,
-  "seconds": 6.09
+  "seconds": 5.5
  },
  {
   "id": "JOKER_RED",
@@ -1271,7 +1271,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JOKER-RED.png",
   "print": null,
   "error": null,
-  "seconds": 2.68
+  "seconds": 3.19
  },
  {
   "id": "JOKER_BLACK",
@@ -1295,7 +1295,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JOKER-BLACK.png",
   "print": null,
   "error": null,
-  "seconds": 2.81
+  "seconds": 2.36
  },
  {
   "id": "BACK",
@@ -1318,6 +1318,6 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/BACK.png",
   "print": null,
   "error": null,
-  "seconds": 17.11
+  "seconds": 16.47
  }
 ]

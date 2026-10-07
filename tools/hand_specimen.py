@@ -87,7 +87,7 @@ def _open(size, chir, *, view="back", angle=-60.0, spread=0.0, curl=0.0):
             "obj": None}
 
 
-def _hand5(size, chir, pose, *, view="back", angle=-90.0, curl=0.0, spread=0.0, grip_w=22.0):
+def _hand5(size, chir, pose, *, view="back", angle=-90.0, curl=0.0, spread=0.0, grip_w=22.0, cues=True):
     if pose == "wrap":
         at = (0.0, 0.0)
         obj = ("staff", angle, grip_w)
@@ -97,8 +97,27 @@ def _hand5(size, chir, pose, *, view="back", angle=-90.0, curl=0.0, spread=0.0, 
             ("flat-meta", grip_w, 22.0) if pose == "hold_flat" else None)
     return {"fn": "hand5", "args": (at, angle, pose),
             "kw": {"size": size, "hand": chir, "view": view, "curl": curl, "spread": spread,
-                   "grip_w": grip_w},
+                   "grip_w": grip_w, "cues": cues},
             "obj": obj}
+
+
+# Per pose: the angle that puts the fingers roughly upward / across for a frontal figure, and the
+# held-object width. ``angle`` is the wrist-to-fingertip direction, except wrap where it is the
+# shaft axis toward the thumb end (fingers run perpendicular to it).
+MATRIX_POSES = (("wrap", -90.0, 18.0), ("cup", -90.0, 62.0), ("rest", -20.0, 22.0),
+                ("hold_flat", -75.0, 28.0), ("open", -90.0, 22.0))
+
+
+def matrix_rows(size=85.0):
+    """One row per pose; four cells each: L back, R back, L palm, R palm (the named anatomical hand
+    seen from the named side). Labels carry hand, view, pose and angle."""
+    R = []
+    for pose, angle, grip in MATRIX_POSES:
+        R.append((f"anatomy matrix · {pose} · angle {angle:g}° · L/R × back/palm",
+                  [dict(_hand5(size, c, pose, view=v, angle=angle, grip_w=grip, curl=6.0),
+                        label=f"{c} · {v} · {pose} · {angle:g}°")
+                   for v in ("back", "palm") for c in ("L", "R")]))
+    return R
 
 
 def rows():
@@ -316,11 +335,13 @@ def main(argv=None):
     ap.add_argument("--out", default=os.path.join(ROOT, "build", "review", "v3-hands"))
     ap.add_argument("--courts", action="store_true", help="also write <out>/courts/: the twelve courts' own hands")
     ap.add_argument("--only", nargs="*", type=int, help="row numbers to draw (0-based)")
+    ap.add_argument("--matrix", action="store_true",
+                    help="draw only the L/R × back/palm × pose anatomy matrix (labelled)")
     args = ap.parse_args(argv)
     os.makedirs(args.out, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix="hands-")
     K.HAND_LOG.clear()
-    R = rows()
+    R = matrix_rows() if args.matrix else rows()
     idx = args.only if args.only else list(range(len(R)))
     rows_svg, dump = [], []
     for ri in idx:
