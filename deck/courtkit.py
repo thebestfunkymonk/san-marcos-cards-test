@@ -89,6 +89,10 @@ GAP_MARK = 3.0                   # §I.12 separate marks
 HALO = 4.3                       # paper channel round hands and attributes crossing a pattern
 EDGE_MED = MEDIUM / 2 + GAP + FINE / 2 + 0.2      # 7.0: first FINE line inside a MEDIUM edge
 EDGE_CON = CONTOUR / 2 + GAP + FINE / 2 + 0.05    # 8.4: first FINE line inside a CONTOUR edge
+# Curves are flattened to this chord error whenever the kit turns marks into
+# shapely geometry (clipping, healing). 0.05 px left curves of r ~30 visibly
+# faceted at 8x (6-8 degree corners every 3-4 px); 0.01 matches C.region.
+FLAT_TOL = 0.01
 
 
 def _f(v):
@@ -539,11 +543,11 @@ def _polys_of(g):
     return out
 
 
-def _stroke_lines(d, tol=0.05):
+def _stroke_lines(d, tol=FLAT_TOL):
     return [LineString(np.vstack([p, p[:1]]) if c else p) for p, c in G.flatten(d, tol) if len(p) >= 2]
 
 
-def clip_in(f: C.Frag, zone, tol=0.05) -> C.Frag:
+def clip_in(f: C.Frag, zone, tol=FLAT_TOL) -> C.Frag:
     """Keep only the parts of ``f`` inside ``zone`` (stroke centrelines are
     clipped; fills are intersected)."""
     out = []
@@ -587,7 +591,7 @@ STROKE_EPS = -0.5    # strokes behind stop 0.5 px INSIDE the front object (under
 TRAP = 1.6           # fills behind run this far under the front object's contour
 
 
-def clip_out(f: C.Frag, zone, tol=0.05, eps=STROKE_EPS, trap=TRAP, extra=None, halo=None) -> C.Frag:
+def clip_out(f: C.Frag, zone, tol=FLAT_TOL, eps=STROKE_EPS, trap=TRAP, extra=None, halo=None) -> C.Frag:
     """Remove the parts of ``f`` inside ``zone`` (a shapely region): what an
     object in front hides.
 
@@ -727,7 +731,7 @@ class Scene:
     then clipped and rotated by ``deck.build``.
     """
     items: list = field(default_factory=list)
-    clip_tol: float = 0.05
+    clip_tol: float = FLAT_TOL
     heal_log: list = field(default_factory=list)
     rank: str | None = None       # 'K' | 'Q' | 'J': clip to the system's court clip before healing
     cut_y: float = 511.0          # the module's CUT_Y
@@ -831,8 +835,8 @@ def flatten_fills(f: C.Frag) -> C.Frag:
                 break
             mi = marks[i]
             if mi.layer != mj.layer and LAYER_RANK[mi.layer] > LAYER_RANK[mj.layer] and mi.d:
-                gi = G.to_shape(mi.d, tol=0.05)
-                gj = G.to_shape(mj.d, tol=0.05)
+                gi = G.to_shape(mi.d, tol=FLAT_TOL)
+                gj = G.to_shape(mj.d, tol=FLAT_TOL)
                 if gi.intersects(gj):
                     marks[i] = replace(mi, d=G.from_shape(gi.difference(gj)))
     return C.Frag(marks, f.meta)
@@ -848,6 +852,9 @@ def silhouette_line(sil, w=CONTOUR):
 # ---- heal ------------------------------------------------------------------
 GAP_FILL = 2.5
 PAR_RUN = 12.0
+# Ink fill pieces below this area (dots, terminals) are shrunk evenly by heal
+# instead of having a bite cut out of one side.
+DOT_AREA = 60.0
 
 
 def _run_len(a, b):
@@ -889,6 +896,24 @@ def _groups(marks):
     return groups
 
 
+def _exposed(p, q, reach, order, otree, ogeoms, oidx):
+    """Area of the cut ``p − q⊕reach`` left uncovered by marks painted above p."""
+    cut = p[0].intersection(q[0].buffer(reach))
+    if cut.is_empty:
+        return 0.0
+    top = max(order[i] for i in p[1])
+    above = [ogeoms[k] for k in otree.query(cut) if order[oidx[k]] > top]
+    if above:
+        cut = cut.difference(shapely.union_all(above))
+    return float(cut.area)
+
+
+def _cut_ok(p, q, reach):
+    """The cut leaves no part of p thinner than HAIRLINE."""
+    rest = p[0].difference(q[0].buffer(reach).intersection(p[0].buffer(0.5)))
+    return all(not x.buffer(-0.8).is_empty for x in _polys_of(rest))
+
+
 def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.0, keep_roles=("contour",),
          log=None) -> C.Frag:
     """Make every pair of drawn pieces either touch or keep the §I.12 paper
@@ -902,6 +927,11 @@ def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.
     * knockout holes closer than 3 px to their solid's edge are filled;
     * a stroke piece shorter than ``stub`` (a fill smaller than ``sliver``
       px²) that nearly touches another piece is deleted;
+    * of two colour fills that come too close, the smaller is cut back,
+      unless cutting the other one, or half the deficit from each, leaves
+      clearly less of the cut uncovered by the marks painted above;
+    * an ink fill smaller than DOT_AREA (a dot or terminal) is shrunk evenly
+      instead of losing a bite on one side, if it keeps half its area;
     * a longer stroke is cut back only where it nears the other piece.
 
     Marks whose role is in ``keep_roles`` (the silhouette CONTOUR) are never
@@ -920,7 +950,7 @@ def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.
     for i, m in enumerate(marks):
         if m.kind != "fill" or m.role in keep_roles or not m.d:
             continue
-        s = G.to_shape(m.d, tol=0.05)
+        s = G.to_shape(m.d, tol=FLAT_TOL)
         parts = [p for p in getattr(s, "geoms", [s]) if p.geom_type == "Polygon"]
         bad = [p for p in parts if p.buffer(-0.8).is_empty]
         if bad:
@@ -932,7 +962,7 @@ def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.
     for i, m in enumerate(marks):
         if m.kind != "fill" or not m.d:
             continue
-        s = G.to_shape(m.d, tol=0.05)
+        s = G.to_shape(m.d, tol=FLAT_TOL)
         changed = False
         polys = []
         for pg in getattr(s, "geoms", [s]):
@@ -966,6 +996,10 @@ def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.
                 pieces.append((pg, mem, m0.kind, m0.layer, prot))
         if not pieces:
             break
+        order = {i: (T.LAYERS.index(m.layer), i) for i, m in enumerate(marks)}
+        oidx = list(outl)
+        ogeoms = [outl[i] for i in oidx]
+        otree = shapely.STRtree(ogeoms)
         geoms = [p[0] for p in pieces]
         tree = shapely.STRtree(geoms)
         pairs = tree.query(geoms, predicate="dwithin", distance=GAP)
@@ -989,34 +1023,65 @@ def heal(f: C.Frag, *, max_iter: int = 6, stub: float = 7.0, sliver: float = 12.
             cand = [(p[0].area, p, q) for p, q in ((pa, pb), (pb, pa)) if not p[4]]
             if not cand:
                 continue
+
+            def near_of(p):
+                return sorted({(marks[i].role or marks[i].kind).split("@")[0] for i in p[1]})
+
             cand.sort(key=lambda t: t[0])
             _, victim, other = cand[0]
-            todo.append((victim, other[0], need, d, sorted({(marks[i].role or marks[i].kind).split("@")[0]
-                                                            for i in other[1]})))
+            plan = [(victim, other, need + 0.1)]
+            if len(cand) == 2 and pa[2] == "fill" and pb[2] == "fill" and victim[3] != "ink" \
+                    and min(pa[0].area, pb[0].area) >= sliver:
+                # A colour fill's edge is usually under its ink outline, so a
+                # cut deeper than the outline shows the colour beneath as a
+                # wedge. Take whichever cut (either piece, or half the
+                # deficit from each) leaves the least of it uncovered.
+                half = (need + d) / 2 + 0.05
+                opts = [plan, [(other, victim, need + 0.1)], [(pa, pb, half), (pb, pa, half)]]
+                scored = [(sum(_exposed(p, q, r, order, otree, ogeoms, oidx) for p, q, r in o), k, o)
+                          for k, o in enumerate(opts) if k == 0 or all(_cut_ok(p, q, r) for p, q, r in o)]
+                best = min(scored, key=lambda t: (t[0], t[1]))
+                if best[0] < 0.5 * scored[0][0] - 0.1:
+                    plan = best[2]
+            for p, q, r in plan:
+                todo.append((p, q[0], need, d, near_of(q), r))
         if not todo:
             break
         if it_ == max_iter:                 # still failing: say so (QA 12 will too)
-            for (pg, mem, kind, layer, _), other, need, dd, near in todo:
+            for (pg, mem, kind, layer, _), other, need, dd, near, _r in todo:
                 w_ = pg.representative_point()
                 note("UNRESOLVED", marks[mem[0]], (w_.x, w_.y), f"{dd:.2f} px from a neighbour (needs {need})", near)
             break
-        for (pg, mem, kind, layer, _), other, need, dd, near in todo:
+        for (pg, mem, kind, layer, _), other, need, dd, near, reach in todo:
             where = pg.representative_point()
             for i in mem:
                 m = marks[i]
                 if not m.d:
                     continue
                 if m.kind == "fill":
-                    s = G.to_shape(m.d, tol=0.05)
+                    s = G.to_shape(m.d, tol=FLAT_TOL)
+                    shrunk = None
+                    if layer == "ink" and sliver <= pg.area < DOT_AREA:
+                        shrunk = pg.buffer(-(reach - dd), quad_segs=16)
+                        # past half its area a dot reads as a speck; the bite is the lesser evil
+                        if shrunk.geom_type != "Polygon" or shrunk.area < 0.5 * pg.area:
+                            shrunk = None
                     if pg.area < sliver:
                         s = s.difference(pg.buffer(0.2))
                         note("delete", m, (where.x, where.y), f"sliver {pg.area:.1f} px² {dd:.2f} px from a neighbour", near)
+                    elif shrunk is not None:
+                        s = s.difference(pg.buffer(0.05)).union(shrunk)
+                        note("shrink", m, (where.x, where.y), f"fill {dd:.2f} px from a neighbour (needs {need})", near)
                     else:
-                        s = s.difference(other.buffer(need + 0.1).intersection(pg.buffer(0.5)))
+                        s = s.difference(other.buffer(reach).intersection(pg.buffer(0.5)))
                         note("trim", m, (where.x, where.y), f"fill {dd:.2f} px from a neighbour (needs {need})", near)
+                        thin = [p for p in _polys_of(s) if p.intersects(pg) and p.buffer(-0.8).is_empty]
+                        if thin:
+                            s = s.difference(shapely.union_all(thin).buffer(0.05))
+                            note("drop", m, (where.x, where.y), "cut left a fill thinner than HAIRLINE", near)
                     marks[i] = replace(m, d=G.from_shape(s))
                     continue
-                ml = MultiLineString(_stroke_lines(m.d, 0.05))
+                ml = MultiLineString(_stroke_lines(m.d))
                 local = shapely.intersection(ml, pg.buffer(0.01))
                 if local.length < stub:
                     ml = shapely.difference(ml, pg.buffer(0.3))

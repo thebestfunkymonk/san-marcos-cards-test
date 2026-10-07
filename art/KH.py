@@ -132,7 +132,7 @@ def sleeved_hand(hand, sleeve):
 def held_attribute(attribute, hand_cuff):
     """One outline at the hand, cuff and held shaft, without a halo."""
     # A small join fillet belongs to the union, not to the shared hand asset.
-    shape = K.U(attribute.shape, hand_cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.2)
+    shape = K.U(attribute.shape, hand_cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.02)
     # Trap the held plate beneath the grip outline, rather than eroding
     # thin ends beside a thumb into little paper wedges.
     fills = K.clip_in(attribute.fills, attribute.shape.difference(

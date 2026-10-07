@@ -28,6 +28,7 @@ so QA can find them.
 """
 from __future__ import annotations
 
+import math
 from functools import lru_cache
 
 import numpy as np
@@ -57,23 +58,30 @@ INDEX_BLOCK_BOTTOM = T.INDEX_PIP_TOP + max(P.pip_size(s, T.INDEX_PIP_U)[1] for s
 
 def _q_with_diagonal_tail(d: str) -> str:
     """D3: the Q's bowl (upper half mirrored about the counter's centre line)
-    plus a diagonal tail (``Q_TAIL``). ``d`` is the native Q, already centred."""
+    plus a diagonal tail (``Q_TAIL``). ``d`` is the native Q, already centred.
+
+    Built with curve-preserving booleans so the bowl keeps the font's exact
+    quadratics (a shapely round trip writes it as a visibly faceted polygon).
+    The tail is trimmed to the counter so its rounded inner corners never
+    poke into it."""
     import shapely
-    from shapely import affinity
     q = G.to_shape(d)
-    counter = [shapely.Polygon(r) for p in getattr(q, "geoms", [q]) for r in p.interiors]
-    cy = counter[0].centroid.y if counter else (q.bounds[1] + T.INDEX_BASELINE) / 2
-    top = q.intersection(shapely.box(-1e3, -1e3, 1e3, cy))
-    bowl = top.union(affinity.scale(top, 1.0, -1.0, origin=(0.0, cy)))
+    holes = [r for p in getattr(q, "geoms", [q]) for r in p.interiors]
+    cy = shapely.Polygon(holes[0]).centroid.y if holes else (q.bounds[1] + T.INDEX_BASELINE) / 2
+    top = G.intersection(d, G.rect_d(-1e3, -1e3, 2e3, 1e3 + cy))
+    bowl = G.union(top, G.mirror_y(top, cy))
     ax, bl = T.INDEX_AXIS_X, T.INDEX_BASELINE
     p0 = np.array([ax + Q_TAIL["from"][0], bl + Q_TAIL["from"][1]])
     p1 = np.array([ax + Q_TAIL["to"][0], bl + Q_TAIL["to"][1]])
-    t = (p1 - p0) / np.linalg.norm(p1 - p0)
-    n = np.array([-t[1], t[0]]) * Q_TAIL["width"] / 2
-    tail = shapely.Polygon([p0 + n, p1 + n, p1 - n, p0 - n])
-    r = Q_TAIL["corner_r"]
-    tail = tail.buffer(-r, join_style="mitre").buffer(r, quad_segs=8)
-    return G.from_shape(bowl.union(tail))
+    length = float(np.linalg.norm(p1 - p0))
+    w = Q_TAIL["width"]
+    tail = G.rect_d(0.0, -w / 2, length, w, Q_TAIL["corner_r"])
+    ang = math.degrees(math.atan2(p1[1] - p0[1], p1[0] - p0[0]))
+    tail = G.translate(G.rotate(tail, ang), p0[0], p0[1])
+    # the counter as a solid: every hole subpath of the bowl, re-wound as a fill
+    counter = "".join(G.orient(G.cmds_to_d(sub), "cw") for sub in G._split_subpaths(G.parse_d(bowl))
+                      if G.signed_area(G.flatten(sub, 0.25)[0][0]) < 0)
+    return G.union(bowl, G.difference(tail, counter) if counter else tail)
 
 
 @lru_cache(maxsize=None)

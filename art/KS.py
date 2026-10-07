@@ -103,7 +103,7 @@ def sleeved_hand(hand, sleeve):
 
 def held_attribute(attribute, hand_cuff):
     """One outline at the hand and the held object, without a halo."""
-    shape = K.U(attribute.shape, hand_cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.2)
+    shape = K.U(attribute.shape, hand_cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.02)
     fills = K.clip_in(attribute.fills, attribute.shape.difference(
         hand_cuff.shape.buffer(-K.MEDIUM / 2))) + hand_cuff.fills
     return K.Part(

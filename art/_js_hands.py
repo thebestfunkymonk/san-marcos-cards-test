@@ -94,7 +94,7 @@ def held_attribute(attribute, hand_cuff, *, keep=lambda m: m.role != "outline"):
     """One outline at the hand and the held object, without a halo."""
     joined = K.U(attribute.shape, hand_cuff.shape)
     fillet = joined.buffer(1.6).buffer(-1.6).intersection(hand_cuff.shape.buffer(8.0))
-    shape = K.U(joined, fillet).simplify(0.2)
+    shape = K.U(joined, fillet).simplify(0.02)
     fills = K.clip_in(attribute.fills, attribute.shape.difference(
         hand_cuff.shape.buffer(-K.MEDIUM / 2))) + hand_cuff.fills
     return K.Part(

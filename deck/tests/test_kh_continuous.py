@@ -126,7 +126,7 @@ def test_sleeves_are_red_cloak_sleeves_from_the_outer_edge(composition):
         assert not cuff.fills.marks
         assert cuff.shape.intersection(sleeve).area < 0.01
         assert cuff.shape.symmetric_difference(hand.shape.difference(sleeve)).area < 1.0
-        filleted = K.U(attribute.shape, cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.2)
+        filleted = K.U(attribute.shape, cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.02)
         assert held.shape.symmetric_difference(filleted).area < 0.01
         assert any(mark.role == "grip-edge" for mark in held.lines.marks)
         outline = held.lines.select(lambda mark: mark.role == "contour")

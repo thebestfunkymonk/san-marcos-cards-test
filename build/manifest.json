@@ -20,7 +20,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AS.png",
   "print": null,
   "error": null,
-  "seconds": 2.1
+  "seconds": 2.09
  },
  {
   "id": "AH",
@@ -43,7 +43,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AH.png",
   "print": null,
   "error": null,
-  "seconds": 0.99
+  "seconds": 0.98
  },
  {
   "id": "AC",
@@ -66,7 +66,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AC.png",
   "print": null,
   "error": null,
-  "seconds": 1.37
+  "seconds": 1.41
  },
  {
   "id": "AD",
@@ -89,7 +89,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/AD.png",
   "print": null,
   "error": null,
-  "seconds": 1.1
+  "seconds": 1.13
  },
  {
   "id": "2S",
@@ -133,7 +133,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/3S.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "4S",
@@ -155,7 +155,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/4S.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "5S",
@@ -177,7 +177,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/5S.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "6S",
@@ -331,7 +331,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/3H.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "4H",
@@ -397,7 +397,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/6H.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "7H",
@@ -419,7 +419,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/7H.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "8H",
@@ -573,7 +573,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/5C.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "6C",
@@ -595,7 +595,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/6C.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "7C",
@@ -617,7 +617,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/7C.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "8C",
@@ -639,7 +639,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/8C.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "9C",
@@ -683,7 +683,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/10C.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "2D",
@@ -727,7 +727,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/3D.png",
   "print": null,
   "error": null,
-  "seconds": 0.07
+  "seconds": 0.06
  },
  {
   "id": "4D",
@@ -931,7 +931,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KS.png",
   "print": null,
   "error": null,
-  "seconds": 12.49
+  "seconds": 13.43
  },
  {
   "id": "QS",
@@ -981,7 +981,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QS.png",
   "print": null,
   "error": null,
-  "seconds": 26.97
+  "seconds": 31.13
  },
  {
   "id": "JS",
@@ -1031,7 +1031,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JS.png",
   "print": null,
   "error": null,
-  "seconds": 121.08
+  "seconds": 120.19
  },
  {
   "id": "KH",
@@ -1081,7 +1081,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KH.png",
   "print": null,
   "error": null,
-  "seconds": 18.66
+  "seconds": 19.83
  },
  {
   "id": "QH",
@@ -1131,7 +1131,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QH.png",
   "print": null,
   "error": null,
-  "seconds": 88.21
+  "seconds": 84.09
  },
  {
   "id": "JH",
@@ -1181,7 +1181,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JH.png",
   "print": null,
   "error": null,
-  "seconds": 22.66
+  "seconds": 21.95
  },
  {
   "id": "KC",
@@ -1231,7 +1231,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KC.png",
   "print": null,
   "error": null,
-  "seconds": 17.17
+  "seconds": 18.22
  },
  {
   "id": "QC",
@@ -1281,7 +1281,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QC.png",
   "print": null,
   "error": null,
-  "seconds": 59.45
+  "seconds": 60.19
  },
  {
   "id": "JC",
@@ -1331,7 +1331,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JC.png",
   "print": null,
   "error": null,
-  "seconds": 27.72
+  "seconds": 27.33
  },
  {
   "id": "KD",
@@ -1381,7 +1381,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/KD.png",
   "print": null,
   "error": null,
-  "seconds": 9.88
+  "seconds": 10.34
  },
  {
   "id": "QD",
@@ -1431,7 +1431,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/QD.png",
   "print": null,
   "error": null,
-  "seconds": 8.17
+  "seconds": 8.68
  },
  {
   "id": "JD",
@@ -1481,7 +1481,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JD.png",
   "print": null,
   "error": null,
-  "seconds": 10.47
+  "seconds": 10.41
  },
  {
   "id": "JOKER_RED",
@@ -1505,7 +1505,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JOKER-RED.png",
   "print": null,
   "error": null,
-  "seconds": 3.19
+  "seconds": 3.07
  },
  {
   "id": "JOKER_BLACK",
@@ -1529,7 +1529,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/JOKER-BLACK.png",
   "print": null,
   "error": null,
-  "seconds": 2.36
+  "seconds": 2.94
  },
  {
   "id": "BACK",
@@ -1552,6 +1552,6 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/png/small/BACK.png",
   "print": null,
   "error": null,
-  "seconds": 16.47
+  "seconds": 15.57
  }
 ]
