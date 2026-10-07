@@ -70,11 +70,17 @@ def drop_short(f: C.Frag, min_len: float = 9.0) -> C.Frag:
     return C.Frag(out, f.meta)
 
 
-def seam_guard(f: C.Frag, seam, margin: float = 4.8) -> C.Frag:
+def seam_guard(f: C.Frag, seam, margin: float = 4.8, at=None) -> C.Frag:
     """Drop stroke pieces with an end within ``margin`` of the seam: the half's clip would cut
-    them a hair short of their junction, leaving a sub-3 px stub the other half has to finish."""
+    them a hair short of their junction, leaving a sub-3 px stub the other half has to finish.
+    ``at``: only ends lying on this geometry count."""
     if seam is None:
         return f
+
+    def near(p):
+        q = Point(*p)
+        return q.distance(seam) < margin and (at is None or q.distance(at) < 1.0)
+
     out = []
     for m in f.marks:
         if m.kind == "fill" or not m.d:
@@ -83,7 +89,7 @@ def seam_guard(f: C.Frag, seam, margin: float = 4.8) -> C.Frag:
         keep = []
         for pts, cl in G.flatten(m.d, 0.05):
             pts = np.asarray(pts)
-            if not cl and (Point(*pts[0]).distance(seam) < margin or Point(*pts[-1]).distance(seam) < margin):
+            if not cl and (near(pts[0]) or near(pts[-1])):
                 continue
             keep.append(C.polyline_d(pts, closed=cl))
         if keep:
@@ -191,8 +197,11 @@ def bubble_field(region_left, *, d_lo=4.2, d_hi=9.5, pitch=21.0, offsets=(13.0, 
     return out
 
 
-FAULT = ((282.0, 476.0), (216.0, 556.0))
+FAULT = ((282.0, 486.5), (208.0, 566.5))    # its ends and its seam crossing fall >= 5 px from every course line
 STRATA_Y0 = 519.0                             # courses 12/19 are symmetric about y 525 from this phase
+FAULT_JOG = 12.0                              # one thin-course height (brief §11)
+STRATA_MIN = 7.0                              # a full hatched 12 px course gives 17 px pieces at 45°
+COURSE_MIN = 16.0
 
 
 def _side(p0, p1, sign):
@@ -204,22 +213,91 @@ def _side(p0, p1, sign):
     return Polygon([p0 - u * big, p1 + u * big, p1 + u * big + n * big, p0 - u * big + n * big])
 
 
-def strata_field(region):
+def fault_blocks():
+    """The half-planes screen-left of the fault (x smaller) and its 180° partner."""
+    left = _side(*FAULT, 1)
+    return left, rot(left)
+
+
+def _pieces(f, role):
+    return [np.asarray(p) for m in f.marks if m.role == role and m.kind != "fill" and m.d
+            for p, _ in G.flatten(m.d, 0.05)]
+
+
+def prune_cells(f, blockers, lapel, min_course=COURSE_MIN, near=4.6):
+    """Empty the small strata cells the orb/lapel gap and the fault's corners leave: a course
+    piece shorter than ``min_course`` goes if it ends on the lapel or if no front item ends it,
+    and the hatch of the course it bounds goes with it (same fault block, within one thin
+    course of it). A hatch piece with an end that meets no course or fault line but stops
+    within ``near`` of one goes too (a hatch end on a front item just short of a course
+    corner). Heal would otherwise trim these into hooks and floating dashes."""
+    left, right = fault_blocks()
+
+    def block(pt):
+        p = Point(*pt)
+        return 1 if left.contains(p) else 2 if right.contains(p) else 0
+
+    def on(pt, g):
+        return Point(*pt).distance(g) < 1.2
+
+    dropped = []
+    for pts in _pieces(f, "course"):
+        if G.Curve(pts).length >= min_course:
+            continue
+        a, b = pts[0], pts[-1]
+        if on(a, lapel) or on(b, lapel) or not (on(a, blockers) or on(b, blockers)):
+            xa, xb = sorted((a[0], b[0]))
+            dropped.append((LineString(pts), a[1], xa, xb, block((pts[0] + pts[-1]) / 2)))
+
+    def is_dropped(pts):
+        return any(ln.distance(Point(*pts[0])) < 0.05 and ln.distance(Point(*pts[-1])) < 0.05
+                   for ln, *_ in dropped)
+
+    rails = shapely.MultiLineString([p for p in _pieces(f, "course") if not is_dropped(p)] + _pieces(f, "fault"))
+
+    def gone(role, pts):
+        if role == "course":
+            return is_dropped(pts)
+        if any(0.6 < rails.distance(Point(*e)) < near for e in (pts[0], pts[-1])):
+            return True
+        mid = (pts[0] + pts[-1]) / 2
+        for ln, y, xa, xb, blk in dropped:
+            if ln.distance(Point(*pts[0])) < 0.6 or ln.distance(Point(*pts[-1])) < 0.6:
+                return True
+            if (blk == block(mid) and abs(mid[1] - y) < 12.0 and xa - 1.0 <= pts[:, 0].max()
+                    and pts[:, 0].min() <= xb + 1.0):
+                return True
+        return False
+
+    out = []
+    for m in f.marks:
+        if m.role not in ("course", "hatch") or m.kind == "fill" or not m.d:
+            out.append(m)
+            continue
+        keep = [C.polyline_d(p, closed=cl) for p, cl in G.flatten(m.d, 0.05) if not gone(m.role, np.asarray(p))]
+        if keep:
+            out.append(replace(m, d="".join(keep)))
+    return C.Frag(out, f.meta)
+
+
+def strata_field(region, jog=FAULT_JOG):
     """Whole-card strata with the Balcones fault: the fault and its 180° partner split the card
-    into three blocks on one common course phase (symmetric about y 525, so any 12/19 jog would
-    leave 7 px slivers); the displacement reads as the hatch grain turning across the fault."""
+    into three blocks. The centre block keeps the phase symmetric about y 525; the block left of
+    the fault drops ``jog`` px and its 180° partner rises by the same amount, so the hatched
+    courses step across both faults."""
     p0, p1 = FAULT
     d = np.array(p1) - np.array(p0)
     fault_l = LineString([np.array(p0) - d * 6, np.array(p1) + d * 6])
-    left_zone = _side(p0, p1, -1)               # screen-left of the fault (x smaller)
-    right_zone = rot(left_zone)
+    left_zone, right_zone = fault_blocks()
     mid = region.difference(left_zone).difference(right_zone)
     out = C.Frag()
-    for zone, angle in ((mid, C.DIAG), (region.intersection(left_zone), -C.DIAG),
-                        (region.intersection(right_zone), -C.DIAG)):
+    # the fault runs ~47° the same way as C.DIAG; hatching the other diagonal keeps the hatch
+    # from running alongside the fault line in thin wedges
+    for zone, shift in ((mid, 0.0), (region.intersection(left_zone), jog),
+                        (region.intersection(right_zone), -jog)):
         if not zone.is_empty:
-            out += MG.strata(zone, y0=STRATA_Y0, heights=(12.0, 19.0), hatched="thin", angle=angle,
-                             origin=(AX, CY))
+            out += MG.strata(zone, y0=STRATA_Y0 + shift, heights=(12.0, 19.0), hatched="thin", angle=-C.DIAG,
+                             origin=(AX, CY + shift))
     for ln in (fault_l, rot(fault_l)):
         for g in K._lines_of(ln.intersection(region)):
             if g.length > 1.0:
@@ -250,8 +328,12 @@ def garments(front, *, sleeves, cuff_bands, sleeve_grain, sleeve_edges, seam=Non
     # grown 0.8 px under the lapel/lens/sleeve outlines so course lines overlap them instead of
     # stopping a hair short of the stroke
     strata_zone = jade.intersection(inner_shape).buffer(0.8).intersection(inner_shape).difference(sleeve_zone.buffer(-0.8))
-    strata = strata_field(strata_zone)
-    strata = drop_short(strata.select(lambda m: m.role == "hatch"), 19.0) + strata.select(lambda m: m.role != "hatch")
+    # cut under the front items first so the length test sees the visible piece (the orb and its
+    # stem leave short course and hatch ends against the lapel)
+    strata = K.clip_out(strata_field(strata_zone), blockers)
+    strata = (drop_short(strata.select(lambda m: m.role in ("hatch", "course")), STRATA_MIN)
+              + strata.select(lambda m: m.role not in ("hatch", "course")))
+    strata = prune_cells(strata, blockers, K.U(red, lens_s))
 
     # ---- red lapels: rising bubbles knocked out, hatch between ---------------------------
     left_red = red.intersection(K.box(0, 0, AX, 2000))
@@ -271,7 +353,11 @@ def garments(front, *, sleeves, cuff_bands, sleeve_grain, sleeve_edges, seam=Non
     # ---- sleeves --------------------------------------------------------------------------
     fills = K.fill(jade, K.JADE) + K.fill(red_fill, K.RED) + cav.select(lambda m: m.kind == "fill")
     lines = K.outline(shape) + K.outline(lens_s) + K.outline(red)
-    textile = seam_guard(border_hatch + strata + red_hatch, seam)
+    # the strata are exactly C2, so the other half continues every course and hatch piece the
+    # seam cuts; guarding them all would drop each hatched course the shallow seam runs along.
+    # Only the junctions on the fault where the seam crosses it need the guard.
+    faults = shapely.MultiLineString(_pieces(strata, "fault"))
+    textile = seam_guard(border_hatch + red_hatch, seam) + seam_guard(strata, seam, 4.0, at=faults)
     lines += seam_line + textile + voids + bubbles.select(lambda m: m.kind != "fill")
     lines += K.c2(cuff_bands) + K.c2(sleeve_grain) + K.c2(sleeve_edges)
     return K.Part(shape, fills, lines, {"jade": jade, "red": red, "lens": lens_s})
