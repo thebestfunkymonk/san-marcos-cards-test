@@ -95,7 +95,10 @@ COLLAR = (((364.5, 283.0), (412.0, 281.0), 5.5, 370.8, 405.05, 6, 7.6, 6.4),)
 FAR_SHOULDER = dict(start=(418.0, 173.6), h0=36.0, join_y=232.0, via=((429.0, 181.0), (435.0, 198.0)),
                     hidden=((410.0, 232.0), (404.0, 200.0), (408.0, 178.0), (416.5, 176.0)))
 REST_AT = (334, 424)
-RIGHT_SLEEVE = dict(run=44.0, reach=0.0, bell=4.0, neck=4.0, curl=-5.0)
+HAND_S = 0.82
+# the stem sleeve is cut short by the robe's edge: two turn-back bands, no pearl row
+RIGHT_TRIM = dict(second_band=20.0)
+RIGHT_SLEEVE = dict(run=40.0, reach=0.0, bell=5.0, neck=10.0, curl=-5.0)
 LEFT_SLEEVE = dict(run=54.0, reach=0.0, bell=8.0, neck=12.0, curl=-5.0)
 
 
@@ -190,10 +193,15 @@ def _course(hand, sleeve, sleeve_kw, offset, inset):
     return cut
 
 
-def cuff_trim(hand, sleeve, sleeve_kw, *, band=10.0, pearl_at=21.0):
-    """A turn-back band parallel to the cuff mouth with a row of pearls behind it."""
+def cuff_trim(hand, sleeve, sleeve_kw, *, band=10.0, pearl_at=21.0, second_band=None):
+    """A turn-back band parallel to the cuff mouth with a row of pearls behind it
+    (or, on a sleeve too short for pearls, a second band)."""
     edge = _course(hand, sleeve, sleeve_kw, band, 1.0)
     lines = K.line(C.polyline_d(np.asarray(edge.coords)), K.MEDIUM, role="cuffline")
+    if second_band is not None:
+        edge2 = _course(hand, sleeve, sleeve_kw, second_band, 1.0)
+        lines += K.line(C.polyline_d(np.asarray(edge2.coords)), K.MEDIUM, role="cuffline")
+        return K.Part(Polygon(), C.Frag(), lines)
     row = _course(hand, sleeve, sleeve_kw, pearl_at, 9.0)
     pearls = B.pearls_on(np.asarray(row.coords), d_max=7.0, d_min=7.0, gap=0.0, even=True)
     ring = C.Frag([replace(m, role="contour") for m in pearls.lines.marks])
@@ -211,16 +219,14 @@ def figure():
                 side=+1, bubbles=(4.2, 5.6, 7.0), bubble_lane=2, bubble_at=0.55)
     hf = H.lock([(426, 188), (437, 218), (441, 250), (440, 278), (451, 300), (469, 304)], 40.0, n=4, side=-1)
     # Both hands come out of bell sleeves that are lobes of the jade mantle.
-    # Legacy wrap pose: hand5's wrap now draws the named hand, so the opposite letter (and
-    # cues=False, the pre-anatomy line set) reproduces this approved render until QH is re-posed.
-    h = K.hand5((546, 434), 90, "wrap", size=K.hand_size(fc),
-                hand="R", view="palm", grip_w=19, cues=False)
+    h = K.hand5((546, 434), -90, "wrap", size=K.hand_size(fc) * HAND_S,
+                hand="L", view="back", grip_w=19)
     right_sleeve = sleeve_end(h, **RIGHT_SLEEVE)
     right_hand = sleeved_hand(h, right_sleeve)
     # The original wrist (300,452) straddles the approved -42° seam.
     # Shift the same resting gesture up onto the chest, not the seam.
-    resting = K.hand5((REST_AT), -24, "rest", size=K.hand_size(fc) * 0.82,
-                      hand="R", view="back", curl=6, spread=3, cues=False)
+    resting = K.hand5((REST_AT), -24, "rest", size=K.hand_size(fc) * HAND_S,
+                      hand="R", view="back", curl=6, spread=3)
     left_sleeve = sleeve_end(resting, **LEFT_SLEEVE)
     left_hand = sleeved_hand(resting, left_sleeve)
     pet = A.petiole(**PETIOLE)
@@ -230,8 +236,9 @@ def figure():
                                      notch=5, centre="scallop", hatch_rel=0)]
     held = QC.held(_stem(), pet, leaf, flower, right_hand)
     trim = K.Part(Polygon(), C.Frag(), C.Frag())
-    for hand, sleeve, kw in ((h, right_sleeve, RIGHT_SLEEVE), (resting, left_sleeve, LEFT_SLEEVE)):
-        part = cuff_trim(hand, sleeve, kw)
+    for hand, sleeve, kw, trim_kw in ((h, right_sleeve, RIGHT_SLEEVE, RIGHT_TRIM),
+                                      (resting, left_sleeve, LEFT_SLEEVE, {})):
+        part = cuff_trim(hand, sleeve, kw, **trim_kw)
         trim = K.Part(K.U(trim.shape, part.shape), trim.fills + part.fills, trim.lines + part.lines)
     robe = QC.garments(K.U(held.shape, left_hand.shape, hn.shape, hf.shape),
                        K.U(hn.shape, hf.shape), sleeves=left_sleeve, inked=right_sleeve, trim=trim,

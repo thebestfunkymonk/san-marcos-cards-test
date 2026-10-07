@@ -50,25 +50,42 @@ def test_approved_seam_and_four_integrated_items(composition):
     assert all(item.halo == 0 for item in composition.scene.items)
 
 
-def test_two_face_scaled_hands_restore_bodice_gesture(composition):
+def test_two_anatomical_hands_one_size_restore_bodice_gesture(composition):
+    # Checkpoint 3: the queen's left hand (viewer's right) grips the stem back-view, thumb up at
+    # the shaft's working end, forearm running down and out into the outer mantle; her right hand
+    # (viewer's left) rests on the bodice, back view, thumb on the upper edge. One size for both.
     face = QH.QF.queen_face(QH.HEAD, wing_mode="hook",
                            wing=(4.5, 62.0, 0.8), lid_sag=2.6, low_sag=6.4)
+    assert QH.HAND_S == 0.82
     assert len(composition.hands) == 2
-    args, kwargs, _ = composition.hands[0]
-    # Compensated for the wrap chirality fix: opposite letter, same angle, legacy lines.
-    assert args == ((546, 434), 90, "wrap")
-    assert kwargs == dict(size=K.hand_size(face), hand="R",
-                         view="palm", grip_w=19, cues=False)
-    args, kwargs, _ = composition.hands[1]
-    # Moved 12 px right (from (322,424)) so the sleeve has room between the
-    # mantle edge and the hand; still 50+ px clear of the seam.
+    args, kwargs, stem = composition.hands[0]
+    assert args == ((546, 434), -90, "wrap")
+    assert kwargs == dict(size=K.hand_size(face) * QH.HAND_S, hand="L", view="back", grip_w=19)
+    args, kwargs, rest = composition.hands[1]
     assert args == (QH.REST_AT, -24, "rest")
     assert QH.REST_AT == (334, 424)
-    assert kwargs == dict(size=K.hand_size(face) * 0.82, hand="R",
-                         view="back", curl=6, spread=3, cues=False)
+    assert kwargs == dict(size=K.hand_size(face) * QH.HAND_S, hand="R",
+                         view="back", curl=6, spread=3)
+    assert "cues" not in kwargs
     seam = LineString(F.seam_points(QH.SEAM))
     for _, _, hand in composition.hands:
         assert hand.hand.shape.distance(seam) >= 12
+    for hand, (lo, hi) in ((stem, (-10.0, 90.0)), (rest, (90.0, 190.0))):
+        forearm = float(np.degrees(np.arctan2(hand.wrist_dir[1], hand.wrist_dir[0])))
+        assert lo <= forearm <= hi
+    # stem hand: wrist on the outer (right) side of the shaft, fingers toward the axis,
+    # thumb above the index fingertip at the shaft's upper end
+    tips = stem.hand.meta["digit_tips"]
+    thumb = np.asarray(stem.hand.meta["thumb_centerline"].coords[-1])
+    assert stem.wrist[0] > 546 + 20.0
+    assert np.asarray(tips[1])[0] < 546
+    assert thumb[1] < np.asarray(tips[0])[1] - 10.0
+    # resting hand: fingers up and across toward the axis,
+    # thumb on the upper edge nearer the wrist than the fingertips
+    tips = rest.hand.meta["digit_tips"]
+    thumb = np.asarray(rest.hand.meta["thumb_centerline"].coords[-1])
+    assert rest.wrist[0] == pytest.approx(QH.REST_AT[0]) and np.asarray(tips[1])[0] > QH.REST_AT[0] + 40.0
+    assert thumb[0] < np.asarray(tips[0])[0] - 20.0
 
 
 def test_cuffs_are_short_mantle_sleeves_not_stubs(composition):
@@ -93,7 +110,8 @@ def test_cuffs_are_short_mantle_sleeves_not_stubs(composition):
         assert cuff.shape.intersection(sleeve).area < 1.0
         assert cuff.fills.marks == []
         assert any(mark.role == "cuffline" for mark in trim.lines.marks)
-        assert trim.fills.shape().area > 0
+        # the stem sleeve is cut short by the robe edge: two bands instead of pearls
+        assert (trim.fills.shape().area > 0) == (i == 1)
     assert any(mark.role == "cuffline" for mark in gown.lines.marks)
 
 
