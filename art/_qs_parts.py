@@ -555,68 +555,6 @@ def laurel_sprig(stem_base, stem_top, *, leaves_spec, raceme_top, raceme_len=64.
 
 
 # -----------------------------------------------------------------------------
-# drip-fringe cuff
-# -----------------------------------------------------------------------------
-def drip_fringe_ko(sleeve_part, cuff_part, *, n=3, pitch=7.8, l_min=3.0, l_max=17.0):
-    """§G.14 drip fringe hanging from a cuff's lower edge down the sleeve,
-    KNOCKED OUT of the jade sleeve (MEDIUM paper strokes + Ø6.3 terminals):
-    ``n`` strokes along the sleeve axis at ``pitch`` px (≥ 3 px of jade
-    between a terminal and the next stroke, the outer terminals ≥ 3 px inside
-    the sleeve's outline), their lengths on one slow sine (short–long–short).
-    Each starts under the cuff, so it hangs from the cuff's edge. A drip that
-    would not keep that paper is dropped whole. Returns the sleeve Part with
-    its fill knocked out (meta 'drips': the knockout Frag).
-
-    (It used to measure the cuff's lower edge from the wrist point, which
-    lies on the cuff's top edge and so is not inside it: the drips started at
-    the cuff's TOP, six of them 3 px apart, and all that showed below the cuff
-    was one lumpy paper blob.)"""
-    m = sleeve_part.meta
-    W, u, nn = P(m["W"]), P(m["u"]), P(m["n"])
-    cuff = cuff_part.shape
-    sl = sleeve_part.shape
-    inner = sl.buffer(-(MEDIUM / 2 + K.GAP_MARK), quad_segs=12)
-    # centre the fringe on the sleeve's cross-section just below the cuff (a sagged
-    # sleeve is not symmetric about the wrist point's axis)
-    s = 0.0
-    while not cuff.contains(Point(*(W - u * s))) and s < 30.0:
-        s += 0.25
-    while cuff.contains(Point(*(W - u * s))) and s < 60.0:
-        s += 0.25
-    xs = LineString([tuple(W - u * (s + 3.0) + nn * 80), tuple(W - u * (s + 3.0) - nn * 80)]).intersection(sl)
-    if not xs.is_empty:
-        xs = max(K._lines_of(xs), key=lambda g: g.length)
-        mid = np.asarray(xs.interpolate(0.5, normalized=True).coords[0])
-        W = W + nn * float(np.dot(mid - (W - u * (s + 3.0)), nn))
-    ko = C.Frag()
-    for i in range(n):
-        off = (i - (n - 1) / 2) * pitch
-        t = (i + 0.5) / n
-        Lk = l_min + (l_max - l_min) * math.sin(math.pi * t)
-        q = W + nn * off
-        s = 0.0
-        while not cuff.contains(Point(*(q - u * s))) and s < 30.0:     # into the cuff …
-            s += 0.25
-        while cuff.contains(Point(*(q - u * s))) and s < 60.0:         # … and out through its lower edge
-            s += 0.25
-        p0 = q - u * (s - 2.0)                                        # 2 px under the cuff
-        p1 = p0 - u * (Lk + 2.0)
-        drip = C.stroke(C.polyline_d([p0, p1]), KO, role="drip") + C.dot(p1[0], p1[1], K.TD, role="drip-t")
-        body = LineString([tuple(q - u * (s + 0.5)), tuple(p1)]).buffer(KO / 2).union(
-            Point(*p1).buffer(K.TD / 2, quad_segs=12))
-        if inner.contains(body):
-            ko += drip
-    fills = sleeve_part.fills
-    new = C.Frag()
-    for mk in fills.marks:
-        if mk.kind == "fill":
-            new += K.fill(C.knockout(mk.d, ko), mk.color, role=mk.role)
-        else:
-            new += C.Frag([mk])
-    return K.Part(sl, new, sleeve_part.lines, {**sleeve_part.meta, "drips": ko})
-
-
-# -----------------------------------------------------------------------------
 # hair under the veil
 # -----------------------------------------------------------------------------
 def hair_under_veil(edge_pts, bottom_y, *, n=2, stagger=10.0, round_r=9.0, face=None):
@@ -1253,36 +1191,3 @@ def laurel_sprig2(mouth, axis_deg, stem_pts, *, holder_len=34.0, holder_w=(12.0,
         out["florets"] = flo
         out["raceme"] = K.Part(rreg, C.Frag(), C.Frag(), {"florets": fl})
     return out
-
-
-# -----------------------------------------------------------------------------
-# paper pockets between a fist and the attribute it holds
-# -----------------------------------------------------------------------------
-def paper_pocket(sc, name, members, window, *, host, r=8.0, halo_only=None, min_area=2.0):
-    """The ground left between the named scene items (each grown by its paper
-    channel, ``halo`` + MEDIUM/2) and ``host`` (the region of the hand that
-    is stacked NEXT, in front) that is narrower than 2·``r`` inside
-    ``window`` turns to paper, closing on round arcs — the kit's heel
-    treatment (courtkit.Hand.add_to, HEEL_CLOSE) for the pocket between a
-    thumb, the attribute's stem and what hangs from it: no coloured wedge or
-    sliver pinched between three outlines. Adds an empty item whose paper
-    channel is the pocket (``halo_only``: the grounds it clears); its own
-    region is a sliver of ``host``, so it hides nothing that shows.
-    → the pocket region (empty when there is none)."""
-    regs = [K.R(host)]
-    for it in sc.items:
-        if it.name in members and it.occ is not None and not it.occ.is_empty:
-            regs.append(it.occ.buffer(it.halo + MEDIUM / 2, quad_segs=12) if it.halo else it.occ)
-    both = K.U(*regs)
-    gap = both.buffer(r, quad_segs=12).buffer(-r, quad_segs=12).difference(both)
-    gap = gap.intersection(K.R(window))
-    pcs = [g for g in K._polys_of(gap) if g.area > min_area]
-    if not pcs:
-        return Polygon()
-    gap = K.U(*pcs)
-    occ = K.R(host).intersection(gap.buffer(2.0, quad_segs=8))
-    if occ.is_empty:
-        return Polygon()
-    sc.add(name, C.Frag(), occ, sil=False, halo=K.HALO, halo_only=halo_only, halo_zone=gap.union(occ))
-    return gap
-

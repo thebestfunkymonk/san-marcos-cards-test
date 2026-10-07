@@ -1,7 +1,19 @@
-"""art/QS.py — Q♠ · The Blind Oracle (creative brief §H.2). Pass 4 (layout);
-courts2 hands pass: forearms continue the wrists, posy clear of the thumb,
-§H.2 drip-fringe cuffs, layered laurel leaves."""
+"""art/QS.py — Q♠ · The Blind Oracle (creative brief §H.2): continuous double-head, two cloak-sleeve hands.
+
+Whole-card textiles (art/_qs_garments.py): the jade barrel mantle with its hatched border and karst
+voids, the red lining lens with its water-drop columns, the paper gown and the two sleeves are C2
+about the card centre, so the seam (SEAM, a gentle diagonal through the robes) is only a place where
+the 180° copy takes over — no band, medallion or divider.
+
+Hands (both ``K.hand5``, back view, posed by parameters):
+  * the oracle's LEFT hand (viewer's right) wraps the scrying mirror's handle, thumb up the shaft;
+  * the oracle's RIGHT hand (viewer's left) wraps the mountain-laurel posy-holder, thumb up.
+Each wrist continues a short jade sleeve that opens from the mantle's outer edge; its cuff is a red
+turn-back band with the §H.2 drip fringe hanging from it.
+"""
 from __future__ import annotations
+
+import math
 
 import numpy as np
 import shapely
@@ -10,16 +22,20 @@ from shapely.geometry import LineString, Point, Polygon
 from inkkit import geom as G
 
 from deck import courtkit as K
+from deck import frames as F
+from deck import tokens as T
 from deck.motifs import core as C
 from art import _qs_parts as Q
 from art import _qs_face as QF
 from art import _qs_body as B
-from art import _qs_garb as GB
-from art import _qs_finish as FIN
+from art import _qs_garments as QG
 from art import _qs_sal as QSAL
-import os
 
+DOUBLE_HEAD = "continuous"
+SEAM = -10.0
 P = K.P
+HAND_SCALE = 0.82
+
 HEAD = (388.0, 200.0)
 TILT, PIVOT = -6.0, (388.0, 292.0)
 
@@ -34,8 +50,7 @@ CIRCLET = ((324.0, 152.0), (378.0, 156.0), (484.0, 142.0))
 VEIL_IN = 10.0      # the veil's inner contour: the crown guide offset this far inward (the circlet ends on it)
 # nine graduated points hung from the circlet between the far contour and its
 # round end on the veil's inner contour; packed so the kites' outlines join at
-# the shoulders (a closed zigzag, no hairline paper slits); too slim at this
-# pitch for the FINE growth axis, so none
+# the shoulders (a closed zigzag, no hairline paper slits)
 KITES = dict(xs=(347.0, 356.7, 367.1, 378.7, 390.9, 402.5, 413.4, 423.8, 433.5),
              lengths=(13.0, 16.0, 21.0, 31.0, 24.0, 20.0, 17.0, 14.5, 12.0),
              widths=(6.6, 7.2, 7.9, 9.7, 9.2, 8.4, 7.9, 7.2, 6.6), top_k=0.25, axis_min=99.0)
@@ -52,58 +67,157 @@ PLUMES = [
     ((348, 280), (222, 242), 12.0, -1, 48.0), ((430, 280), (574, 236), -12.0, +1, 50.0),
     ((346, 298), (204, 302), 10.0, -1, 46.0), ((432, 298), (590, 296), -10.0, +1, 48.0),
 ]
-# ---- body (card frame) ----------------------------------------------------------
-MANTLE = [(388, 300), (340, 306), (286, 312), (236, 322), (200, 340), (178, 372), (164, 420), (154, 480),
-          (150, 545), (626, 545), (620, 480), (610, 420), (596, 372), (574, 340), (538, 322), (488, 312),
-          (436, 306)]
-LINING_L = [(372, 300), (330, 306), (306, 360), (290, 440), (280, 545), (376, 545), (376, 440), (378, 360),
-            (380, 312)]
-LINING_R = [(404, 300), (446, 306), (470, 360), (486, 440), (496, 545), (402, 545), (402, 440), (400, 360),
-            (398, 312)]
-LINING_L_MID = [(340, 404), (332, 450), (326, 500), (324, 540)]
-LINING_R_MID = [(446, 408), (452, 450), (455, 500), (456, 540)]
-GOWN = [(375, 300), (370, 380), (366, 460), (364, 545), (412, 545), (410, 460), (406, 380), (401, 300),
-        (388, 296)]
 
-GOWN_FOLD = [(386, 352), (384, 420), (383, 480), (383, 545)]
-GOWN_SEAM = [(398.0 + 0.035 * (y - 372), y) for y in range(372, 512, 10)]
+# ---- the mirror (viewer's right) and the posy-holder (viewer's left) -------------------
+MIRROR_C = (510.0, 350.0)
+MIRROR_GRIP = (510.0, 448.0)
+MIRROR_RUN, MIRROR_REACH = 78.0, 4.0
+HANDLE_W = 14.0
 
-MIRROR_C = (512.0, 350.0)
-
-# the holder's foot stays in the fist; it stands 7 px taller than the fist so
-# the sprig (and the raceme hanging from the mouth) clear the thumb
-POSY_LEN = 40.0
-POSY = dict(mouth=(320.3, 387.2), axis_deg=-104.0)
-LEAVES = ((-70.0, 53.0, 5.0), (-118.0, 56.0, -6.0), (-160.0, 56.0, 6.0))   # heading, length, bend (tips where they stood before the holder grew)
-RACEME = (160.0, 64.0, -8.0, 5, 6.6)    # heading, length, bend, florets, floret r (≥ 6 px off the thumb)
-FIST_L = (326.0, 424.0)
-FIST_R = (512.0, 444.0)                 # the mirror's knob shows whole below the little finger
-HAND_L = dict(shaft_w=9.0, back=-1, h=30.0)
-HAND_R = dict(shaft_w=12.0, back=+1, h=34.0)
-# each wrist out along its hand's axis, bent ≈ 40° toward the forearm (courtkit.fist_wrist)
-WRIST_L = tuple(K.fist_wrist(FIST_L, POSY["axis_deg"], bend=40.0, **HAND_L))
-WRIST_R = tuple(K.fist_wrist(FIST_R, -90.0, bend=40.0, **HAND_R))
-# the forearms continue the wrists' sweep (≤ 15° more bend at the cuff): the
-# elbows sit low and out under the mantle
-SLEEVE_L = (234.0, 552.0)
-SLEEVE_R = (612.0, 552.0)
+POSY_GRIP = (232.0, 440.0)
+POSY_W = 10.0
+POSY_MOUTH = (232.0, 392.0)
+POSY_FOOT = 484.0
+POSY_RUN, POSY_REACH = 78.0, 4.0
+LEAVES = ((-30.0, 46.0, 4.0), (-68.0, 54.0, 3.0), (-108.0, 50.0, -4.0))
+RACEME = (150.0, 40.0, 5.0, 4, 5.8)
 
 
-def posy_parts():
-    po = Q.laurel_posy(POSY["mouth"], POSY["axis_deg"], holder_len=POSY_LEN,  # the knob (and its halo) end inside the fist
+def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=12.0, curl=-5.0, elbow_r=9.0):
+    """The cloak's own sleeve: a bell that opens from the cuff mouth toward the elbow, running
+    to the cloak's outer edge so the garment outline is the sleeve's far end."""
+    u = hand.wrist_dir
+    w = K.P(hand.wrist) - u * reach
+    n = np.array([u[1], -u[0]])
+    half = hand.wrist_w / 2
+    base = w + u * run
+    shape = K.R(K.Path(w + n * (half + cuff)).sag(w - n * (half + cuff), curl)
+                .sag(base - n * (half + cuff + flare), 1.5).line(base + n * (half + cuff + flare))
+                .sag(w + n * (half + cuff), 1.5).close().d)
+    shape = shape.buffer(-1.6).buffer(1.6)
+    elbow = shape.buffer(-elbow_r).buffer(elbow_r)
+    mouth = shape.intersection(Polygon([w - n * 60 - u * 4, w + n * 60 - u * 4,
+                                        w + n * 60 + u * 16, w - n * 60 + u * 16]))
+    return K.U(elbow, mouth).intersection(QG.mantle().buffer(1.0))
+
+
+def _arc(hand, reach, offset, half, curl):
+    u = hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    m = K.P(hand.wrist) - u * reach + u * offset
+    path = K.Path(m + n * half).sag(m - n * half, curl)
+    return np.asarray(K.C.sample_d(path.d, 0.3)[0][0])
+
+
+def cuff_band(hand, sleeve, *, reach, width=11.0, curl=-5.0, cuff=3.0):
+    """The red turn-back band at the sleeve's mouth: (region, MEDIUM back line, drip knockouts)."""
+    half = hand.wrist_w / 2 + cuff + 8.0
+    front = _arc(hand, reach, -5.0, half, curl)
+    back = _arc(hand, reach, width, half, curl)
+    band = Polygon(np.vstack([front, back[::-1]])).buffer(0).intersection(sleeve)
+    band = band.buffer(-0.8).buffer(0.8)
+    edge = LineString(back).intersection(sleeve.buffer(-0.3))
+    line = C.Frag()
+    for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
+        if g.length > 8.0:
+            line += K.line(C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
+    return band, line, edge
+
+
+def drip_fringe(hand, sleeve, edge, *, width, reach, n=3, pitch=7.8, l_min=3.0, l_max=14.0):
+    """§G.14 drip fringe: paper strokes with Ø6.3 terminals hanging from the band's back line down
+    the sleeve (KNOCKED out of the jade). A drip that would not keep paper clear of the outline
+    is dropped whole. Returns their shapes."""
+    u = hand.wrist_dir
+    nn = np.array([u[1], -u[0]])
+    inner = sleeve.buffer(-(K.MEDIUM / 2 + K.GAP_MARK), quad_segs=12)
+    mid = K.P(hand.wrist) - u * reach + u * width
+    cross = LineString([tuple(mid + nn * 80), tuple(mid - nn * 80)]).intersection(sleeve)
+    if cross.is_empty:
+        return Polygon()
+    cross = max(K._lines_of(cross), key=lambda g: g.length)
+    c0 = np.asarray(cross.interpolate(0.5, normalized=True).coords[0])
+    out = []
+    for i in range(n):
+        off = (i - (n - 1) / 2) * pitch
+        t = (i + 0.5) / n
+        Lk = l_min + (l_max - l_min) * math.sin(math.pi * t)
+        p0 = c0 + nn * off + u * 1.0
+        p1 = p0 + u * (Lk + 2.0)
+        body = LineString([tuple(p0), tuple(p1)]).buffer(K.MEDIUM / 2).union(
+            Point(*p1).buffer(K.TD / 2, quad_segs=12))
+        if inner.contains(body):
+            out.append(body)
+    return K.U(*out) if len(out) == n else Polygon()
+
+
+def sleeve_edges(sleeve, keep):
+    """The sleeve's long folds: its edges inside the cloak (the cloak outline carries the rest)."""
+    out = K.C.Frag()
+    edge = K.R(sleeve).boundary.intersection(keep)
+    for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
+        if g.length > 6.0:
+            out += K.line(K.C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
+    return out
+
+
+def sleeve_grain(hand, sleeve, avoid, *, inset=6.5):
+    """Hatch along the forearm axis, so the sleeve grain differs from the mantle's."""
+    u = hand.wrist_dir
+    ang = float(np.degrees(np.arctan2(u[1], u[0])))
+    zone = sleeve.buffer(-inset).difference(avoid)
+    return QG.drop_short(K.hatch_in(zone, angle=ang, origin=tuple(hand.wrist)), 10.0)
+
+
+def sleeved_hand(hand, sleeve):
+    """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
+    region = K._biggest(hand.shape.difference(sleeve))
+    inner = hand.hand.meta.get("inner", K.C.Frag())
+    return K.Part(region, K.C.Frag(), K.outline(region) + K.clip_in(inner, region.buffer(-5.0)),
+                  {**hand.hand.meta, "hand_region": region})
+
+
+def held_attribute(attribute, hand_cuff, *, keep=lambda m: m.role != "outline"):
+    """One outline at the hand and the held object, without a halo."""
+    joined = K.U(attribute.shape, hand_cuff.shape)
+    fillet = joined.buffer(1.6).buffer(-1.6).intersection(hand_cuff.shape.buffer(8.0))
+    shape = K.U(joined, fillet).simplify(0.2)
+    fills = K.clip_in(attribute.fills, attribute.shape.difference(
+        hand_cuff.shape.buffer(-K.MEDIUM / 2))) + hand_cuff.fills
+    return K.Part(
+        shape, fills,
+        K.clip_out(attribute.lines.select(keep), hand_cuff.shape, eps=0.2, trap=0.0)
+        + hand_cuff.lines.select(lambda m: m.role != "outline")
+        + K.clip_in(K.outline(hand_cuff.shape, role="grip-edge"), attribute.shape.buffer(2.0))
+        + K.outline(shape, role="contour"), hand_cuff.meta)
+
+
+def merged(parts):
+    """Painter-ordered sub-composition of Parts (back to front) into one Part, with no silhouette."""
+    sub = K.Scene()
+    for name, p in parts:
+        sub.part(name, p)
+    return K.Part(sub.silhouette(), K.C.Frag(), sub.compose(contour=None, heal_gaps=False), {})
+
+
+def mirror_part():
+    mir = Q.mirror(MIRROR_C, 41.0, 55.0, handle_to=486.0, knop_y=482.0, handle_w=HANDLE_W,
+                   sal_build=QSAL.salamander)
+    lines = mir.lines.select(lambda m: m.role != "outline") + K.outline(K.circle(MIRROR_C, 41.0))
+    return K.Part(mir.shape, mir.fills, lines, mir.meta)
+
+
+def posy_part():
+    po = Q.laurel_posy(POSY_MOUTH, -90.0, holder_len=POSY_FOOT - POSY_MOUTH[1], holder_w=(POSY_W, POSY_W),
                        leaves=LEAVES, raceme=RACEME, layered=True)
-    return po
+    return merged([("raceme", po["raceme"]), ("laurel", po["leaves"]), ("holder", po["holder"])])
 
 
 def region(pts):
     return K.R(B.cspline(pts)).buffer(0)
 
 
-def head_group(front=None):
-    """``front``: the region (head frame) of what stands in front of the far
-    lock's lower end (the posy, its fist and their paper channels): the lock's
-    current lines end where they first run in behind it, instead of
-    re-emerging below the leaves as stubs and an orphan curl by the holder."""
+def head_group():
     fc = QF.oracle_face(HEAD, crease=True, dot_dx=0.0, eye_dy=13.0, mouth_dy=33.0, lip_dy=40.0, lip_sag=-1.4,
                         lip_hw=4.6, brow_in=8.0)
     veil = region(VEIL)
@@ -120,7 +234,7 @@ def head_group(front=None):
     dome = veil.difference(below).difference(fc.skin.difference(above))
     neck = K.neck(fc, bottom=318.0, width=32.0)
     hide = K.U(fc.skin, neck.shape, dome)
-    lf = B.lock_part(HAIR_F_OUT, HAIR_F_IN, n=2, side=+1, stagger=10.0, hide=hide, stop=front)
+    lf = B.lock_part(HAIR_F_OUT, HAIR_F_IN, n=2, side=+1, stagger=10.0, hide=hide)
     ln = B.lock_part(HAIR_N_OUT, HAIR_N_IN, n=3, side=-1, stagger=10.0, hide=hide)
     head = K.Part(fc.skin, C.Frag(), fc.lines + K.outline(fc.head), {})
     face_low = fc.skin.difference(above)
@@ -130,51 +244,55 @@ def head_group(front=None):
 
 
 def figure():
-    sc = K.Scene(rank="Q")
-    posy = posy_parts()
-    handL = K.fist(FIST_L, POSY["axis_deg"], wrist=WRIST_L, wrist_w=24.0, hand="R", **HAND_L)
-    front = K.U(posy["holder"].shape, posy["leaves"].shape, posy["raceme"].shape, handL.hand.shape)
-    hg = head_group(front=Q.rot_geom(front.buffer(K.HALO, quad_segs=8), -TILT, PIVOT))
+    sc = K.Scene()
+    hg = head_group()
+    fc = hg["fc"]
+    size = K.hand_size(fc) * HAND_SCALE
     R_ = lambda p: Q.rot_part(p, TILT, PIVOT)                       # noqa: E731
     rg = lambda g: Q.rot_geom(g, TILT, PIVOT)                       # noqa: E731
     veil, face_low, hair_low = rg(hg["veil"]), rg(hg["face_low"]), rg(hg["hair_low"])
     diad, lf, ln, head, neck = [R_(hg[k]) for k in ("diad", "lf", "ln", "head", "neck")]
 
+    # oracle's LEFT (viewer's right): wrap on the mirror handle, thumb up, forearm out and down
+    h_m = K.hand5(MIRROR_GRIP, -90.0, "wrap", size=size, hand="L", view="back", grip_w=HANDLE_W)
+    sl_m = sleeve_end(h_m, run=MIRROR_RUN, reach=MIRROR_REACH)
+    # oracle's RIGHT (viewer's left): wrap on the posy-holder, thumb up, forearm out and down
+    h_p = K.hand5(POSY_GRIP, -90.0, "wrap", size=size, hand="R", view="back", grip_w=POSY_W)
+    sl_p = sleeve_end(h_p, run=POSY_RUN, reach=POSY_REACH)
+
+    bands, band_lines, drips, grains = [], C.Frag(), [], C.Frag()
+    for h, sl, reach in ((h_m, sl_m, MIRROR_REACH), (h_p, sl_p, POSY_REACH)):
+        b, bl, edge = cuff_band(h, sl, reach=reach)
+        dz = drip_fringe(h, sl, edge, width=11.0, reach=reach)
+        bands.append(b)
+        band_lines += bl
+        drips.append(dz)
+        grains += sleeve_grain(h, sl, K.U(b.buffer(5.5), dz.buffer(5.5)))
+    sleeves = K.U(sl_m, sl_p)
+    keep = QG.mantle().buffer(-0.4)
+
+    cuff_m, cuff_p = sleeved_hand(h_m, sl_m), sleeved_hand(h_p, sl_p)
+    held_m = held_attribute(mirror_part(), cuff_m)
+    held_p = held_attribute(posy_part(), cuff_p, keep=lambda m: True)
+
+    seam = LineString(F.seam_spec(SEAM)["points"])
+    neckline = K.U(lf.shape, ln.shape, head.shape, neck.shape, veil)
+    brooch = K.lion_clasp((388.0, 322.0), 40.0)
+    robes = QG.garments(K.U(held_m.shape, held_p.shape, neckline, brooch.shape),
+                        sleeves=sleeves, bands=K.U(*bands), band_lines=band_lines, drips=K.U(*drips),
+                        sleeve_grain=grains, sleeve_edges=sleeve_edges(sl_m, keep) + sleeve_edges(sl_p, keep),
+                        seam=seam)
+
     # ---- back to front -----------------------------------------------------------
+    ruff = K.Scene()
     for i, (r0, t1, sg, sd, wd) in enumerate(PLUMES):
-        sc.part(f"plume{i}", Q.plume(r0, t1, sag=sg, width=wd, n=5, side=sd, hatch=10.5, depth=3.0))
-    mreg = region(MANTLE)
-    m_in, m_seam = GB.bordered(mreg, 30.0)
-    pk = os.environ.get("QS_PAT", "karst")
-    if pk == "drops":
-        m_pat = GB.drops(m_in, pitch=(30.0, 30.0), origin=(388.0, 330.0))
-    elif pk == "ripples":
-        m_pat = GB.ripple_drops(m_in, pitch=(46.0, 40.0), origin=(388.0, 330.0))
-    elif pk == "karst":
-        # voids stop clear of the band rule (none sits cut on it where the forearm left the mantle open)
-        m_pat = K.pattern(m_in.intersection(K.box(0.0, 0.0, 750.0, 511.0 - K.GAP_MARK)), "karst",
-                          origin=(388.0, 330.0), pitch=(28.0, 22.0))
-    elif pk == "strata":
-        m_pat = K.pattern(m_in, "strata", heights=(12.0, 19.0), hatched="thin", y0=330.0)
-    else:
-        m_pat = C.Frag()
-    sc.part("mantle", K.Part(mreg, K.fill(mreg, K.JADE), K.outline(mreg) + m_seam + m_pat, {}))
-    for nm, pts, mid in (("liningL", LINING_L, LINING_L_MID), ("liningR", LINING_R, LINING_R_MID)):
-        r_ = region(pts)
-        holes = GB.drop_column(r_, B.open_spline(mid), r=(3.2, 4.4), gap=4.0)
-        if nm == "liningL":
-            holes = K.clear_of_hand(holes, handL.hand.shape)      # no drop half under the fingertips
-        sc.part(nm, K.Part(r_, K.fill(r_.difference(holes), K.RED), K.outline(r_), {}))
-    gr = region(GOWN)
-    g_lines = K.outline(gr)
-    fold = B.open_spline(GOWN_FOLD)
-    g_lines += C.stroke(C.polyline_d(fold), K.FINE, role="gown-fold") + K.dot(fold[0], K.TD, role="gown-fold-t")
-    for (x, y) in GOWN_SEAM:
-        g_lines += K.dot((x, y), 4.2, role="seam-dot")
-    sc.part("gown", K.Part(gr, C.Frag(), g_lines, {}))
+        ruff.part(f"plume{i}", Q.plume(r0, t1, sag=sg, width=wd, n=5, side=sd, hatch=10.5, depth=3.0))
+    rf = ruff.compose(contour=None)
+    sc.part("ruff", K.Part(ruff.silhouette(), C.Frag(), rf, {}))
+    sc.part("robes", robes)
     # the veil: everything of it that is not behind the face, the hair below
-    # its hem, the neck or the mantle (it hides the ruff's roots and the hair's)
-    vf = veil.difference(K.U(face_low, hair_low, neck.shape, mreg, region(LINING_L), region(LINING_R), gr))
+    # its hem, the neck or the garments (it hides the ruff's roots and the hair's)
+    vf = veil.difference(K.U(face_low, hair_low, neck.shape, robes.shape))
     vf = K.U(*[g for g in K._polys_of(vf) if g.area > 40.0])
     guide = np.asarray([Q.rot_pt(p_, TILT, PIVOT) for p_ in B.open_spline(VEIL_GUIDE)])
     v_lines = C.Frag()
@@ -185,11 +303,11 @@ def figure():
     segs = [g for g in K._lines_of(off.intersection(vf.difference(diad.shape).buffer(0.5))) if g.length > 20]
     if segs:
         dome = min(segs, key=lambda g: g.bounds[1])
-        keep = [dome]
+        keep_ = [dome]
         if "end" in diad.meta:
             e_ = Point(*diad.meta["end"])
-            keep += [g for g in segs if g is not dome and g.distance(e_) < 8.0]
-        for g in keep:
+            keep_ += [g for g in segs if g is not dome and g.distance(e_) < 8.0]
+        for g in keep_:
             v_lines += K.line(C.polyline_d(np.asarray(g.coords)), K.FINE, role="veil-fold")
     sc.part("neck", neck)
     sc.part("lockF", lf)
@@ -197,47 +315,18 @@ def figure():
     sc.part("head", head)
     sc.part("veil", K.Part(vf, C.Frag(), K.outline(vf) + v_lines, {}))
     sc.part("diadem", diad)
-    sc.part("brooch", K.lion_clasp((388.0, 322.0), 40.0))
-
-    # ---- arms, attributes, hands ---------------------------------------------------
-    # no fold line: the §H.2 drip fringe hangs down the forearm from each cuff instead
-    slL, cfL = K.sleeve(K.SleeveSpec(base=SLEEVE_L, wrist=WRIST_L, sag=6.0, width=54.0, wrist_w=32.0,
-                                     cuff=14.0, folds=0, color=K.JADE, cuff_color=K.RED))
-    slR, cfR = K.sleeve(K.SleeveSpec(base=SLEEVE_R, wrist=WRIST_R, sag=-6.0, width=56.0, wrist_w=34.0,
-                                     cuff=14.0, folds=0, color=K.JADE, cuff_color=K.RED))
-    sc.part("sleeveL", Q.drip_fringe_ko(slL, cfL), halo=K.HALO, halo_only=("mantle",))
-    sc.part("sleeveR", Q.drip_fringe_ko(slR, cfR), halo=K.HALO, halo_only=("mantle",))
-    # the grip ends inside the foot knop (its corners no longer stand proud of the knop's round)
-    mir = Q.mirror(MIRROR_C, 41.0, 55.0, handle_to=486.0, knop_y=482.0, handle_w=14.0, sal_build=QSAL.salamander)
-    sc.part("mirror", mir, halo=K.HALO, halo_only=("mantle", "liningR", "plume5", "plume3", "lockN", "sleeveR"))
-    sc.part("laurel", posy["leaves"], halo=K.HALO, halo_only=("mantle", "liningL", "plume4", "lockF"))
-    sc.part("raceme", posy["raceme"], halo=K.HALO, halo_only=("mantle", "sleeveL", "liningL"))
-    sc.part("holder", posy["holder"], halo=K.HALO, halo_only=("liningL", "mantle"))   # as the laurel: no red wedge by the thumb
-    sc.part("cuffL", cfL)
-    sc.part("cuffR", cfR)
-    # the ground pinched between the thumb, the holder and the raceme turns to paper
-    Q.paper_pocket(sc, "handL~pocket", ("holder", "raceme", "laurel"), K.box(292.0, 392.0, 322.0, 420.0),
-                   host=handL.hand.shape, halo_only=("liningL", "mantle"))
-    handL.add_to(sc, "handL", halo=0.0)
-    K.fist(FIST_R, -90.0, wrist=WRIST_R, wrist_w=26.0, hand="L", **HAND_R).add_to(sc, "handR", halo=0.0)
-    K.band_guard(sc, "Q")
-    fill_pinholes(sc)
+    sc.part("brooch", brooch)
+    sc.part("mirror+hand+sleeve", held_m)
+    sc.part("posy+hand+sleeve", held_p)
     return sc
 
 
-def fill_pinholes(sc, max_area=40.0):
-    """The veil, head and circlet leave sub-pixel slits in the silhouette
-    union; stroked at CONTOUR each becomes an ink dot (and a QA 12 near-miss).
-    An empty item at the very BACK (it hides nothing) closes them."""
-    sil = sc.silhouette()
-    holes = [Polygon(r) for pg in K._polys_of(sil) for r in pg.interiors if Polygon(r).area < max_area]
-    if holes:
-        sc.items.insert(0, K.Item("pinholes", C.Frag(), K.U(*holes).buffer(0.6), True))
-
-
-def compose_scene(sc):
-    return FIN.compose(sc)
-
-
 def build():
-    return K.layers(compose_scene(figure()))
+    f = figure().compose()
+    # red tucked under a thick ink junction (two plume contours meeting the silhouette) is
+    # invisible; QA 4c reads it as art hidden under a plate, so cut it
+    r_ = T.CONTOUR / 2 + 0.3
+    solid = f.shape("ink").buffer(-r_ - 1.0).buffer(r_ + 1.0).buffer(-1.0)
+    red = K.clip_out(C.Frag([m for m in f.marks if m.layer == "red" and m.kind == "fill"]), solid, eps=0.0, trap=0.0)
+    f = C.Frag([m for m in f.marks if not (m.layer == "red" and m.kind == "fill")] + list(red.marks), f.meta)
+    return K.layers(f)
