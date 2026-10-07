@@ -1,0 +1,161 @@
+{
+ "source_commits": {
+  "original": "b4e26982",
+  "checkpoint3": "90a950d4",
+  "now": "b4561372"
+ },
+ "hand_zoom": 6,
+ "closeup_zoom": 12,
+ "crop_windows_xywh": {
+  "KH-pole-now": [
+   438,
+   400,
+   180,
+   150
+  ],
+  "KH-pole-cp3": [
+   465,
+   398,
+   180,
+   150
+  ],
+  "KH-chalice-now": [
+   116,
+   322,
+   180,
+   150
+  ],
+  "KH-chalice-cp3": [
+   116,
+   324,
+   180,
+   150
+  ],
+  "QH-stem-now": [
+   484,
+   364,
+   180,
+   150
+  ],
+  "QH-stem-cp3": [
+   484,
+   364,
+   180,
+   150
+  ],
+  "QH-rest-now": [
+   274,
+   354,
+   180,
+   150
+  ],
+  "QH-rest-cp3": [
+   274,
+   354,
+   180,
+   150
+  ],
+  "JH-fiddle-now": [
+   450,
+   236,
+   180,
+   150
+  ],
+  "JH-fiddle-cp3": [
+   468,
+   210,
+   180,
+   150
+  ],
+  "JH-bow-now": [
+   135,
+   322,
+   180,
+   150
+  ],
+  "JH-bow-cp3": [
+   135,
+   310,
+   180,
+   150
+  ]
+ },
+ "flags": [
+  "hand5 wrap PALM view weakest back/palm read",
+  "wrap thumb reads as mitten",
+  "QH stem sleeve ~35 px visible",
+  "JH sleeve ends slightly boxy"
+ ],
+ "scene_items": {
+  "KH": [
+   26,
+   10,
+   10
+  ],
+  "QH": [
+   42,
+   4,
+   4
+  ],
+  "JH": [
+   26,
+   4,
+   4
+  ]
+ },
+ "qa": {
+  "KH": {
+   "pass": 15,
+   "fail": 0,
+   "warn": 1
+  },
+  "QH": {
+   "pass": 15,
+   "fail": 0,
+   "warn": 1
+  },
+  "JH": {
+   "pass": 15,
+   "fail": 0,
+   "warn": 1
+  }
+ },
+ "density": {
+  "KH": {
+   "ref": {
+    "score": 0.352754,
+    "low_detail_fraction": 0.081761
+   },
+   "now": {
+    "score": 0.391353,
+    "low_detail_fraction": 0.00207
+   },
+   "largest_flat_ref": 4116.0,
+   "largest_flat_now": 1102.0
+  },
+  "QH": {
+   "ref": {
+    "score": 0.372674,
+    "low_detail_fraction": 0.016097
+   },
+   "now": {
+    "score": 0.379633,
+    "low_detail_fraction": 0.005736
+   },
+   "largest_flat_ref": 1967.0,
+   "largest_flat_now": 757.0
+  },
+  "JH": {
+   "ref": {
+    "score": 0.315374,
+    "low_detail_fraction": 0.141104
+   },
+   "now": {
+    "score": 0.388601,
+    "low_detail_fraction": 0.021401
+   },
+   "largest_flat_ref": 11145.0,
+   "largest_flat_now": 596.0
+  }
+ }
+}
