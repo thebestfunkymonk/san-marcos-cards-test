@@ -56,31 +56,47 @@ def test_approved_continuous_scene_has_ten_integrated_items(composition):
     assert all(item.halo == 0 for item in scene.items)
 
 
-def test_two_face_scaled_wrapping_hands_without_legacy_arms(composition):
-    # The pole hand approaches from the tunic side, 14 px down the unchanged shaft.
-    assert KH.FIST == (527.4, 467.9)
-    assert KH.POLE_HAND_DEG == pytest.approx(KH.POLE_DEG + 180.0)
-    assert KH.CHAL_GRIP == (233.5, 394.0)
+
+
+def test_two_anatomical_wrapping_hands_without_legacy_arms(composition):
+    # Checkpoint 3: the king's left hand (viewer's right) holds the pole back-view with the
+    # thumb toward its upper end; the right hand (viewer's left) grips the stem, thumb up.
+    assert KH.FIST == (500.0, 470.0)
+    assert KH.POLE_DEG == -112.0
+    assert KH.POLE_HAND == ("L", "back")
+    assert KH.CHAL_GRIP == (233.5, 392.0)
     assert KH.HAND_SCALE == 0.82
     assert len(composition.hands) == 2
     face = K.face(KH.HEAD, "frontal", **KH.FACE_KW)
     expected = [
-        # Compensated for the wrap chirality fix: opposite letter (chalice: angle + 180), legacy lines.
-        (KH.FIST, KH.POLE_HAND_DEG, "L", "back", KH.POLE_WIDTH),
-        (KH.CHAL_GRIP, 90.0, "R", "back", 10.4),
+        (KH.FIST, KH.POLE_DEG, "L", "back", KH.POLE_WIDTH),
+        (KH.CHAL_GRIP, -90.0, "R", "back", 10.4),
     ]
-    for (args, kwargs, _), (at, angle, hand, view, grip) in zip(
-            composition.hands, expected):
+    for (args, kwargs, hand), (at, angle, letter, view, grip) in zip(composition.hands, expected):
         assert args == (at, angle, "wrap")
         assert kwargs["size"] == pytest.approx(K.hand_size(face) * 0.82)
-        assert kwargs["hand"] == hand
+        assert kwargs["hand"] == letter
         assert kwargs["view"] == view
         assert kwargs["grip_w"] == grip
-        assert kwargs["cues"] is False
+        assert "cues" not in kwargs
+        tips = hand.hand.meta["digit_tips"]
+        forearm = float(np.degrees(np.arctan2(hand.wrist_dir[1], hand.wrist_dir[0])))
+        thumb = np.asarray(hand.hand.meta["thumb_centerline"].coords[-1])
+        # Thumb above the index fingertip: it sits at the shaft's upper end.
+        assert thumb[1] < np.asarray(tips[0])[1] - 10.0
+        if letter == "L":
+            # Viewer's right: the wrist is on the outer side and the forearm leaves outward, not
+            # toward the tunic centre or up toward the chest.
+            assert hand.wrist[0] > at[0] + 20.0 and -10.0 <= forearm <= 90.0
+            assert np.asarray(tips[1])[0] < at[0]
+        else:
+            assert hand.wrist[0] < at[0] - 20.0 and 90.0 <= forearm <= 190.0
+            assert np.asarray(tips[1])[0] > at[0]
 
 
-def test_sleeves_are_jade_lapel_lobes_not_separate_cuff_stubs(composition):
+def test_sleeves_are_red_cloak_sleeves_from_the_outer_edge(composition):
     robes = next(item for item in composition.scene.items if item.name == "robes")
+    red = robes.frag.select(lambda m: m.kind == "fill" and m.layer == "red").shape()
     jade = robes.frag.select(lambda m: m.kind == "fill" and m.layer == "jade").shape()
     assert len(composition.sleeves) == len(composition.cuffs) == 2
     for sleeve_call, cuff_call, hand_call, held_call, name, run, reach in zip(
@@ -92,21 +108,24 @@ def test_sleeves_are_jade_lapel_lobes_not_separate_cuff_stubs(composition):
         assert cuff_sleeve is sleeve
         (attribute, hand_cuff), _, held = held_call
         assert hand_cuff is cuff
-        # The sleeve is the lapel's own region: jade fill covers it and no
-        # closed outline separates it from the tunic.
-        assert sleeve.difference(jade).area < 0.1
-        # A bold turn-back band parallels the cuff mouth inside the jade sleeve.
+        # The sleeve is the cloak's own: its visible part is red, never jade, and it runs
+        # out to the cloak's outer edge.
+        visible = sleeve.intersection(robes.occ).difference(cuff.shape.buffer(2.0))
+        assert visible.area > 300.0
+        assert visible.intersection(jade).area < 1.0
+        # Cream pleats are knocked out of the red plate, so close its holes before comparing.
+        assert red.buffer(4.0).buffer(-4.0).intersection(visible).area > 0.95 * visible.area
         assert any(mark.role == "cuffline" for mark in robes.frag.marks)
-        assert sleeve.area > 0.0
         mouth = K.P(hand.wrist) - hand.wrist_dir * reach
-        body = mouth + hand.wrist_dir * run
-        assert np.hypot(*(body - mouth)) <= 90.0
-        # The hand ends at the cuff mouth: its region is the hand minus the
-        # sleeve, with no separate cuff fill or cuff outline of its own.
+        far = max(np.hypot(*(np.asarray(p) - mouth)) for g in K._polys_of(visible)
+                  for p in g.exterior.coords)
+        assert far <= 90.0
+        # The sleeve end is on the outer side of the hand, away from the figure's axis.
+        assert abs(sleeve.centroid.x - KH.AX) > abs(hand.wrist[0] - KH.AX)
+        # The hand ends at the cuff mouth: its region is the hand minus the sleeve.
         assert not cuff.fills.marks
         assert cuff.shape.intersection(sleeve).area < 0.01
         assert cuff.shape.symmetric_difference(hand.shape.difference(sleeve)).area < 1.0
-        assert not any(mark.role == "cuffline" for mark in cuff.lines.marks)
         filleted = K.U(attribute.shape, cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.2)
         assert held.shape.symmetric_difference(filleted).area < 0.01
         assert any(mark.role == "grip-edge" for mark in held.lines.marks)
@@ -169,19 +188,17 @@ def test_original_chalice_and_graduated_bubbles_stay_clear_of_seam(composition):
     assert not K.c2(bubbles.shape).intersects(seam_band)
 
 
-def test_chalice_lapel_fills_enclosed_pocket_but_not_open_finger_notch(composition):
+def test_chalice_stands_on_the_red_cloak_and_pole_runs_along_the_jade_trim(composition):
     robes = next(item for item in composition.scene.items if item.name == "robes")
     jade = robes.frag.select(lambda mark: mark.kind == "fill" and mark.layer == "jade").shape()
     red = robes.frag.select(lambda mark: mark.kind == "fill" and mark.layer == "red").shape()
-    for point in (Point(249.7, 424.7), Point(500.3, 625.3)):
-        assert jade.contains(point)
-        assert not red.contains(point)
-    for point in (Point(221.8, 404.4), Point(528.2, 645.6)):
+    for point in (Point(207.0, 440.0), Point(543.0, 610.0)):
         assert red.contains(point)
         assert not jade.contains(point)
-    trim_ink = robes.frag.select(lambda mark: mark.role == "outline").shape()
-    for point in (Point(253.5, 419.7), Point(496.5, 630.3)):
-        assert not trim_ink.intersects(point.buffer(2.0))
+    # The trim bulges around the pole's upper shaft, so no wedge of cloak lies beside it.
+    for point in (Point(458.0, 340.0), Point(292.0, 710.0)):
+        assert jade.contains(point)
+        assert not red.contains(point)
 
 
 def test_art_is_deterministic():

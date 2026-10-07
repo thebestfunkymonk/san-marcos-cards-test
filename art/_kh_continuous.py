@@ -30,7 +30,8 @@ def _lens(half_w, throat):
     return K.R(K.circle(g["cL"], g["R"])).intersection(K.R(K.circle(g["cR"], g["R"])))
 
 
-def garments(front, neckline, grip, *, pocket_front=None, cuff_bands=None):
+def garments(front, neckline, sleeves, *, pocket_front=None, cuff_bands=None, sleeve_stripes=None,
+              skim=None, skim_r=18.0, skim_y=468.0):
     # Union first, outline once: neither mantle carries a hidden horizontal hem.
     shape = K.R("M375 256 C310 271 240 294 195 314 "
                 "C170 322 169 340 168 365 C164 423 155 475 155 525 "
@@ -41,10 +42,16 @@ def garments(front, neckline, grip, *, pocket_front=None, cuff_bands=None):
                 "C510 294 440 271 375 256 Z")
     field = _lens(92.0, 280.0).intersection(shape)
     trim_outer = _lens(138.0, 250.0).intersection(shape)
-    # Blend the trim into the grip at its re-entrant corner, so no needle of
-    # red is trapped between the little finger and the robe's jade edge.
-    joined = trim_outer.union(K.c2(grip))
-    trim_outer = joined.buffer(4.0).buffer(-4.0).intersection(shape)
+    # The sleeves are the red cloak's own: carved out of the jade trim so the cloak runs
+    # unbroken from the outer edge to the cuff mouth.
+    sleeve_zone = K.c2(sleeves)
+    trim_outer = trim_outer.difference(sleeve_zone)
+    if skim is not None:
+        # Where a held shaft runs alongside the trim edge, the trim bulges around it, so the
+        # trim outline and the shaft contour never run as a shallow pair of strokes.
+        near = K.c2(skim).buffer(skim_r).intersection(trim_outer.buffer(60.0)) \
+            .intersection(K.c2(K.box(0.0, 0.0, 750.0, skim_y)))
+        trim_outer = trim_outer.union(near).intersection(shape).difference(sleeve_zone)
     if pocket_front is not None:
         # Assign enclosed grip pockets to the lapel, without extending its
         # fillet into the hand's open distal finger notches.
@@ -102,13 +109,16 @@ def garments(front, neckline, grip, *, pocket_front=None, cuff_bands=None):
     chest = field.buffer(-7.0).difference(blockers.buffer(7.3))
     lines += K.hatch_in(chest, origin=(K.AX, 525.0))
     # Restore the dense half-drop ripple textile, as a whole-card C2 course.
-    avoid = K.U(blockers.buffer(7.0), bead_shape.buffer(4.0))
+    avoid = K.U(blockers.buffer(7.0), bead_shape.buffer(4.0), sleeve_zone.buffer(5.0))
     ripple_left = red.intersection(K.box(0, 0, K.AX, 1050))
     rip = KP.ripple_textile(ripple_left, ry=(3.8, 10.2, 16.6), aspect=0.72,
                            pitch=(58.0, 42.0), origin=(K.AX, 294.0), mirror=False)
     starts = rip.meta["starts"]
     rip = KP.close_starts(K.clip_out(rip, avoid, eps=0.0, trap=0.0), starts)
     rip = K.c2(rip)
+    if sleeve_stripes is not None:
+        # Pleats along each sleeve, knocked out of the red like the ripple rings.
+        rip += K.c2(sleeve_stripes)
     # Knock the pearls into the red plate, without a paper surround.
     bead_fill = K.U(*[K.R(m.d) for m in beads.marks if m.kind == "fill"])
     red_fill = K.R(C.knockout(K.D(red), rip)).difference(bead_fill)
@@ -124,6 +134,10 @@ def garments(front, neckline, grip, *, pocket_front=None, cuff_bands=None):
     lines += contours
     if cuff_bands is not None:
         lines += K.clip_out(K.c2(cuff_bands), K.c2(front), eps=1.6, trap=0.0)
+    # The sleeve's long edges are fold lines that start on the cloak's own outline.
+    sleeve_edges = K.clip_in(K.outline(sleeve_zone), shape.buffer(-0.4))
+    sleeve_edges = K.clip_out(sleeve_edges, trim_outer.buffer(1.0), eps=0.0, trap=0.0)
+    lines += K.clip_out(sleeve_edges, K.c2(front), eps=1.6, trap=0.0)
 
     # Both decorations are apertures in the jade chest, not extra Scene plates.
     fills = K.clip_out(fills, apertures, eps=0.0, trap=0.0) + decoration.fills

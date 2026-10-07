@@ -5,7 +5,7 @@ from dataclasses import replace
 
 import numpy as np
 import shapely
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Polygon
 
 from deck import courtkit as K
 from art import _kh_head as KHH
@@ -16,17 +16,20 @@ DOUBLE_HEAD = "continuous"
 SEAM = -20
 AX = K.AX
 HEAD = (AX, 207.0)
-FIST = (527.4, 467.9)
-POLE_TOP = (271.5, 55.0)
-POLE_BUTT = (543.2, 493.4)
-POLE_DEG = float(np.degrees(np.arctan2(POLE_TOP[1] - 456.0, POLE_TOP[0] - 520.0)))
-# The palm lies on the tunic side of the shaft, so the sleeve is the jade lapel.
-POLE_HAND_DEG = POLE_DEG + 180.0
+# The king's left hand (viewer's right) holds the pole from the cloak side: back view, thumb
+# toward the pole's upper end, fingers wrapped round the far side toward the tunic. The pole
+# is steeper than before so the forearm leaves the wrist outward and slightly down.
+FIST = (500.0, 470.0)
+POLE_DEG = -112.0
+POLE_TOP = (FIST[0] + 436.0 * float(np.cos(np.radians(POLE_DEG))),
+            FIST[1] + 436.0 * float(np.sin(np.radians(POLE_DEG))))
+POLE_BUTT = (FIST[0] - 28.0 * float(np.cos(np.radians(POLE_DEG))),
+             FIST[1] - 28.0 * float(np.sin(np.radians(POLE_DEG))))
 POLE_HAND = ("L", "back")
-POLE_RUN = 40.0
-POLE_REACH = 16.0
-CHAL_RUN = 40.0
-CHAL_REACH = 20.0
+POLE_RUN = 84.0
+POLE_REACH = 11.0
+CHAL_RUN = 70.0
+CHAL_REACH = 12.0
 FACE_KW = dict(age="elder", lids="level", lid_sag=5.4, low_sag=3.0, brow_sag=5.0, brow_dy=-14.0,
                brow_drop=3.0, bow_rise=0.4, bow_sag=-2.2, lip_sag=-2.6, lip_hw=6.5)
 HAIR = K.HairSpec(bulge=(-64.0, 34.0), bottom=(-52.0, 66.0), ribbons=4, over=12.0)
@@ -38,7 +41,7 @@ BEARD_LOCKS = {"mode": "manual", "locks": [
 POLE_WIDTH = 18.0
 CHAL_X = 233.5
 CHAL_RIM = 292.0
-CHAL_GRIP = (CHAL_X, 394.0)
+CHAL_GRIP = (CHAL_X, 392.0)
 HAND_SCALE = 0.82
 
 
@@ -70,27 +73,51 @@ class Scene(KP.Scene):
         return artwork
 
 
-def sleeve_end(hand, *, run, reach=0.0, bell=11.0, neck=4.0, curl=5.0):
-    """The jade lapel's sleeve: a short bell running from the cuff mouth back
-    toward the tunic, so it is the garment's own region and not a separate cuff."""
+def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=14.0, curl=5.0):
+    """The cloak's own sleeve: a bell that opens from the cuff mouth toward the elbow, running
+    past the cloak's outer edge so the garment outline is the sleeve's outer end."""
     u = hand.wrist_dir
     w = K.P(hand.wrist) - u * reach
     n = np.array([u[1], -u[0]])
     half = hand.wrist_w / 2
     base = w + u * run
-    shape = K.R(K.Path(w + n * (half + bell)).sag(w - n * (half + bell), curl)
-                .sag(base - n * (half + neck), -2.0).line(base + n * (half + neck))
-                .sag(w + n * (half + bell), -2.0).close().d)
-    return shape.buffer(-1.6).buffer(1.6)
+    shape = K.R(K.Path(w + n * (half + cuff)).sag(w - n * (half + cuff), curl)
+                .sag(base - n * (half + cuff + flare), 1.5).line(base + n * (half + cuff + flare))
+                .sag(w + n * (half + cuff), 1.5).close().d)
+    return shape
 
 
-def cuff_band(hand_region, sleeve, *, offset=8.0):
+def cuff_band(hand, sleeve, *, reach, offset=9.0, cuff=3.0, curl=5.0):
     """A fine turn-back line parallel to the cuff mouth, inside the sleeve."""
-    edge = hand_region.buffer(offset).boundary.intersection(sleeve.buffer(0.5))
+    u = hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    mouth = K.P(hand.wrist) - u * reach + u * offset
+    half = hand.wrist_w / 2 + cuff + 8.0
+    path = K.Path(mouth + n * half).sag(mouth - n * half, curl)
+    pts = np.asarray(K.C.sample_d(path.d, 0.3)[0][0])
+    edge = LineString(pts).intersection(sleeve.buffer(-0.3))
     out = K.C.Frag()
     for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
         if g.length > 8.0:
             out += K.line(K.C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
+    return out
+
+
+def sleeve_stripes(hand, sleeve, *, start=20.0, inset=4.8, fans=(-0.6, 0.0, 0.6)):
+    """Cream pleats fanning from the cuff toward the elbow, knocked out of the red."""
+    u = hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    mouth = K.P(hand.wrist)
+    half = hand.wrist_w / 2 + 3.0
+    out = K.C.Frag()
+    zone = sleeve.buffer(-inset)
+    for f in fans:
+        a = mouth + u * start + n * (f * half * 1.2)
+        b = mouth + u * 160.0 + n * (f * half * 3.4)
+        seg = LineString([a, b]).intersection(zone)
+        for g in K._lines_of(seg):
+            if g.length > 12.0:
+                out += K.line(K.C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="pleat")
     return out
 
 
@@ -129,16 +156,15 @@ def figure():
     # hair/robe junction into detached rounded contour fragments.
     for part in [*hair, beard]:
         part.lines = part.lines.select(lambda m: m.role != "outline") + K.outline(part.shape, role="contour")
-    # Legacy wrap poses: hand5's wrap now draws the named hand, so the opposite letter (and
-    # cues=False, the pre-anatomy line set) reproduces this approved render until KH is re-posed.
-    # The pole hand keeps its angle; the chalice hand needs angle + 180 as well.
-    h = K.hand5(FIST, POLE_HAND_DEG, "wrap", size=K.hand_size(fc) * HAND_SCALE,
-                hand=POLE_HAND[0], view=POLE_HAND[1], grip_w=POLE_WIDTH, cues=False)
+    h = K.hand5(FIST, POLE_DEG, "wrap", size=K.hand_size(fc) * HAND_SCALE,
+                hand=POLE_HAND[0], view=POLE_HAND[1], grip_w=POLE_WIDTH)
     right_sleeve = sleeve_end(h, run=POLE_RUN, reach=POLE_REACH)
     right_cuff = sleeved_hand(h, right_sleeve)
-    left = K.hand5(CHAL_GRIP, 90.0, "wrap", size=K.hand_size(fc) * HAND_SCALE,
-                   hand="R", view="back", grip_w=10.4, spread=4.0, cues=False)
-    left_sleeve = sleeve_end(left, run=CHAL_RUN, reach=CHAL_REACH, bell=5.0)
+    # The king's right hand (viewer's left) grips the stem: fingers toward the tunic, thumb up
+    # toward the bowl, forearm down and out into the cloak's left edge.
+    left = K.hand5(CHAL_GRIP, -90.0, "wrap", size=K.hand_size(fc) * HAND_SCALE,
+                   hand="R", view="back", grip_w=10.4, spread=4.0)
+    left_sleeve = sleeve_end(left, run=CHAL_RUN, reach=CHAL_REACH, flare=7.0)
     left_cuff = sleeved_hand(left, left_sleeve)
     u = K.unit(POLE_DEG)
     pole = KP.pole(K.P(POLE_BUTT), K.P(POLE_TOP) + u * 40.0, w=POLE_WIDTH,
@@ -159,9 +185,10 @@ def figure():
     # them. The complete hand is kept out: closing around it would spill jade
     # into its distal finger webs.
     garment = KC.garments(K.U(held.shape, cup.shape, bubbles.shape, neckline),
-                          neckline, K.U(right_sleeve, left_sleeve, chalice.shape),
+                          neckline, K.U(right_sleeve, left_sleeve),
                           pocket_front=K.U(cup.shape, held.shape),
-                          cuff_bands=cuff_band(right_cuff.shape, right_sleeve) + cuff_band(left_cuff.shape, left_sleeve))
+                          cuff_bands=cuff_band(h, right_sleeve, reach=POLE_REACH) + cuff_band(left, left_sleeve, reach=CHAL_REACH),
+                          skim=pole.shape, sleeve_stripes=sleeve_stripes(h, right_sleeve) + sleeve_stripes(left, left_sleeve))
     sc = Scene(over_contour={"crown": 1.6}, stroke_ends={"crown": 1.6})
     collar = K.standing_collar(top_y=231.0, half_w=112.0, neck_y=262.0,
                                shoulder=(-130.0, 304.0), side_sag=-3.0, rim=9.5,
