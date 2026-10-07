@@ -24,8 +24,6 @@ knockouts and hiding as geometry (nothing paper-coloured is painted).
 * ``hair_bob``     page-boy hair with §G.24 current lines.
 * ``map_open``     the map held open between two rollers: triple wavy river
                    crossed by the dotted route.
-* ``sleeve_part`` / ``ford_brocade``  jade sleeves with the K♦ ford-stone
-                   brocade.
 """
 from __future__ import annotations
 
@@ -320,178 +318,12 @@ def rowel(c, r_out, *, hole=None, rot=-90.0, w=FINE):
     return sil, f
 
 
-def rowel_grid(region, *, pitch=(40.0, 36.0), r=9.0, origin=(382.0, 330.0), clear=4.3, hole=None,
-               visible=None, rot=-90.0):
-    """Gold rowels in a HALF-DROP grid (§H.12) inside ``region``: each kept
-    whole (atomic) ≥ ``clear`` px + FINE inside it; with ``visible`` only the
-    rowels that stay wholly visible (not under something in front) are kept.
-    → (list of silhouettes, Frag, list of core discs)."""
-    reg = K.R(region)
-    px, py = pitch
-    ox, oy = origin
-    x0, y0, x1, y1 = reg.bounds
-    inner = reg.buffer(-(clear + FINE / 2), quad_segs=12)
-    vis = K.R(visible).buffer(-(clear + FINE / 2), quad_segs=12) if visible is not None else None
-    sils, f, cores = [], C.Frag(), []
-    for i in range(int(math.floor((x0 - ox) / px)) - 1, int(math.ceil((x1 - ox) / px)) + 2):
-        off = py / 2 if i % 2 else 0.0                  # half-drop: alternate COLUMNS drop half a pitch
-        for j in range(int(math.floor((y0 - oy - off) / py)) - 1, int(math.ceil((y1 - oy - off) / py)) + 2):
-            x, y = ox + i * px, oy + off + j * py
-            sil = rowel_solid((x, y), r, rot=rot)
-            if not inner.contains(sil):
-                continue
-            if vis is not None and not vis.contains(sil):
-                continue
-            s_, fr = rowel((x, y), r, hole=hole, rot=rot)
-            sils.append(s_)
-            cores.append(s_.buffer(-3.6, quad_segs=8).buffer(3.6, quad_segs=8))   # where the gold is a solid (4c)
-            f += fr
-    return sils, f, cores
 
 
-# ---------------------------------------------------------------------------
-# the tabard
-# ---------------------------------------------------------------------------
-def ford_chain(reg, *, d_in=8.0, band=12.0, stone=11.0, pitch=20.0, bottom=511.0, keep=None, turn=22.0,
-               stop_y=None):
-    """A §G.23 stepping-stone chain run round the inside of region ``reg``
-    (the ♦ house edging, as on the Q♦ cape): two MEDIUM rails ``d_in`` and
-    ``d_in + band`` px in from the edge and lozenge stones between them, tips
-    on the rails — returned as INK marks for knocking out of the fill
-    (paper, never paint). Nothing runs along the band cut (below
-    ``bottom`` − 6). ``keep``: stones must lie inside it (else dropped whole).
-    ``stop_y``: the chain ends there (rails cut, stones above it only) — under
-    a belt that crosses the piece, so the skirt below it is plain."""
-    reg = K.R(reg)
-    x0, y0, x1, y1 = reg.bounds
-    if y1 > bottom - 1:
-        # the region runs on below the band cut: extrude its cross-section there (not its full
-        # width — on a T-shaped tabard that put a corner at the panel's edge and the rails turned
-        # out along it, two paper arcs beside the forearm)
-        bx0, _, bx1, _ = reg.intersection(K.box(-2000, bottom - 40, 4000, 4000)).bounds
-        ext = reg.union(K.box(bx0, bottom - 40, bx1, bottom + 80))
-    else:
-        ext = reg
-    cutoff = K.box(-10, -10, 2000, bottom + 30)
-    # the rails end at stop_y; the stones keep their places along the whole ring (only those below go)
-    rcut = cutoff if stop_y is None else K.box(-10, -10, 2000, stop_y)
-    f = C.Frag()
-    for d in (d_in, d_in + band):
-        ring = ext.buffer(-d, quad_segs=16).boundary.intersection(rcut)
-        for ln in K._lines_of(shapely.line_merge(ring) if ring.geom_type != "LineString" else ring):
-            if ln.length > 6:
-                f += C.stroke(np.asarray(ln.coords), MEDIUM, style="rule", color=INK, role="rail")
-    mid = ext.buffer(-(d_in + band / 2), quad_segs=16).boundary.intersection(cutoff)
-    kp = K.R(keep) if keep is not None else None
-    for ln in K._lines_of(shapely.line_merge(mid) if mid.geom_type != "LineString" else mid):
-        Lm = ln.length
-        n = max(1, int(Lm // pitch))
-        st = (Lm - (n - 1) * pitch) / 2 if n > 1 else Lm / 2
-        for k in range(n):
-            sp = st + k * pitch
-            p = ln.interpolate(sp)
-            q = ln.interpolate(min(sp + 1.0, Lm))
-            o = ln.interpolate(max(sp - 1.0, 0.0))
-            ang = math.degrees(math.atan2(q.y - o.y, q.x - o.x))
-            # no stone on a corner: the rails turn there, the stone would jam against them
-            qa, qb = ln.interpolate(max(sp - stone, 0.0)), ln.interpolate(max(sp - stone + 1.0, 0.0))
-            ra, rb = ln.interpolate(min(sp + stone - 1.0, Lm)), ln.interpolate(min(sp + stone, Lm))
-            a0 = math.degrees(math.atan2(qb.y - qa.y, qb.x - qa.x))
-            a1 = math.degrees(math.atan2(rb.y - ra.y, rb.x - ra.x))
-            if abs(((a1 - a0) + 180.0) % 360.0 - 180.0) > turn:
-                continue
-            ld = C.lozenge_d(p.x, p.y, stone, band, ang)
-            if kp is not None and not kp.contains(K.R(ld)):
-                continue
-            if stop_y is not None and K.R(ld).bounds[3] > stop_y - 1.0:
-                continue
-            f += C.fill(ld, color=INK, role="stone")
-    return f
 
 
-def tabard(reg, *, seams=(), border=10.0, rowels=None, trap=1.6, bottom=511.0, color=RED, cores=(),
-           chain=None, extra=None, cut=None) -> K.Part:
-    """A red tabard piece over region ``reg``: its edging either a plain
-    border closed by a FINE seam ``border`` px inside every edge but the band
-    cut, or (``chain`` = ford_chain kwargs) a §G.23 stepping-stone chain
-    KNOCKED OUT to paper; MEDIUM ``seams`` (polylines); gold ``rowels``
-    (silhouettes, Frag, cores) sitting on it — the red is CUT under each
-    rowel's core disc and under ``cores`` (solids in front: 1.6 px trap; the
-    rowel points are thinner than a CONTOUR, so no plate hides under another).
-    ``extra``: more red cloth beyond ``reg`` (under a part in front — the
-    chain still follows ``reg``); ``cut``: a region where the red is knocked
-    out to paper (a channel widened to the edge line; the outline stays)."""
-    reg0 = K.R(reg)
-    reg = reg0 if extra is None else K.U(reg0, extra)
-    x0, y0, x1, y1 = reg.bounds
-    ext = reg.union(K.box(x0 + 1, bottom - 40, x1 - 1, bottom + 60)) if y1 > bottom else reg
-    red = reg if cut is None else reg.difference(cut)
-    fills = C.Frag()
-    lines = K.outline(reg)
-    if chain is None and border:
-        inner_ext = ext.buffer(-border, quad_segs=12).intersection(reg)
-        lines += K.clip_in(C.stroke(K.D(inner_ext), FINE, role="seam"), K.box(0, 0, 2000, bottom + 20))
-    for sd in seams:
-        lines += K.clip_in(K.line(C.polyline_d(sd), MEDIUM, role="seam"), reg.buffer(-0.3))
-    for cg in cores:
-        red = red.difference(cg.buffer(-trap))
-    if rowels is not None:
-        sils, rf, rcores = rowels
-        for cg in rcores:
-            red = red.difference(cg.buffer(-trap))
-    red_d = K.D(red)
-    if chain is not None:
-        red_d = C.knockout(red_d, ford_chain(reg0, bottom=bottom, **chain))
-    fills += C.fill(red_d, color=color, role="fill")
-    if rowels is not None:
-        fills += rf.select(lambda m: m.layer != "ink")
-        lines += rf.select(lambda m: m.layer == "ink")
-    return K.Part(reg, fills, lines, {})
 
 
-# ---------------------------------------------------------------------------
-# cuffs
-# ---------------------------------------------------------------------------
-def gauntlet(W, u, *, width=36.0, flare=48.0, depth=36.0, height=26.0, n=2, mirror=False, top_sag=-2.5,
-             bottom_sag=3.0, sprig=None, bottom=511.0, grow=0.0) -> K.Part:
-    """A flared gold cuff from the wrist W (top edge across the arm) back down
-    the arm (−u) ``depth`` px, ``width`` → ``flare`` wide, carrying §G.31
-    tooled scroll (♦ cuffs only) across its middle: the deck's running
-    two-row motif, or with ``sprig`` = running_scroll kwargs (x_first, yc in
-    the cuff's frame: x across it, y down the arm from its middle) ONE unit
-    of the belt's scroll — the stem in from one side, a large eye volute, a
-    sessile leaf — its leaves kept only where they stand clear inside (and
-    clear above the band cut ``bottom``). ``grow``: px the cuff's −n side
-    (a1/b1) is widened by alone (to move that corner off a line behind)."""
-    W, u = P(W), np.asarray(u, float) / np.hypot(*u)
-    nrm = np.array([u[1], -u[0]])
-    a0, a1 = W + nrm * width / 2, W - nrm * (width / 2 + grow)
-    Bp = W - u * depth
-    b0, b1 = Bp + nrm * flare / 2, Bp - nrm * (flare / 2 + grow)
-    d = K.Path(a0).sag(a1, top_sag).line(b1).sag(b0, bottom_sag).close().d
-    reg = K.R(d)
-    lines = K.outline(reg)
-    L = (width + flare) / 2 + 1.0
-    ang = math.degrees(math.atan2(-nrm[1], -nrm[0]))
-    C0 = W - u * depth * 0.5
-    if sprig is not None:
-        # the cuff in its own frame (x across, y down the arm), so leaves are tested before placing
-        ex, ey = -nrm, -u
-        seen = reg.intersection(K.box(0.0, 0.0, 2000.0, bottom - K.GAP_MARK))
-        loc = shapely.transform(seen, lambda xy: np.column_stack([(xy - C0) @ ex, (xy - C0) @ ey]))
-        if mirror:
-            loc = shapely.transform(loc, lambda xy: xy * np.array([-1.0, 1.0]))
-        kw = dict(sprig)
-        kw.setdefault("lead_x", -L / 2 - 8.0)
-        kw.setdefault("tail", L)
-        sc = running_scroll(n=1, keep=loc.buffer(-(MEDIUM / 2 + K.GAP_MARK + FINE / 2 + 0.3)), **kw)
-    else:
-        sc = M.tooled_scroll(-L / 2, L / 2, 0.0, height=height, n=n)
-    if mirror:
-        sc = sc.mirror_x(0.0)
-    sc = sc.rotate(ang).translate(C0[0], C0[1])
-    lines += K.clip_in(sc, reg.buffer(-0.2))
-    return K.Part(reg, K.fill(reg, GOLD), lines, {})
 
 
 # ---------------------------------------------------------------------------
@@ -753,48 +585,3 @@ def lozenge_buckle(c, *, L=26.0, W=34.0, inner=(12.0, 16.0), color=GOLD, stone=R
     fills = K.fill(outer.difference(st), color) + K.fill(st, stone)
     lines = K.outline(outer) + K.outline(st)
     return K.Part(outer, fills, lines, {})
-
-
-def sleeve_part(reg, folds=(), *, color=JADE, brocade=None) -> K.Part:
-    """A doublet sleeve (jade) over region ``reg`` with MEDIUM fold lines
-    (G1 splines through each point list) running edge to edge — both ends
-    under something in front or on the band cut, so no free ends — and an
-    optional ♦ brocade (``brocade`` = ford_brocade kwargs: small outlined
-    ford stones in a half-drop grid, as on the K♦ mantle)."""
-    reg = K.R(reg)
-    lines = K.outline(reg)
-    fl = C.Frag()
-    for fp in folds:
-        fl += K.clip_in(K.line(spl(fp), MEDIUM, role="fold"), reg.buffer(-0.3))
-    lines += fl
-    if brocade is not None:
-        avoid = fl.shape() if fl.marks else None
-        lines += ford_brocade(reg, avoid=avoid, **brocade)
-    return K.Part(reg, K.fill(reg, color), lines, {})
-
-
-def ford_brocade(region, *, pitch=(26.0, 22.0), size=(12.0, 7.5), origin=(375.0, 300.0), avoid=None,
-                 color=INK, bottom=511.0) -> C.Frag:
-    """A half-drop grid of small outlined lozenges (the ♦ divider's stepping
-    stones strewn as a brocade; FINE Aquifer on jade, §C.4), each atomic
-    (kept whole or dropped), ≥ 4.3 px + FINE inside the region's CONTOUR
-    edge and ≥ 3 px clear of ``avoid`` (fold lines)."""
-    reg = K.R(region)
-    px, py = pitch
-    L, W = size
-    inner = reg.buffer(-(L / 2 + FINE / 2 + K.CONTOUR / 2 + 3.2))
-    av = K.R(avoid).buffer(FINE / 2 + 3.1) if avoid is not None else None
-    x0, y0, x1, y1 = reg.bounds
-    ox, oy = origin
-    f = C.Frag()
-    for j in range(int(math.floor((y0 - oy) / py)) - 1, int(math.ceil((y1 - oy) / py)) + 2):
-        off = px / 2 if j % 2 else 0.0
-        for i in range(int(math.floor((x0 - ox - off) / px)) - 1, int(math.ceil((x1 - ox - off) / px)) + 2):
-            x, y = ox + off + i * px, oy + j * py
-            if not inner.contains(Point(x, y)) or y + W / 2 + FINE / 2 + 3.4 > bottom:
-                continue
-            ld = C.lozenge_d(x, y, W, L, 90.0)
-            if av is not None and av.intersects(K.R(ld)):
-                continue
-            f += K.atomic(C.stroke(ld, FINE, style="point", color=color, role="stone"), f"brc{i}_{j}")
-    return f

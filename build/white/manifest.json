@@ -931,7 +931,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/KS.png",
   "print": null,
   "error": null,
-  "seconds": 13.45
+  "seconds": 12.94
  },
  {
   "id": "QS",
@@ -981,7 +981,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/QS.png",
   "print": null,
   "error": null,
-  "seconds": 23.84
+  "seconds": 26.01
  },
  {
   "id": "JS",
@@ -1031,7 +1031,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/JS.png",
   "print": null,
   "error": null,
-  "seconds": 104.07
+  "seconds": 117.89
  },
  {
   "id": "KH",
@@ -1081,7 +1081,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/KH.png",
   "print": null,
   "error": null,
-  "seconds": 15.68
+  "seconds": 18.24
  },
  {
   "id": "QH",
@@ -1131,7 +1131,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/QH.png",
   "print": null,
   "error": null,
-  "seconds": 66.71
+  "seconds": 86.3
  },
  {
   "id": "JH",
@@ -1181,7 +1181,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/JH.png",
   "print": null,
   "error": null,
-  "seconds": 17.85
+  "seconds": 21.68
  },
  {
   "id": "KC",
@@ -1231,7 +1231,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/KC.png",
   "print": null,
   "error": null,
-  "seconds": 12.69
+  "seconds": 15.75
  },
  {
   "id": "QC",
@@ -1281,7 +1281,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/QC.png",
   "print": null,
   "error": null,
-  "seconds": 55.92
+  "seconds": 61.89
  },
  {
   "id": "JC",
@@ -1331,7 +1331,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/JC.png",
   "print": null,
   "error": null,
-  "seconds": 22.85
+  "seconds": 28.76
  },
  {
   "id": "KD",
@@ -1381,7 +1381,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/KD.png",
   "print": null,
   "error": null,
-  "seconds": 8.25
+  "seconds": 10.09
  },
  {
   "id": "QD",
@@ -1431,7 +1431,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/QD.png",
   "print": null,
   "error": null,
-  "seconds": 6.71
+  "seconds": 7.73
  },
  {
   "id": "JD",
@@ -1440,7 +1440,33 @@
   "rank": "J",
   "suit": "D",
   "cut_y": 511,
-  "double_head": "band",
+  "double_head": "continuous",
+  "seam": {
+   "kind": "angle",
+   "points": [
+    [
+     -60.0,
+     463.865
+    ],
+    [
+     -21.107,
+     469.331
+    ],
+    [
+     375.0,
+     525.0
+    ],
+    [
+     771.107,
+     580.669
+    ],
+    [
+     810.0,
+     586.135
+    ]
+   ],
+   "angle": -8.0
+  },
   "status": "art",
   "stock": "white",
   "order": [
@@ -1455,7 +1481,7 @@
   "small": "/home/factory-user/san-marcos-cards-test/build/white/png/small/JD.png",
   "print": null,
   "error": null,
-  "seconds": 5.73
+  "seconds": 10.99
  },
  {
   "id": "JOKER_RED",
