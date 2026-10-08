@@ -33,6 +33,15 @@ SX = 508.0                                     # sceptre axis
 SC_TOP, SC_BOTTOM, FIN_C = 148.0, 452.0, (SX, 100.0)
 GRIP = (SX, 396.0)
 SC_RUN, SC_REACH = 80.0, 4.0
+SC_HW = 11.0
+FILLET, NECK_FILLET = 5.0, 7.0
+SWEEP, SLIT_FOOT = 14.0, 318.0
+HAIR_CLEAR = K.AVOID_MARGIN
+# front items' regions grown 0.2 px: lines behind them then end on the outline's centre line;
+# on the plain shape the 0.3 px trap and the clip tolerance end them inside it and their round
+# caps bulge into the fill in front (not the sceptre: grown, it made heal cut the sleeve edge
+# where the border seam meets it)
+OCC_GROW = 0.2
 
 ORB_X, ORB_R = 236.0, 33.0
 ORB_C = (ORB_X, 376.0)
@@ -40,6 +49,7 @@ ORB_GRIP = (ORB_X, 454.0)                      # the king's right hand wraps the
 ORB_FOOT = 494.0
 ORB_GAPS = (8.2, 10.6, 13.8)
 ORB_RUN, ORB_REACH = 80.0, 4.0
+ORB_BAND = 14.0                                # at 9 px its foot met the sleeve edge 1 px from the cuff mouth's hook
 
 
 def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=14.0, curl=-5.0, elbow_r=9.0):
@@ -57,7 +67,7 @@ def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=14.0, curl=-5.0, elbow_r
     elbow = shape.buffer(-elbow_r).buffer(elbow_r)
     mouth = shape.intersection(Polygon([w - n * 60 - u * 4, w + n * 60 - u * 4,
                                         w + n * 60 + u * 16, w - n * 60 + u * 16]))
-    return K.U(elbow, mouth).intersection(KG.barrel().buffer(1.0))
+    return K.U(elbow, mouth).intersection(KG.barrel())
 
 
 def cuff_band(hand, sleeve, *, reach, offset=9.0, curl=-5.0, cuff=3.0):
@@ -68,7 +78,11 @@ def cuff_band(hand, sleeve, *, reach, offset=9.0, curl=-5.0, cuff=3.0):
     half = hand.wrist_w / 2 + cuff + 8.0
     path = K.Path(mouth + n * half).sag(mouth - n * half, curl)
     pts = np.asarray(K.C.sample_d(path.d, 0.3)[0][0])
-    edge = LineString(pts).intersection(sleeve.buffer(-0.3))
+    t0, t1 = pts[0] - pts[1], pts[-1] - pts[-2]
+    pts = np.vstack([pts[:1] + t0 / np.hypot(*t0) * 8.0, pts, pts[-1:] + t1 / np.hypot(*t1) * 8.0])
+    # it may run on into the hand, which is drawn over it: the band then ends under the hand's
+    # contour rather than on the sleeve's undrawn edge a few px short of it
+    edge = LineString(pts).intersection(K.U(sleeve.buffer(-0.3), hand.shape))
     out = K.C.Frag()
     for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
         if g.length > 8.0:
@@ -86,11 +100,16 @@ def sleeve_edges(sleeve, keep):
     return out
 
 
-def sleeve_grain(hand, sleeve, *, inset=9.0):
-    """Hatch along the forearm axis, so the sleeve grain differs from the mantle's."""
+def sleeve_grain(hand, sleeve, *, inset=9.0, band=None):
+    """Hatch along the forearm axis, so the sleeve grain differs from the mantle's. ``band``: the
+    cuff band, which the grain keeps 3 px off (a grain end beside the band's foot made heal cut
+    the band short of the sleeve edge)."""
     u = hand.wrist_dir
     ang = float(np.degrees(np.arctan2(u[1], u[0])))
-    return K.hatch_in(sleeve.buffer(-inset), angle=ang, origin=tuple(hand.wrist))
+    region = sleeve.buffer(-inset)
+    if band is not None and band.marks:
+        region = region.difference(band.shape().buffer(K.GAP_MARK + K.FINE / 2 + 0.2))
+    return K.hatch_in(region, angle=ang, origin=tuple(hand.wrist))
 
 
 def sleeved_hand(hand, sleeve):
@@ -116,7 +135,7 @@ def held_attribute(attribute, hand_cuff):
 
 def sceptre_part():
     """The seven-segment core sceptre, with a collar and a ferrule at its foot."""
-    spec = K.SceptreSpec(x=SX, hw=11.0, collar_hw=14.5, top=SC_TOP, bottom=SC_BOTTOM,
+    spec = K.SceptreSpec(x=SX, hw=SC_HW, collar_hw=14.5, top=SC_TOP, bottom=SC_BOTTOM,
                          finial_c=FIN_C, visible_to=None)
     sp = K.sceptre(spec)
     collar = K.R(K.rrect(SX - 14.5, SC_BOTTOM - 3.7, SX + 14.5, SC_BOTTOM + 3.7, 3.2))
@@ -126,6 +145,11 @@ def sceptre_part():
     lines = K.clip_out(sp.lines, collar, eps=-0.5, trap=0.0) + K.outline(collar) \
         + K.clip_out(K.outline(foot), collar, eps=-0.5, trap=0.0)
     shape = K.U(sp.shape, both)
+    # Fillet the inside corners (finial neck, bead collars, ferrule) so the stroked contour has no
+    # round-join knob on the gold side and no notch on the paper side; the neck's V is the deepest.
+    neck = K.box(0.0, FIN_C[1] + 18.0, 2000.0, SC_TOP + 6.0)
+    shape = K.U(shape.buffer(FILLET, quad_segs=16).buffer(-FILLET, quad_segs=16),
+                shape.buffer(NECK_FILLET, quad_segs=16).buffer(-NECK_FILLET, quad_segs=16).intersection(neck))
     return K.Part(shape, K.fill(shape, K.GOLD) + sp.fills.select(lambda m: m.color != K.GOLD), lines, sp.meta)
 
 
@@ -154,6 +178,35 @@ def orb_part():
     return K.Part(shape, K.fill(shape, K.GOLD), lines, {"c": K.P(ORB_C), "r": ORB_R}), bc
 
 
+def collar_part():
+    """The standing collar. Its sceptre-side edge ran 2–3 px of paper beside the sceptre (and
+    touched it at a node), so on that side the collar runs on behind the sceptre: the corner is
+    swept along the top edge's tangent, the jade rim with it."""
+    top_y, half_w, neck_y, top_sag, rim_w = 236.0, 110.0, 262.0, 7.0, 10.5
+    collar = K.standing_collar(top_y=top_y, half_w=half_w, neck_y=neck_y, shoulder=(-112.0, 312.0),
+                               top_sag=top_sag, side_sag=-3.0, rim=rim_w)
+    edge = K.C.sample_d(K.arc_sag((AX, neck_y), (AX - half_w, top_y), top_sag), 0.3)[0][0]
+    edge = np.column_stack([2.0 * AX - edge[:, 0], edge[:, 1]])      # the right half is the mirror
+    if edge[0][0] > edge[-1][0]:
+        edge = edge[::-1]
+    d = (edge[-1] - edge[-2]) / np.hypot(*(edge[-1] - edge[-2]))
+    # ends on the sceptre's left edge, so the collar's outline and rim fold end under its contour
+    side = K.box(AX, 150.0, SX - SC_HW, SLIT_FOOT)
+    swept = K.U(*[shapely.affinity.translate(collar.shape, t * d[0], t * d[1])
+                  for t in np.arange(0.5, SWEEP + 0.25, 0.5)]).intersection(side)
+    shape = K.U(collar.shape, swept)
+    ext = np.vstack([edge, [edge[-1] + d * (SWEEP + 30.0)]])
+    rim = K.U(collar.meta["rim"], LineString(ext).buffer(rim_w, cap_style=2).intersection(swept))
+    rim = rim.intersection(shape)
+    fills = K.fill(shape.difference(rim), K.RED) + K.fill(rim, K.JADE)
+    lines = K.outline(shape)
+    fold = K.R(rim).buffer(0).boundary.intersection(shape.buffer(-0.6))
+    for ln in K._lines_of(shapely.line_merge(fold) if fold.geom_type != "LineString" else fold):
+        if ln.length > 4:
+            lines += K.line(np.asarray(ln.coords), K.MEDIUM, role="fold")
+    return K.Part(shape, fills, lines, {**collar.meta, "rim": rim})
+
+
 def figure():
     sc = K.Scene()
     fc = K.face(HEAD, "frontal", age="elder", lids="heavy")
@@ -174,39 +227,55 @@ def figure():
     bubble = K.Part(K.R(K.circle(bc, 6.5 + K.MEDIUM / 2)), K.C.Frag(), K.line(K.circle(bc, 6.5), K.MEDIUM, role="bubble"))
 
     # ---- head ------------------------------------------------------------------
-    hs = K.HairSpec(bulge=(-65.0, 40.0), bottom=(-54.0, 108.0), ribbons=4)
-    hair = [K.hair_fall(fc, side, hs) for side in (-1, 1)]
     mo = K.moustache(fc, K.MoustacheSpec(root=(-1.5, 8.5), tip=(-30.0, 25.0), arch=6.2))
     beard = K.beard(fc, K.BeardSpec(bulge=(-41.0, 72.0), tip=(-15.0, 124.0), notch_dy=95.0,
                                     stagger=13.0, lines=3), mo=mo)
+    # the hair's current lines keep a clear 4.2 px from the face, beard and crown outlines (a line
+    # alongside them made heal cut the temple outline away and left hooked stubs)
     crown = K.merlon_crown()
+    hs = K.HairSpec(bulge=(-65.0, 40.0), bottom=(-54.0, 108.0), ribbons=4)
+    hair_avoid = K.U(fc.skin, beard.shape, mo.shape, crown.shape).buffer(HAIR_CLEAR)
+    hair = [K.hair_fall(fc, side, hs, avoid=hair_avoid) for side in (-1, 1)]
     clasp = K.lion_clasp((AX, 358.0), 40.0)
     neckline = K.U(*[p.shape for p in hair], beard.shape, crown.shape)
 
     sleeves = K.U(sl_sc, sl_orb)
+    band_sc, band_orb = cuff_band(h_sc, sl_sc, reach=SC_REACH), cuff_band(h_orb, sl_orb, reach=ORB_REACH, offset=ORB_BAND)
     keep = KG.barrel().buffer(-0.4)
     robes = KG.garments(K.U(held_sc.shape, held_orb.shape, bubble.shape, neckline, clasp.shape),
                         sleeves=sleeves,
-                        cuff_bands=cuff_band(h_sc, sl_sc, reach=SC_REACH) + cuff_band(h_orb, sl_orb, reach=ORB_REACH),
-                        sleeve_grain=sleeve_grain(h_sc, sl_sc) + sleeve_grain(h_orb, sl_orb),
+                        cuff_bands=band_sc + band_orb,
+                        sleeve_grain=sleeve_grain(h_sc, sl_sc, band=band_sc) + sleeve_grain(h_orb, sl_orb, band=band_orb),
                         sleeve_edges=sleeve_edges(sl_sc, keep) + sleeve_edges(sl_orb, keep),
                         seam=LineString(F.seam_spec(SEAM)["points"]))
 
-    sc.part("collar", K.standing_collar(top_y=236.0, half_w=110.0, neck_y=262.0, shoulder=(-112.0, 312.0),
-                                        side_sag=-3.0, rim=10.5))
-    sc.part("robes", robes)
+    sc.part("collar", collar_part())
+    sc.add("robes", robes.frag, robes.shape.buffer(OCC_GROW))
     sc.part("sceptre+hand+sleeve", held_sc)
     sc.part("orb+hand+sleeve", held_orb)
     sc.part("bubble", bubble, sil=False)
     for s, p in zip((-1, 1), hair):
-        sc.part(f"hair{s}", p)
+        sc.add(f"hair{s}", p.frag, p.shape.buffer(OCC_GROW))
     sc.add("head", fc.lines + K.outline(fc.head), fc.skin)
-    sc.part("beard", beard)
-    sc.part("moustache", mo)
-    sc.part("crown", crown)
+    sc.add("beard", beard.frag, beard.shape.buffer(OCC_GROW))
+    sc.add("moustache", mo.frag, mo.shape.buffer(OCC_GROW))
+    sc.add("crown", crown.frag, crown.shape.buffer(OCC_GROW))
     sc.part("clasp", clasp)
+    sc.red, sc.jade = robes.meta["red"], robes.meta["jade"]
     return sc
 
 
+def final(sc):
+    """The composed, healed and cleaned-up frag of ``figure()``."""
+    # the red hatch stops short of the lapel outlines by design; only the jade textile is closed up
+    jade = sc.jade.buffer(-0.5)
+    head = K.box(330.0, 225.0, 420.0, 275.0)
+    frag = KG.drop_stubs(sc.compose(), within=K.U(head, KG.rot(head)))
+    frag = KG.trim_acute(KG.trim_acute(frag, within=jade), roles=("hatch",), within=jade, targets=("seam",))
+    frag = KG.drop_stubs(KG.drop_crowding(frag, within=jade), roles=("seam",), max_len=18.0, within=jade, orphans=True)
+    frag = KG.drop_corner_slivers(frag, within=sc.red)
+    return KG.close_ends(frag, within=jade, skip=sc.red.buffer(-0.5))
+
+
 def build():
-    return figure().layers()
+    return K.layers(final(figure()))

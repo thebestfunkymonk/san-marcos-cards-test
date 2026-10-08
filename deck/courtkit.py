@@ -1117,7 +1117,7 @@ def _curl(pts, side, r, deg):
 
 def current_lines(guide, n, region=None, *, side=+1, pitch=PITCH, first=None, edge=MEDIUM,
                   stagger=8.0, end="curl", curl_r=4.2, curl_deg=75.0, root="edge",
-                  min_len=10.0, placed=None, w=FINE, color=INK, terminal=TD):
+                  min_len=10.0, placed=None, w=FINE, color=INK, terminal=TD, clip=None):
     """§G.24 current lines: ``n`` (3–5) parallel offsets of ONE guide at a
     7 px pitch, clipped to ``region``, each ending in a Ø6.3 terminal.
 
@@ -1137,7 +1137,10 @@ def current_lines(guide, n, region=None, *, side=+1, pitch=PITCH, first=None, ed
     Every end is checked against the region edge and everything already
     placed (``placed``: shapely geometry of other marks, and each line as it
     is drawn) and stepped back until §I.12 holds; a line that cannot fit is
-    dropped. Returns a Frag (meta['lines'] = the centrelines)."""
+    dropped. ``clip``: a region the lines are cut out of (the region's edge
+    margins and terminal checks still use ``region``); each line keeps its
+    longest piece. Returns a Frag
+    (meta['lines'] = the centrelines)."""
     if isinstance(guide, str):
         gp = C.sample_d(guide, 0.25)[0][0]
     else:
@@ -1159,12 +1162,16 @@ def current_lines(guide, n, region=None, *, side=+1, pitch=PITCH, first=None, ed
             uu = shapely.ops.unary_union(ln)
             parts = list(uu.geoms) if hasattr(uu, "geoms") else [ln]
             ln = max(parts, key=lambda g: g.length)
-        pieces = [ln] if reg is None else [g for g in _lines_of(ln.intersection(reg)) if g.length >= min_len]
+        vis = ln if reg is None else ln.intersection(reg)
+        if clip is not None:
+            vis = vis.difference(R(clip))
+        pieces = [g for g in _lines_of(vis) if g.length >= min_len] if (reg is not None or clip is not None) else [ln]
         if not pieces:
             continue
-        # the piece nearest the root
+        # the piece nearest the root (with ``clip``, the longest: a line cut by it starts again
+        # past the clipped stretch instead of curling at the cut)
         s0 = [ln.project(Point(g.coords[0])) for g in pieces]
-        piece = pieces[int(np.argmin(s0))]
+        piece = max(pieces, key=lambda g: g.length) if clip is not None else pieces[int(np.argmin(s0))]
         q = np.asarray(piece.coords)
         if ln.project(Point(q[0])) > ln.project(Point(q[-1])):
             q = q[::-1]
@@ -1688,11 +1695,18 @@ class HairSpec:
     edge: float = CONTOUR            # the fan's outer edge weight where it meets paper (sets line 0's inset)
 
 
-def hair_fall(fc: "Face", side=-1, h: HairSpec = HairSpec()) -> Part:
+AVOID_MARGIN = GAP + MEDIUM / 2 + FINE / 2 + 0.2      # a FINE line this far from a MEDIUM outline keeps 4.2 px
+
+
+def hair_fall(fc: "Face", side=-1, h: HairSpec = HairSpec(), avoid=None) -> Part:
     """Hair falling beside the face (side −1 = viewer's left; +1 is the exact
     mirror about the face's centre line). The current lines are the fan's
     concentric offsets, 7 px apart, the first 8.4 px inside the outer edge,
-    each rolling inward into a Ø6.3 terminal at the curl."""
+    each rolling inward into a Ø6.3 terminal at the curl. ``avoid`` (a region
+    given for the side −1 fall, grown ``AVOID_MARGIN`` past the outlines of
+    the face and beard in front): the current lines are cut out of it, so no
+    line runs alongside those outlines, and their terminals stay §I.12 clear
+    of the outlines."""
     cx = float(fc.anchors["center"][0])
     cy = float(fc.anchors["center"][1])
     T0 = P(cx + h.top[0], cy + h.top[1])
@@ -1707,7 +1721,8 @@ def hair_fall(fc: "Face", side=-1, h: HairSpec = HairSpec()) -> Part:
     reg = lock_fan(c, Rr, r_in, a0, a1)
     th = np.radians(np.linspace(a0, a1, 400))
     guide = np.column_stack([c[0] + Rr * np.cos(th), c[1] + Rr * np.sin(th)])
-    lines = current_lines(guide, h.ribbons - 1, reg, side=+1, first=first, edge=MEDIUM, stagger=9.0)
+    lines = current_lines(guide, h.ribbons - 1, reg, side=+1, first=first, edge=MEDIUM, stagger=9.0,
+                          clip=avoid, placed=None if avoid is None else R(avoid).buffer(MEDIUM / 2 - AVOID_MARGIN))
     part = Part(reg, fill(reg, h.color), lines + outline(reg), {"c": c, "R": Rr, "a": (a0, a1), "r_in": r_in})
     return part.mirrored(cx) if side > 0 else part
 
@@ -4102,14 +4117,16 @@ class CrownSpec:
     hatch: bool = True
 
 
-def merlon_hatch(k, a, b, t, v, band_top, band, nmerl):
+def merlon_hatch(k, a, b, t, v, band_top, band, nmerl, ext=(None, None)):
     """Half-hatch of merlon k (edges at ray angles a < b, top t). Side
     merlons: the outer half hatched 45° (split on the merlon's mid-ray by a
     FINE joint). The CENTRE merlon: split into two courses by a FINE bedding
     line; the LOWER course is split on the axis by a FINE joint and hatched
     mirror-wise at ±45° — half-hatched at 45° AND mirror-symmetric (a single
-    45° hatch cannot be both)."""
+    45° hatch cannot be both). ``ext`` (left, right): regions added to the
+    hatched half on that side (the wall below a crenel, out to its joint)."""
     f = C.Frag()
+    el, er = (g if g is not None else Polygon() for g in ext)
 
     def wedge(a_, b_, top_, bottom_):
         return Polygon([(_ray_x(v, a_, top_), top_), (_ray_x(v, b_, top_), top_),
@@ -4118,7 +4135,7 @@ def merlon_hatch(k, a, b, t, v, band_top, band, nmerl):
     centre = nmerl // 2
     if k != centre:
         left = k < centre
-        half = wedge(a, mid, t, band_top + 2) if left else wedge(mid, b, t, band_top + 2)
+        half = U(wedge(a, mid, t, band_top + 2), el) if left else U(wedge(mid, b, t, band_top + 2), er)
         half = half.difference(band)
         org = (_ray_x(v, a if left else b, t), t)
         f += hatch_in(half, angle=-45.0 if left else -135.0, origin=org)
@@ -4131,8 +4148,8 @@ def merlon_hatch(k, a, b, t, v, band_top, band, nmerl):
     f += seg(P(xa, ym), P(xb, ym), FINE, style="rule", role="bed")
     cx = v[0]
     lo = wedge(a, b, ym, band_top + 2).difference(band)
-    lh = lo.intersection(box(0, 0, cx, 1000))
-    rh = lo.intersection(box(cx, 0, 2000, 1000))
+    lh = U(lo, el.difference(band)).intersection(box(0, 0, cx, 1000))
+    rh = U(lo, er.difference(band)).intersection(box(cx, 0, 2000, 1000))
     f += hatch_in(lh, angle=-45.0, origin=(cx, ym))
     f += hatch_in(rh, angle=-135.0, origin=(cx, ym))
     seg_ = LineString([(cx, ym), (cx, band_top + 8)]).difference(band)
@@ -4181,14 +4198,28 @@ def merlon_crown(s: CrownSpec = CrownSpec()) -> Part:
         sg = LineString([(_ray_x(v, mid, t), t), (_ray_x(v, mid, base), base)]).difference(band)
         for ln in _lines_of(sg):
             lines += line(np.asarray(ln.coords), MEDIUM, role="joint")
+    def wall_strip(k, side):
+        # below a crenel the merlon's edge is no line; its hatch runs on across the wall to the joint
+        j = k - 1 if side < 0 else k
+        if not 0 <= j < len(merl) - 1:
+            return None
+        top = max(merl[j][2], merl[j + 1][2]) + s.crenel_depth
+        mid = (merl[j][1] + merl[j + 1][0]) / 2
+        return wedge(mid, merl[k][0] + 0.3, top) if side < 0 else wedge(merl[k][1] - 0.3, mid, top)
+
     if s.hatch:
         for k, (a, b, t) in enumerate(merl):
-            lines += merlon_hatch(k, a, b, t, v, s.band_top, band, len(merl))
+            lines += merlon_hatch(k, a, b, t, v, s.band_top, band, len(merl),
+                                  ext=(wall_strip(k, -1), wall_strip(k, +1)))
     lines += clip_out(outline(stone), band, eps=-0.8, trap=0.0)
     lines += outline(band_d)
     jy = s.band_top + s.band_h / 2
     jw = jewel((cx, jy), s.jewel_r)
     lines = clip_out(lines, jw.shape, eps=0.0, trap=0.0, extra=jw.shape.buffer(4.3 + MEDIUM))
+    # the band's lower edge is the face's brow line: it runs on into the jewel ring, or the gold
+    # band meets the skin with no ink beside the jewel
+    lines += clip_in(clip_out(outline(band_d), jw.shape, eps=0.0, trap=0.0),
+                     box(0, jy, 750, 400).intersection(jw.shape.buffer(4.3 + MEDIUM)))
     studs = C.Frag()
     for dx in s.studs:
         for sg in (-1, 1):

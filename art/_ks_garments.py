@@ -12,6 +12,7 @@ from dataclasses import replace
 
 import numpy as np
 import shapely
+import shapely.ops
 from shapely.geometry import LineString, Point, Polygon
 
 from deck import courtkit as K
@@ -100,6 +101,20 @@ def seam_guard(f: C.Frag, seam, margin: float = 4.8, at=None) -> C.Frag:
 def lens():
     g = K.lens(K.LensSpec(half_w=LENS_HW, throat_y=LENS_THROAT))
     return K.R(K.circle(g["cL"], g["R"])).intersection(K.R(K.circle(g["cR"], g["R"])))
+
+
+THROAT_R = 3.6
+
+
+def lens_throat(lens_s, blockers):
+    """The lens tip runs up into the beard fork alongside the fork's edges, 1–4 px off them: a
+    red needle each side that heal clears by deleting the lens outline. Close the lens onto the
+    fork instead, so the red ends in a tongue ≥ 2·THROAT_R wide (C2 at the foot)."""
+    zone = K.box(AX - 22.0, LENS_THROAT - 16.0, AX + 22.0, LENS_THROAT + 24.0)
+    zone = K.U(zone, rot(zone))
+    closed = K.U(lens_s, blockers).buffer(THROAT_R, quad_segs=16).buffer(-THROAT_R, quad_segs=16)
+    fill = closed.difference(blockers).intersection(zone).intersection(lens_s.buffer(2 * THROAT_R))
+    return K.U(lens_s, fill)
 
 
 def lapel_zone(shape):
@@ -280,6 +295,47 @@ def prune_cells(f, blockers, lapel, min_course=COURSE_MIN, near=4.6):
     return C.Frag(out, f.meta)
 
 
+def drop_seam_wedges(f, seam_geom, depth=12.0):
+    """A course piece that runs wholly within ``depth`` (one thin course) of the border seam
+    closes a wedge of colour against it; where no hatch hangs from its far side the course and
+    the hatch between it and the seam go, and the cell below runs up to the seam."""
+    courses = [p for p in _pieces(f, "course")]
+    hatch = [p for p in _pieces(f, "hatch")]
+    gone = []
+    for pts in courses:
+        ln = LineString(pts)
+        if max(seam_geom.distance(Point(*p)) for p in pts) >= depth:
+            continue
+        mid_d = seam_geom.distance(ln.interpolate(0.5, normalized=True))
+        hung = touch = False
+        for h in hatch:
+            for a, b in ((h[0], h[-1]), (h[-1], h[0])):
+                if ln.distance(Point(*a)) < 1.2:
+                    if seam_geom.distance(Point(*b)) > mid_d:
+                        hung = True
+                    else:
+                        touch = True
+        if not hung:
+            gone.append(ln)
+
+    def drop(role, pts):
+        if role == "course":
+            return any(g.distance(Point(*pts[0])) < 0.05 and g.distance(Point(*pts[-1])) < 0.05 for g in gone)
+        return any(g.distance(Point(*pts[0])) < 1.2 or g.distance(Point(*pts[-1])) < 1.2 for g in gone)
+
+    if not gone:
+        return f
+    out = []
+    for m in f.marks:
+        if m.role not in ("course", "hatch") or m.kind == "fill" or not m.d:
+            out.append(m)
+            continue
+        keep = [C.polyline_d(p, closed=cl) for p, cl in G.flatten(m.d, 0.05) if not drop(m.role, np.asarray(p))]
+        if keep:
+            out.append(replace(m, d="".join(keep)))
+    return C.Frag(out, f.meta)
+
+
 def strata_field(region, jog=FAULT_JOG):
     """Whole-card strata with the Balcones fault: the fault and its 180° partner split the card
     into three blocks. The centre block keeps the phase symmetric about y 525; the block left of
@@ -305,6 +361,307 @@ def strata_field(region, jog=FAULT_JOG):
     return out
 
 
+def trim_acute(f: C.Frag, *, roles=("course", "hatch"), within=None, angles=(6.0, 30.0), min_w=K.MEDIUM,
+               targets=None, min_len=8.0, log=None) -> C.Frag:
+    """A hatch or course line that runs into an outline at an angle within ``angles`` (°) leaves
+    a long thin wedge between the two; end it short instead, where the clear gap reaches GAP
+    (under the lower bound the line just runs on into it). Pieces left shorter than ``min_len``
+    go. Only ends inside ``within``; only outlines ≥ ``min_w`` (or of the ``targets`` roles)."""
+    strokes = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or m.layer != "ink":
+            continue
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            pts = np.asarray(pts, float)
+            if len(pts) >= 2:
+                strokes.append((i, k, m.w, LineString(np.vstack([pts, pts[:1]]) if cl else pts)))
+    tree = shapely.STRtree([s[3] for s in strokes])
+    changed = {}
+    for j, (i, k, w, ln) in enumerate(strokes):
+        if f.marks[i].role not in roles or ln.is_ring:
+            continue
+        cut = [0.0, ln.length]
+        for end in (0, 1):
+            e = Point(ln.coords[0] if end == 0 else ln.coords[-1])
+            if within is not None and not within.contains(e):
+                continue
+            for q in tree.query(e.buffer(w / 2 + 6.0)):
+                iq, kq, wq, lq = strokes[q]
+                if q == j or (wq < min_w if targets is None else f.marks[iq].role not in targets) \
+                        or lq.distance(e) > (w + wq) / 2 + 0.3:
+                    continue
+                s = ln.length if end else 0.0
+                a = np.asarray(ln.interpolate(s).coords[0])
+                b = np.asarray(ln.interpolate(max(s - 2.0, 0.0) if end else min(2.0, ln.length)).coords[0])
+                u = (a - b) / max(np.hypot(*(a - b)), 1e-9)
+                t = lq.project(e)
+                c0 = np.asarray(lq.interpolate(max(t - 1.5, 0.0)).coords[0])
+                c1 = np.asarray(lq.interpolate(min(t + 1.5, lq.length)).coords[0])
+                v = (c1 - c0) / max(np.hypot(*(c1 - c0)), 1e-9)
+                ang = math.degrees(math.acos(min(1.0, abs(float(np.dot(u, v))))))
+                if not angles[0] <= ang < angles[1]:
+                    continue
+                need = K.GAP + (w + wq) / 2
+                ss = np.arange(0.0, ln.length, 0.25)
+                ok = [x for x in ss if lq.distance(ln.interpolate(x)) >= need]
+                if end:
+                    cut[1] = min(cut[1], max(ok) if ok else 0.0)
+                else:
+                    cut[0] = max(cut[0], min(ok) if ok else ln.length)
+                if log is not None:
+                    log.append((np.round(e.coords[0], 1).tolist(), round(ang, 1), f.marks[iq].role))
+        if cut != [0.0, ln.length]:
+            changed[(i, k)] = None if cut[1] - cut[0] < min_len else \
+                np.asarray(shapely.ops.substring(ln, cut[0], cut[1]).coords)
+    if not changed:
+        return f
+    out = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or not any(key[0] == i for key in changed):
+            out.append(m)
+            continue
+        runs = []
+        for k, (p, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            if len(p) < 2:
+                continue
+            q = changed.get((i, k), np.asarray(p))
+            if q is not None:
+                runs.append(C.polyline_d(q, closed=cl))
+        if runs:
+            out.append(replace(m, d="".join(runs)))
+    return C.Frag(out, f.meta)
+
+
+def drop_crowding(f: C.Frag, *, roles=("hatch",), within=None, clear=2.8, min_w=K.MEDIUM, log=None) -> C.Frag:
+    """Drop a hatch piece whose side passes an outline it does not touch with under ``clear`` px
+    of jade between them (a hatch line slanting past a contour leaves a needle of colour)."""
+    strokes = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or m.layer != "ink":
+            continue
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            pts = np.asarray(pts, float)
+            if len(pts) >= 2:
+                ln = LineString(np.vstack([pts, pts[:1]]) if cl else pts)
+                strokes.append((i, k, m.w, ln, ln.buffer(m.w / 2, quad_segs=6)))
+    tree = shapely.STRtree([s[4] for s in strokes])
+    gone = set()
+    for j, (i, k, w, ln, g) in enumerate(strokes):
+        if f.marks[i].role not in roles or (within is not None and not within.contains(ln.centroid)):
+            continue
+        for q in tree.query(g.buffer(clear)):
+            iq, kq, wq, lq, gq = strokes[q]
+            if q == j or wq < min_w or gq.intersects(g):
+                continue
+            if gq.distance(g) < clear:
+                s = ln.project(shapely.ops.nearest_points(ln, lq)[0])
+                if not 1.0 < s < ln.length - 1.0:
+                    continue                  # an end stopping short is close_ends' business
+                gone.add((i, k))
+                if log is not None:
+                    log.append((np.round(ln.coords[0], 1).tolist(), round(gq.distance(g), 2), f.marks[iq].role))
+                break
+    if not gone:
+        return f
+    out = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or not any(key[0] == i for key in gone):
+            out.append(m)
+            continue
+        runs = [C.polyline_d(np.asarray(p), closed=cl) for k, (p, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL))
+                if len(p) >= 2 and (i, k) not in gone]
+        if runs:
+            out.append(replace(m, d="".join(runs)))
+    return C.Frag(out, f.meta)
+
+
+def drop_stubs(f: C.Frag, *, roles=("current",), max_len=9.0, within=None, orphans=False) -> C.Frag:
+    """Drop line pieces shorter than ``max_len`` left between two front objects (a beard current
+    showing for a few px between the cheek line and the moustache). ``orphans``: only pieces that
+    touch no other ink at either end (a seam dash left floating once its hatch has gone)."""
+    keys, geoms = [], []
+    for i, m in enumerate(f.marks):
+        if not m.d or m.layer != "ink":
+            continue
+        if m.kind == "fill":
+            keys.append((i, -1))
+            geoms.append(K.R(m.d))
+            continue
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            if len(pts) >= 2:
+                keys.append((i, k))
+                geoms.append(LineString(np.vstack([pts, pts[:1]]) if cl else pts).buffer(m.w / 2))
+    tree = shapely.STRtree(geoms)
+
+    def free(key, ln, w):
+        for p in (ln.coords[0], ln.coords[-1]):
+            cap = Point(*p).buffer(w / 2 + 0.3)
+            if any(keys[q] != key and geoms[q].intersects(cap) for q in tree.query(cap)):
+                return False
+        return True
+
+    out = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or m.role not in roles:
+            out.append(m)
+            continue
+        keep = []
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            pts = np.asarray(pts)
+            if len(pts) < 2:
+                continue
+            ln = LineString(pts)
+            if not cl and ln.length < max_len and (within is None or within.contains(ln)) and \
+                    (not orphans or free((i, k), ln, m.w)):
+                continue
+            keep.append(C.polyline_d(pts, closed=cl))
+        if keep:
+            out.append(replace(m, d="".join(keep)))
+    return C.Frag(out, f.meta)
+
+
+def drop_corner_slivers(f: C.Frag, *, roles=("hatch",), within=None, reach=8.0, narrow=1.3, area=8.0) -> C.Frag:
+    """Drop a hatch piece that closes off a corner between two outlines into a pocket of colour
+    of ``area`` px² or more that is nowhere wider than 2·``narrow`` (QA 12's raster narrow gap)."""
+    strokes = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or m.layer != "ink":
+            continue
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            pts = np.asarray(pts, float)
+            if len(pts) >= 2:
+                ln = LineString(np.vstack([pts, pts[:1]]) if cl else pts)
+                strokes.append((i, k, ln.buffer(m.w / 2, quad_segs=6, cap_style=1 if m.cap == "round" else 2), ln))
+    tree = shapely.STRtree([s[2] for s in strokes])
+    gone = set()
+    for j, (i, k, g, ln) in enumerate(strokes):
+        if f.marks[i].role not in roles or (within is not None and not within.contains(ln.centroid)):
+            continue
+        hood = ln.buffer(reach)
+        ink = shapely.union_all([strokes[q][2] for q in tree.query(hood)])
+        colour = hood.difference(ink)
+        for c in getattr(colour, "geoms", [colour]):
+            if c.is_empty or c.distance(hood.exterior) < 0.05 or c.distance(g) > 0.05:
+                continue
+            if c.area >= area and c.buffer(-narrow).is_empty:
+                gone.add((i, k))
+                break
+    if not gone:
+        return f
+    out = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or not any(key[0] == i for key in gone):
+            out.append(m)
+            continue
+        runs = [C.polyline_d(np.asarray(p), closed=cl) for k, (p, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL))
+                if len(p) >= 2 and (i, k) not in gone]
+        if runs:
+            out.append(replace(m, d="".join(runs)))
+    return C.Frag(out, f.meta)
+
+
+CLOSE_ROLES = ("course", "hatch", "seam", "fault", "cuffline")
+
+
+def close_ends(f: C.Frag, *, roles=CLOSE_ROLES, reach=6.0, min_angle=35.0, within=None, skip=None, log=None) -> C.Frag:
+    """Run each textile line end that heal or a clip left stopping 0.3–``reach`` px short of the
+    stroke ahead of it on until it meets that stroke's centre line, when the run-on keeps the
+    §I.12 3 px from every other mark and meets the stroke at ``min_angle``° or more (so no new
+    acute wedge). Only ends inside ``within`` and outside ``skip`` (the red hatch's deliberate
+    gap) are touched. Runs on the composed and healed frag; nothing is trimmed."""
+    pieces = []                    # [mark index, sub-path index, pts, closed, w, cap, geometry]
+    for i, m in enumerate(f.marks):
+        if not m.d or m.layer != "ink":
+            continue
+        if m.kind == "fill":
+            pieces.append([i, 0, None, True, 0.0, None, K.R(m.d)])
+            continue
+        for k, (pts, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)):
+            pts = np.asarray(pts, float)
+            if len(pts) < 2:
+                continue
+            ln = LineString(np.vstack([pts, pts[:1]]) if cl else pts)
+            pieces.append([i, k, pts, cl, m.w, m.cap, ln])
+    geoms = [p[6] if p[2] is None else p[6].buffer(p[4] / 2, quad_segs=6) for p in pieces]
+    tree = shapely.STRtree(geoms)
+    added = []
+    changed = {}
+    for j, (i, k, pts, cl, w, cap, ln) in enumerate(pieces):
+        if pts is None or cl or f.marks[i].role not in roles:
+            continue
+        for end in (0, -1):
+            e = pts[end]
+            if (skip is not None and skip.contains(Point(*e))) or (within is not None
+                                                                     and not within.contains(Point(*e))):
+                continue
+            L = ln.length
+            back = np.asarray(ln.interpolate(min(1.5, L / 2) if end == 0 else max(L - 1.5, L / 2)).coords[0])
+            d = e - back
+            if np.hypot(*d) < 1e-6:
+                continue
+            d = d / np.hypot(*d)
+            start = e + d * (w / 2 if cap == "round" else 0.0)
+            ray = LineString([start, start + d * reach])
+            hit = None
+            for q in tree.query(ray):
+                if q == j:
+                    continue
+                x = ray.intersection(geoms[q])
+                if not x.is_empty:
+                    t = Point(*start).distance(x)
+                    if hit is None or t < hit[0]:
+                        hit = (t, q)
+            if hit is None or hit[0] < 0.3 or pieces[hit[1]][2] is None:
+                continue
+            t, q = hit
+            tgt = pieces[q]
+            run = t + tgt[4] / 2
+            p_new = e + d * run
+            s = tgt[6].project(Point(*p_new))
+            a = np.asarray(tgt[6].interpolate(max(s - 1.0, 0.0)).coords[0])
+            b = np.asarray(tgt[6].interpolate(min(s + 1.0, tgt[6].length)).coords[0])
+            tan = (b - a) / max(np.hypot(*(b - a)), 1e-9)
+            ang = math.degrees(math.acos(min(1.0, abs(float(np.dot(tan, d))))))
+            if ang < min_angle:
+                if log is not None:
+                    log.append(("angle", e.round(1).tolist(), round(ang, 1), f.marks[tgt[0]].role))
+                continue
+            ext = LineString([e, p_new]).buffer(w / 2, cap_style=2)
+            body = ln.buffer(w / 2 + 0.05, quad_segs=6)
+            ok = True
+            for r in list(tree.query(ext.buffer(K.GAP_MARK))):
+                if r in (j, q) or geoms[r].intersects(body):
+                    continue
+                gap = geoms[r].distance(ext)
+                if gap < K.GAP_MARK:
+                    ok = False
+                    if log is not None:
+                        log.append(("clear", e.round(1).tolist(), round(gap, 2), f.marks[pieces[r][0]].role))
+                    break
+            if ok and any(g.distance(ext) < K.GAP_MARK for g in added):
+                ok = False
+            if not ok:
+                continue
+            if log is not None:
+                log.append(("run", e.round(1).tolist(), round(run, 2), f.marks[tgt[0]].role))
+            pts = np.vstack([pts, [p_new]]) if end == -1 else np.vstack([[p_new], pts])
+            ln = LineString(pts)
+            added.append(ext)
+        if len(pts) != len(pieces[j][2]):
+            changed[(i, k)] = pts
+    if not changed:
+        return f
+    out = []
+    for i, m in enumerate(f.marks):
+        if m.kind == "fill" or not m.d or not any(key[0] == i for key in changed):
+            out.append(m)
+            continue
+        d = "".join(C.polyline_d(changed.get((i, k), np.asarray(p)), closed=cl)
+                    for k, (p, cl) in enumerate(G.flatten(m.d, K.FLAT_TOL)) if len(p) >= 2)
+        out.append(replace(m, d=d))
+    return C.Frag(out, f.meta)
+
+
 def garments(front, *, sleeves, cuff_bands, sleeve_grain, sleeve_edges, seam=None):
     """The whole-card robe: jade barrel mantle (strata + fault inside a hatched border), red lapels
     (rising bubbles + hatch), the karst lens, and the two jade sleeves, all as one C2 region set.
@@ -313,11 +670,11 @@ def garments(front, *, sleeves, cuff_bands, sleeve_grain, sleeve_edges, seam=Non
     sleeve_zone = K.c2(sleeves)
     shape = K.U(barrel(), sleeve_zone)
     shape = K.U(shape, shape.buffer(12).buffer(-12).intersection(sleeve_zone.buffer(30)))
-    lens_s = lens().intersection(shape)
+    blockers = K.c2(front)
+    lens_s = lens_throat(lens().intersection(shape), blockers)
     zone = lapel_zone(shape)
     red = zone.difference(lens_s).difference(sleeve_zone)
     jade = shape.difference(lens_s).difference(red)
-    blockers = K.c2(front)
 
     # ---- jade: hatched border, FINE seam, strata + fault inside --------------------------
     inner_shape = barrel().buffer(-BORDER, quad_segs=16)
@@ -334,6 +691,7 @@ def garments(front, *, sleeves, cuff_bands, sleeve_grain, sleeve_edges, seam=Non
     strata = (drop_short(strata.select(lambda m: m.role in ("hatch", "course")), STRATA_MIN)
               + strata.select(lambda m: m.role not in ("hatch", "course")))
     strata = prune_cells(strata, blockers, K.U(red, lens_s))
+    strata = drop_seam_wedges(strata, inner_shape.boundary)
 
     # ---- red lapels: rising bubbles knocked out, hatch between ---------------------------
     left_red = red.intersection(K.box(0, 0, AX, 2000))
