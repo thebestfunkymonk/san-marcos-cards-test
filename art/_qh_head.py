@@ -238,7 +238,7 @@ def lock(guide, width, *, n=4, side=+1, end="round", bubbles=None, bubble_at=0.5
             c = mid.at_s(s_)
             holes.append(Point(*c).buffer(dd / 2, quad_segs=24))
             rings += C.stroke(K.circle(c, dd / 2), FINE, color=INK, role="bubble")
-            s_ -= dd / 2 + 5.0 + dd * 0.6
+            s_ -= dd / 2 + 5.6 + dd * 0.6     # keeps ≥ 3 px clear between neighbouring rings
     ext = np.vstack([pts[:1] - (pts[1] - pts[0]) * 30, pts])
     placed = shapely.union_all(holes).buffer(FINE / 2) if holes else Polygon()
     for k, o in enumerate(offs):

@@ -7,6 +7,7 @@ from dataclasses import replace
 from shapely.geometry import LineString, Polygon
 
 from deck import courtkit as K
+from deck import frames as F
 from deck.motifs import core as C
 
 from art import _qh_attr as A
@@ -34,7 +35,7 @@ CAP_C, CAP_R = (362.0, 194.0), 62.0
 # the gold rule (y 51). Four Ø4.2 dots (the smallest legal dot, §B.2, for the
 # brief's Ø3) then FINE rings Ø5.2 → 8 (centreline; the hole ≥ 3 px), the
 # clear gaps widening ×1.1 as they rise
-AIR = [(497, 302), (505, 262), (499, 212), (485, 165), (485, 124), (495, 94), (511, 71)]
+AIR = [(497, 299), (505, 262), (499, 212), (485, 165), (485, 124), (495, 94), (511, 71)]
 AIR_SIZES = [("dot", 4.2)] * 4 + [("ring", round(5.2 * (8.0 / 5.2) ** (k / 11), 2)) for k in range(12)]
 AIR_GROWTH = 1.1
 HAIR_N = [(320, 190), (302, 226), (292, 262), (278, 290), (252, 305), (228, 302), (214, 290)]
@@ -128,20 +129,35 @@ class Scene(K.Scene):
             self.heal_log = []
             artwork = K.heal(artwork, log=self.heal_log,
                              keep_roles=("contour", "grip-edge", "leaf-vein", "cuffline"))
+            # heal trims a web line off both its notch and the palm contour;
+            # the short dash it leaves floats in the palm as a stray mark
+            artwork = artwork.select(lambda m: not (
+                m.role == "finger" and m.kind == "stroke"
+                and sum(LineString(pts).length for pts, _ in K.G.flatten(m.d, K.FLAT_TOL)) < 8.0))
         # Finish the three-way fold joins after foreground contour clipping.
         artwork += K.c2(K.dot((491.68, 312.15), K.CONTOUR, role="contour"))
         # Union just the shared junctions. Keep legal FINE textile strokes as
         # strokes, rather than interpreting them as solid knockout bridges.
         ink = artwork.select(lambda m: m.layer == "ink")
         joins = K.c2(K.box(481, 303, 504, 342))
+        joined = ink.shape().buffer(1.6).buffer(-1.6).intersection(joins)
+        # A stroke end poking a fraction of a px into the box is already drawn
+        # by its clipped stroke's cap; as a fill it would be a sub-hairline sliver.
+        joined = K.U(*[g for g in K._polys_of(joined) if not g.buffer(-K.HAIR_W / 2).is_empty])
+        # A colour crumb walled in by the joined ink (the bodice tip between
+        # the lock and mantle outlines) is filled with the ink around it. The
+        # plates run on under the ink, so only their visible part is tested.
+        crumbs = [g for m in artwork.marks if m.kind == "fill" and m.layer in ("jade", "red", "gold")
+                  for g in K._polys_of(K.R(m.d).intersection(joins).difference(joined))
+                  if g.area < 60 and g.buffer(1.0).difference(K.U(joined, g)).area < 0.5]
+        crumbs = K.U(*crumbs) if crumbs else Polygon()
         artwork = artwork.select(lambda m: m.layer != "ink") \
             + K.clip_out(ink, joins, eps=0, trap=0) \
-            + K.fill(ink.shape().buffer(1.6).buffer(-1.6).intersection(joins),
-                     K.INK, role="contour")
+            + K.fill(K.U(joined, crumbs.buffer(0.3)).intersection(joins), K.INK, role="contour")
         # Retract hidden plate tails only at their local hair/robe contacts.
         # Broad ink-based clipping would carve paper rims along whole edges.
         tails = {"jade": K.c2(K.box(486, 306, 501, 314.5)),
-                 "red": K.c2(K.box(487.5, 330.5, 494, 338)),
+                 "red": K.c2(K.box(486, 309, 500, 338)),
                  "gold": K.c2(K.box(551, 200, 562, 224))}
         ink_core = artwork.select(lambda m: m.layer == "ink").shape().buffer(-0.6)
         fills = artwork.select(lambda m: m.kind == "fill" and m.layer != "ink")
@@ -152,6 +168,7 @@ class Scene(K.Scene):
             layer = marks.marks[0].layer
             if layer in tails:
                 plate = plate.difference(ink_core.intersection(tails[layer]))
+            plate = plate.difference(crumbs)
             artwork += K.fill(plate, color)
         return artwork
 
@@ -172,7 +189,12 @@ def sleeve_end(hand, *, run, reach=0.0, bell=9.0, neck=3.0, curl=5.0, soften=3.5
 
 def sleeved_hand(hand, sleeve):
     """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
-    region = K._biggest(hand.shape.difference(sleeve))
+    region = hand.shape.difference(sleeve)
+    # hand5's heel bulges a hair past the sleeve's edge; that thin lens doubles
+    # the outline into a lump at the cuff corner, so open it near the sleeve
+    near = sleeve.buffer(4.0)
+    region = K._biggest(K.U(region.difference(near),
+                            region.buffer(-1.6).buffer(1.6).intersection(near)))
     inner = hand.hand.meta.get("inner", C.Frag())
     return K.Part(region, C.Frag(), K.outline(region, role="contour") + K.clip_in(inner, region.buffer(-5.0)),
                   {**hand.hand.meta, "hand_region": region})
@@ -185,7 +207,9 @@ def _course(hand, sleeve, sleeve_kw, offset, inset):
     n = np.array([u[1], -u[0]])
     half = hand.wrist_w / 2 + sleeve_kw["bell"]
     t = np.linspace(-half - 4.0, half + 4.0, 60)
-    sag = sleeve_kw["curl"] * np.clip(1.0 - (t / half) ** 2, 0.0, None)
+    # the parabola runs on past the mouth corners: flattening it there put a
+    # kink in a course that reaches the flared sleeve's sides
+    sag = sleeve_kw["curl"] * (1.0 - (t / half) ** 2)
     pts = [P(hand.wrist) - u * sleeve_kw["reach"] + n * a + u * (offset + b) for a, b in zip(t, sag)]
     cut = LineString(pts).intersection(sleeve.buffer(0.5 - inset))
     if cut.geom_type != "LineString":
@@ -240,11 +264,13 @@ def figure():
                                       (resting, left_sleeve, LEFT_SLEEVE, {})):
         part = cuff_trim(hand, sleeve, kw, **trim_kw)
         trim = K.Part(K.U(trim.shape, part.shape), trim.fills + part.fills, trim.lines + part.lines)
+    clasp = K.lion_clasp((390, 330), 40)
     robe = QC.garments(K.U(held.shape, left_hand.shape, hn.shape, hf.shape),
                        K.U(hn.shape, hf.shape), sleeves=left_sleeve, inked=right_sleeve, trim=trim,
-                       hands=K.U(right_hand.shape, left_hand.shape))
+                       hands=K.U(right_hand.shape, left_hand.shape),
+                       clear=clasp.lines.select(lambda m: m.role == "ripple").shape(),
+                       seam=LineString(F.seam_points(SEAM)))
     sc.gown_bodice = robe.meta["bodice"]
-    clasp = K.lion_clasp((390, 330), 40)
     robe = K.Part(robe.shape,
                   K.clip_out(robe.fills, clasp.meta["silhouette"], eps=0, trap=0) + clasp.fills,
                   K.clip_out(robe.lines, clasp.meta["silhouette"], eps=0.2, trap=0) + clasp.lines)
