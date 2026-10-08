@@ -123,7 +123,12 @@ def sleeve_stripes(hand, sleeve, *, start=20.0, inset=4.8, fans=(-0.6, 0.0, 0.6)
 
 def sleeved_hand(hand, sleeve):
     """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
-    region = K._biggest(hand.shape.difference(sleeve))
+    region = hand.shape.difference(sleeve)
+    # hand5's heel bulges a hair past the sleeve's long edge; that thin lens doubles the
+    # outline into a lump at the cuff corner, so open it away near the sleeve only.
+    near = sleeve.buffer(4.0)
+    region = K._biggest(K.U(region.difference(near),
+                            region.buffer(-1.6).buffer(1.6).intersection(near)))
     inner = hand.hand.meta.get("inner", K.C.Frag())
     return K.Part(region, K.C.Frag(), K.outline(region) + K.clip_in(inner, region.buffer(-5.0)),
                   {**hand.hand.meta, "hand_region": region})
@@ -156,6 +161,10 @@ def figure():
     # hair/robe junction into detached rounded contour fragments.
     for part in [*hair, beard]:
         part.lines = part.lines.select(lambda m: m.role != "outline") + K.outline(part.shape, role="contour")
+    # The moustache lies over the beard: its lobes hide the beard's edge around the chin.
+    # The lines cross the lobe edge at a slant, so they stop short of it for their caps to stay
+    # under the lobe outline.
+    beard.lines = K.clip_out(beard.lines, mo.shape, eps=0.8)
     h = K.hand5(FIST, POLE_DEG, "wrap", size=K.hand_size(fc) * HAND_SCALE,
                 hand=POLE_HAND[0], view=POLE_HAND[1], grip_w=POLE_WIDTH)
     right_sleeve = sleeve_end(h, run=POLE_RUN, reach=POLE_REACH)
@@ -179,7 +188,18 @@ def figure():
         [(CHAL_X - 2, by), (CHAL_X - 6, by - 15), (CHAL_X - 11, by - 33),
          (CHAL_X - 17, by - 54), (CHAL_X - 24, by - 79)],
         [6.3, 8.4, 10.5, 12.6, 15.2])
-    crown = KC.crown()
+    # Where the pole grazes a crown post, the paper slit between them is narrower than two
+    # outlines; the crown's gold takes it, so one outline runs round post and pole there.
+    both = K.U(KC.crown().shape, pole.shape)
+    slits = both.buffer(2.5).buffer(-2.5).difference(both).intersection(K.box(0.0, 0.0, 750.0, 140.0))
+    slits = K.U(*[g for g in getattr(slits, "geoms", [slits]) if g.area > 0.05])
+    # A post that bulges a hair over the pole edge between two slits puts a bump in that edge.
+    over = K.U(KC.crown().shape, slits).intersection(pole.shape)
+    graze = over.difference(over.buffer(-0.8).buffer(0.8))
+    slit_parts = list(getattr(slits, "geoms", [slits]))
+    graze = K.U(*[g for g in getattr(graze, "geoms", [graze])
+                  if sum(g.buffer(0.05).intersects(s) for s in slit_parts) >= 2])
+    crown = KC.crown(fill_in=slits, cut=graze)
     neckline = K.U(*[p.shape for p in hair], beard.shape)
     # The sleeves belong to the lapel, so its outline and scales run on into
     # them. The complete hand is kept out: closing around it would spill jade
@@ -195,9 +215,9 @@ def figure():
                                color=K.JADE, rim_color=K.RED)
     collar.lines = K.C.Frag([replace(m, role="contour") if m.role == "fold" else m
                              for m in collar.lines.marks])
-    collar.lines += K.hatch_in(collar.shape.difference(collar.meta["rim"]).buffer(-7.0)
-                              .difference(neckline.buffer(7.3)),
-                              origin=(K.AX, 262.0))
+    collar.lines += KC.keep_long(K.hatch_in(collar.shape.difference(collar.meta["rim"]).buffer(-7.0)
+                                            .difference(neckline.buffer(7.3)),
+                                            origin=(K.AX, 262.0)), 8.0)
     sc.part("collar", collar)
     sc.part("robes", garment)
     sc.part("pole+handR+cuff", held)

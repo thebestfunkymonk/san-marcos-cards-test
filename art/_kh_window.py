@@ -34,6 +34,7 @@ between any two (§I.12: knockout lines ≥ 2.5, bridges ≥ 3).
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 
 import numpy as np
 import shapely
@@ -217,7 +218,16 @@ def window(cx, cy, w=142.0, h=104.0, r=16.0, *, frame=14.0, darter_c=None, darte
     rip = K.clip_out(rip, K.U(*regs).buffer(GAP + KO / 2), eps=0.0, trap=0.0)
     view = K.clip_in(gl + rip, inner.buffer(-(MEDIUM / 2 + 3.0 + KO / 2)).union(
         K.box(0, fy1 - 30.0, 750, 700).intersection(inner)))
-    view = view + fish
+    # A ring that barely rises past the bottom frame edge would show as a hairline cream lens.
+    kept = []
+    for m in view.marks:
+        if m.role != "ripple":
+            kept.append(m)
+            continue
+        runs = [p for p, _ in G.flatten(m.d, K.FLAT_TOL) if len(p) > 1 and np.min(np.asarray(p)[:, 1]) < fy1 - 3.0]
+        if runs:
+            kept.append(replace(m, d="".join(C.polyline_d(np.asarray(p)) for p in runs)))
+    view = C.Frag(kept, view.meta) + fish
     field = K.R(C.knockout(inner_d, view)).difference(stitch)
     fills = K.fill(ring, K.GOLD) + K.fill(field, K.JADE)
     lines = K.outline(outer_d) + K.outline(inner_d)

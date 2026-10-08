@@ -470,12 +470,14 @@ def ripple_textile(region, *, ry=(3.6, 9.8, 17.8), aspect=0.46, pitch=(96.0, 34.
                 g = g + g.mirror_x(AX)
             f += g
     # every ring's start vertex (where its path opens: see close_starts)
-    starts = [(p[0], p[-1]) for m in f.marks for p, c in G.flatten(m.d, 0.1) if c and len(p) > 2]
+    # Flatten at the kit tolerance: whole rings re-emitted here and rings cut by clip_in must
+    # share vertices, or close_starts misses the cut ones and whole rings show 4 px facets.
+    starts = [(p[0], p[-1]) for m in f.marks for p, c in G.flatten(m.d, K.FLAT_TOL) if c and len(p) > 2]
     f = K.clip_in(f, reg)
     # drop crumbs: arcs shorter than min_piece
     out = []
     for m in f.marks:
-        segs = [p for p, _ in G.flatten(m.d, 0.1) if len(p) > 1 and G.Curve(np.asarray(p)).length >= min_piece]
+        segs = [p for p, _ in G.flatten(m.d, K.FLAT_TOL) if len(p) > 1 and G.Curve(np.asarray(p)).length >= min_piece]
         if segs:
             from dataclasses import replace as _rp
             out.append(_rp(m, d="".join(C.polyline_d(np.asarray(p)) for p in segs)))

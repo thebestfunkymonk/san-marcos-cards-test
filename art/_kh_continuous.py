@@ -4,7 +4,8 @@ from __future__ import annotations
 from dataclasses import replace
 
 import numpy as np
-from shapely.geometry import LineString, Polygon
+import shapely.ops
+from shapely.geometry import LineString, Point, Polygon
 
 from deck import courtkit as K
 from deck.motifs import core as C
@@ -14,14 +15,32 @@ from art import _kh_parts as KP
 from art import _kh_window as KW
 
 
-def crown():
+def crown(fill_in=None, cut=None):
     circlet, posts, pearls = KP.post_crown2()
     shape = K.U(circlet.shape, posts.shape, pearls.shape)
+    if fill_in is not None:
+        shape = K.U(shape, fill_in)
+    if cut is not None:
+        shape = shape.difference(cut)
     # The posts and pearls grow from the circlet, with one outer silhouette.
     inner = circlet.lines.select(lambda m: m.role != "outline")
     inner += circlet.lines.select(lambda m: m.role == "outline")
     return K.Part(shape, K.fill(shape, K.GOLD) + circlet.fills.select(lambda m: m.layer != "gold"),
                   K.outline(shape) + inner)
+
+
+def keep_long(f, min_len, roles=None):
+    """Drop sub-paths shorter than ``min_len``: crumbs and stub dashes that clipping leaves."""
+    out = []
+    for m in f.marks:
+        if roles is not None and m.role not in roles:
+            out.append(m)
+            continue
+        runs = [(p, c) for p, c in G.flatten(m.d, K.FLAT_TOL)
+                if len(p) > 1 and G.Curve(np.asarray(p), closed=c).length >= min_len]
+        if runs:
+            out.append(replace(m, d="".join(C.polyline_d(np.asarray(p), closed=c) for p, c in runs)))
+    return C.Frag(out, f.meta)
 
 
 def _lens(half_w, throat):
@@ -78,22 +97,54 @@ def garments(front, neckline, sleeves, *, pocket_front=None, cuff_bands=None, sl
     lines = C.Frag()
     # One entire left course and its rotated right partner, never cut at the join.
     left = trim.intersection(K.box(0.0, 0.0, K.AX, 1050.0))
-    scales = MG.scale_lattice(left.buffer(-8.0), 11.0, origin=(K.AX - 11.0, 250.0))
+    lattice = left.buffer(-8.0)
+    scales = MG.scale_lattice(lattice, 11.0, origin=(K.AX - 11.0, 250.0))
     scales = K.clip_out(scales, blockers, eps=7.3, trap=0.0)
-    ends = []
-    for mark in scales.marks:
-        for points, _ in G.flatten(mark.d, 0.05):
-            if G.Curve(np.asarray(points)).length >= 10.0:
-                lines += K.line(C.polyline_d(points), K.FINE, role="scale")
-                ends.extend([np.asarray(points[0]), np.asarray(points[-1])])
-    # Cropped adjacent scallops meet as a course, rather than leaving tiny
-    # gaps between their rounded caps at the curved trim boundary.
-    for i, a in enumerate(ends):
-        for b in ends[i + 1:]:
-            if 0.1 < np.linalg.norm(a - b) < 4.2:
-                bridge = LineString([a, b])
-                if trim.contains(bridge) and not blockers.buffer(7.3).intersects(bridge):
-                    lines += K.line(C.polyline_d([a, b]), K.FINE, role="scale")
+    runs = [LineString(points) for mark in scales.marks for points, _ in G.flatten(mark.d, 0.05)
+            if G.Curve(np.asarray(points)).length >= 10.0]
+    crop_edge = lattice.difference(blockers.buffer(7.3)).boundary
+    clear = 4.2 + K.FINE
+    ends = [(i, k) for i in range(len(runs)) for k in (0, -1)]
+    # A scallop that runs on a little past a neighbour's cusp leaves a flick beyond the T, which
+    # a bridge would only retrace; it ends at the cusp instead. Longer overruns (over 4 px here)
+    # are cropped scallops' own curves and stay.
+    trims = {}
+    for i, k in ends:
+        run = runs[i]
+        over = [run.project(p) if k == 0 else run.length - run.project(p)
+                for j, l in ends if j != i
+                for p in [Point(runs[j].coords[l])] if run.distance(p) < 0.6]
+        over = [s for s in over if 0.5 < s <= 3.2]
+        if over:
+            trims[(i, k)] = min(over)
+    runs = [shapely.ops.substring(run, trims.get((i, 0), 0.0), run.length - trims.get((i, -1), 0.0))
+            if (i, 0) in trims or (i, -1) in trims else run for i, run in enumerate(runs)]
+    cut = {}
+    for n, (i, k) in enumerate(ends):
+        a = np.asarray(runs[i].coords[k])
+        for j, l in ends[n + 1:]:
+            b = np.asarray(runs[j].coords[l])
+            gap = float(np.linalg.norm(a - b))
+            if not 0.1 < gap < 4.2:
+                continue
+            on_a, on_b = crop_edge.distance(Point(a)) < 0.3, crop_edge.distance(Point(b)) < 0.3
+            if on_a != on_b and gap >= K.FINE:
+                # A scallop cropped by the lattice edge stops clear of its neighbour's cusp,
+                # rather than being bridged into a stub tail along the row.
+                r, e = (i, k) if on_a else (j, l)
+                cut[(r, e)] = max(cut.get((r, e), 0.0), clear - gap + 0.1)
+                continue
+            # Adjacent scallops of a row meet their shared cusp as one course.
+            bridge = LineString([a, b])
+            if trim.contains(bridge) and not blockers.buffer(7.3).intersects(bridge):
+                lines += K.line(C.polyline_d([a, b]), K.FINE, role="scale")
+    for i, run in enumerate(runs):
+        a, b = cut.get((i, 0), 0.0), run.length - cut.get((i, -1), 0.0)
+        if (a, b) == (0.0, run.length):
+            lines += K.line(C.polyline_d(np.asarray(run.coords)), K.FINE, role="scale")
+        elif b - a >= 6.0:
+            piece = shapely.ops.substring(run, a, b)
+            lines += K.line(C.polyline_d(np.asarray(piece.coords)), K.FINE, role="scale")
     lines = K.c2(lines)
 
     beads = C.Frag()
@@ -115,7 +166,7 @@ def garments(front, neckline, sleeves, *, pocket_front=None, cuff_bands=None, sl
                            pitch=(58.0, 42.0), origin=(K.AX, 294.0), mirror=False)
     starts = rip.meta["starts"]
     rip = KP.close_starts(K.clip_out(rip, avoid, eps=0.0, trap=0.0), starts)
-    rip = K.c2(rip)
+    rip = K.c2(keep_long(rip, 8.0))
     if sleeve_stripes is not None:
         # Pleats along each sleeve, knocked out of the red like the ripple rings.
         rip += K.c2(sleeve_stripes)
@@ -137,7 +188,8 @@ def garments(front, neckline, sleeves, *, pocket_front=None, cuff_bands=None, sl
     # The sleeve's long edges are fold lines that start on the cloak's own outline.
     sleeve_edges = K.clip_in(K.outline(sleeve_zone), shape.buffer(-0.4))
     sleeve_edges = K.clip_out(sleeve_edges, trim_outer.buffer(1.0), eps=0.0, trap=0.0)
-    lines += K.clip_out(sleeve_edges, K.c2(front), eps=1.6, trap=0.0)
+    # The edges end under the hand outline, so no round cap sits in the notch at the cuff corner.
+    lines += K.clip_out(sleeve_edges, K.c2(front), eps=K.STROKE_EPS, trap=0.0)
 
     # Both decorations are apertures in the jade chest, not extra Scene plates.
     fills = K.clip_out(fills, apertures, eps=0.0, trap=0.0) + decoration.fills
@@ -154,5 +206,5 @@ def garments(front, neckline, sleeves, *, pocket_front=None, cuff_bands=None, sl
                     if G.Curve(points, closed=closed).length >= K.MEDIUM)
         if d:
             cleaned.append(replace(mark, d=d, role="outline"))
-    lines = C.Frag(cleaned, lines.meta) + decoration.lines
+    lines = keep_long(C.Frag(cleaned, lines.meta), 8.0, roles=("hatch",)) + decoration.lines
     return K.Part(shape, fills, lines)
