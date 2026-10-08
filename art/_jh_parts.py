@@ -312,7 +312,12 @@ class Fiddle:
             return P(x + dx * k, y0 + dy * k)
         pth = K.Path(q(0, 0)).arc3(q(33, 9), q(48, 40)).arc3(q(49, 57), q(44.5, 72))       # upper bout to its corner
         pth.arc3(q(self.waist[0], self.waist[1]), q(45.5, 127))                            # the C-bout
-        pth.arc3(q(60, 160), q(47, 191)).arc3(q(26, 203.5), q(0, 205))                     # lower bout to the end
+        pth.arc3(q(60, 160), q(47, 191))                                                   # lower bout
+        # to the end button: a cubic that leaves the bout on its tangent and arrives
+        # level, so the mirrored halves meet without a notch at the centre line
+        c1, c2, end = q(34.24, 203.70), q(12, 205), q(0, 205)
+        pth.parts.append("C" + " ".join(f"{v:.3f}" for v in (*c1, *c2, *end)))
+        pth.p = end
         pth.line(q(-2, 205)).line(q(-2, 0)).close()
         half = K.R(pth.d)
         return K.U(half, K.mirror(half, x)).buffer(0.3).buffer(-0.3)
@@ -425,7 +430,7 @@ class Fiddle:
             u = kk - (strings - 1) / 2
             xs = x + u * pitch
             strs += K.seg(P(xs, self.fb_end - 2.0), P(xs, self.tail_top + 2.0), FINE, role="string")
-        strs = K.clip_out(strs, bridge, eps=-0.6, trap=0.0)
+        strs = K.clip_out(strs, bridge, eps=0, trap=0.0)
         dots = shapely.union_all([K.R(K.G.from_skia(m.skia())) for m in det.marks if m.role == "f-eye"] or [Polygon()])
         fills = K.fill(reg.difference(dots.buffer(-0.8)), GOLD) + K.fill(fb, JADE) + K.fill(tail, JADE) + K.fill(bridge, GOLD)
         # (fb_over: its sides and lower end only — no edge along the bout across it)
@@ -569,7 +574,8 @@ def puff_sleeve(pts, slashes, *, color=JADE, inset=None):
 
 
 def plume_locks(guide_pts, *, n=4, ends=(1.0, 0.84, 0.69, 0.55), h_start=None, pitch=K.PITCH, root_taper=14.0,
-                taper0=0.0, curl_r=4.4, curl_deg=95.0, tip_curl=(9.0, 200.0), smooth=4.0, inner=-1):
+                taper0=0.0, curl_r=4.4, curl_deg=95.0, tip_curl=(9.0, 200.0), smooth=4.0, inner=-1,
+                ramp_round=0.0):
     """One long curling plume (§H.6) built as a bundle of §G.24 current
     lines — ``n`` offsets of ONE guide at a 7 px pitch — whose gold body is
     the union of the lines' own clearance (8.4 px: 4.2 paper + the CONTOUR
@@ -585,20 +591,30 @@ def plume_locks(guide_pts, *, n=4, ends=(1.0, 0.84, 0.69, 0.55), h_start=None, p
     _, gp = open_spline(guide_pts, h_start=h_start)
     cv = K.G.Curve(gp)
     L = cv.length
-    lines, terms = [], []
+
+    def ramp(t, h=0.0):
+        u = np.clip(taper0 + (1 - taper0) * (t * L) / root_taper, 0, None)
+        if not h:
+            return np.minimum(u, 1.0)
+        # min(u, 1) with its corner rounded over ±h: C1, never outside the plain ramp
+        knee = np.clip(u - (1 - h), 0, 2 * h)
+        return np.where(u >= 1 + h, 1.0, u - knee ** 2 / (4 * h))
+
+    lines, terms, bodies = [], [], []
     for k in range(n):
         o = inner * k * pitch
-        dist = lambda t, o=o: o * np.clip(taper0 + (1 - taper0) * (t * L) / root_taper, 0, 1)
-        off = cv.offset(dist, spacing=0.5)
-        c2 = K.G.Curve(off)
-        seg = c2.sub(0.0, min(ends[k], 1.0)).pts
-        if k == 0 and tip_curl:
-            seg = K._curl(seg, inner, tip_curl[0], tip_curl[1])
-        elif curl_deg:
-            seg = K._curl(seg, inner, curl_r, curl_deg)
-        lines.append(seg)
+        for kind, h in (("body", 0.0), ("line", ramp_round / root_taper)):
+            off = cv.offset(lambda t, o=o, h=h: o * ramp(t, h), spacing=0.5)
+            seg = K.G.Curve(off).sub(0.0, min(ends[k], 1.0)).pts
+            if k == 0 and tip_curl:
+                seg = K._curl(seg, inner, tip_curl[0], tip_curl[1])
+            elif curl_deg:
+                seg = K._curl(seg, inner, curl_r, curl_deg)
+            (bodies if kind == "body" else lines).append(seg)
         terms.append(seg[-1])
-    geo = [LineString(l).buffer(K.EDGE_CON, quad_segs=16) for l in lines]
+    # The gold body keeps the plain ramp's outline; the drawn lines round its
+    # knee so the fan-out does not show as a hook where they leave the brooch.
+    geo = [LineString(l).buffer(K.EDGE_CON, quad_segs=16) for l in bodies]
     geo += [Point(*t).buffer(K.TD / 2 + K.GAP_MARK + CON / 2 + 0.1, quad_segs=16) for t in terms]
     reg = shapely.union_all(geo)
     reg = biggest(reg.buffer(smooth, quad_segs=16).buffer(-smooth, quad_segs=16))

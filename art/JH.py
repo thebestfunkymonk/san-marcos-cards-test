@@ -71,7 +71,7 @@ def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=14.0, curl=-5.0, elbow_r
 
 def cuff_band(hand_region, sleeve, *, offset=8.0):
     """A bold turn-back line parallel to the cuff mouth, inside the sleeve."""
-    edge = hand_region.buffer(offset).boundary.intersection(sleeve.buffer(0.5))
+    edge = hand_region.buffer(offset).boundary.intersection(sleeve.buffer(-0.5))
     out = C.Frag()
     for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
         if g.length > 8.0:
@@ -97,11 +97,13 @@ def sleeve_hatch(hand, sleeve):
 def sleeved_hand(hand, sleeve):
     """The hand beyond its cuff mouth; the sleeve's edge is the hand's contour."""
     region = K._biggest(hand.shape.difference(sleeve))
-    # The mouth's curl can leave a thin heel tip beside the sleeve; drop it
-    # so its paper does not show through the held plate beneath.
+    # The mouth's curl can leave a thin heel tip beside the sleeve; open it away
+    # near the sleeve only, before clipping, so no hairline notch is left behind.
     near = sleeve.buffer(10)
     region = K._biggest(K.U(region.difference(near),
-                           region.intersection(near).buffer(-2.2).buffer(2.2)))
+                           region.buffer(-2.2).buffer(2.2).intersection(near)))
+    # The two pieces meet along near's edge; close the zero-width slits left there.
+    region = region.buffer(0.25).buffer(-0.25)
     inner = hand.hand.meta.get("inner", C.Frag())
     return K.Part(region, C.Frag(), K.outline(region) + K.clip_in(inner, region.buffer(-5.0)),
                   {**hand.hand.meta, "hand_region": region})
@@ -153,7 +155,7 @@ def figure():
     beret = tilt(JH_.soft_beret(BERET, BAND, 18, fc.skin, ripple=(14, 1.6),
                                under_hatch=14, under_x1=482))
     plume = tilt(JP.plume_locks(PLUME, n=4, ends=(1, 0.92, 0.84, 0.76),
-                                tip_curl=(12, 200), curl_deg=110, smooth=10))
+                                tip_curl=(12, 200), curl_deg=110, smooth=10, ramp_round=4.0))
     brooch = tilt(JP.fluke_heart((PLUME[0][0] + 1, PLUME[0][1] - 3.7),
                                  u=17, bezel=7.4, ring=3))
     crown = beret.shape.buffer(-8).difference(
@@ -169,6 +171,12 @@ def figure():
                         cuff_bands=cuff_band(cuff.shape, fid_sleeve)
                         + cuff_band(bow_cuff.shape, bow_sleeve)
                         + sleeve_edges(fid_sleeve) + sleeve_edges(bow_sleeve))
+    # Robe lines stop where a front object's ink begins, so a round cap meeting
+    # a crossing edge stays inside that ink instead of bulging into the plate.
+    front = (held, portrait, bow)
+    plates = K.U(*[p.shape for p in front]).difference(K.U(*[p.lines.shape() for p in front]))
+    robes = K.Part(robes.shape, robes.fills,
+                   K.clip_out(robes.lines, K.c2(plates), eps=K.MEDIUM / 2, trap=0), robes.meta)
     sc.part("robes", robes)
     sc.part("bow+hand+cuff", bow, sil=False)
     sc.part("fiddle+hand+cuff", held)
@@ -178,6 +186,10 @@ def figure():
 
 def build():
     sc = figure()
+    # Where the robe edge meets a hand or the collar at a shallow angle, the union
+    # leaves a hairline notch that the heavy contour would knot into a lump.
+    sil = sc.silhouette().buffer(1.5).buffer(-1.5)
+    sc.silhouette = lambda: sil
     frag = sc.compose(heal_gaps=False)
     bow = next(it.occ for it in sc.items if it.name == "bow+hand+cuff")
     # A carried bow has its own MEDIUM edge, not a heavy silhouette channel.
@@ -187,4 +199,9 @@ def build():
     # Heal twice: the second pass trims outline strokes that the first still reports.
     frag = K.heal(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")),
                   keep_roles=("contour", "brim-edge", "cuffline"))
-    return K.layers(K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline")))
+    frag = K.heal(frag, keep_roles=("contour", "brim-edge", "cuffline"))
+    # Hatch dashes clipped down to a few px read as stray specks, and outline
+    # crumbs under a crossing edge as dots; the textile reads without them.
+    frag = JC.keep_long(frag, 8.0, roles=("hatch",))
+    frag = JC.keep_long(frag, 2.0, roles=("outline",))
+    return K.layers(frag)

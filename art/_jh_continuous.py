@@ -1,12 +1,29 @@
 """Continuous textiles and integrated assemblies for the Spring Minstrel."""
 from __future__ import annotations
 
+from dataclasses import replace
+
+import numpy as np
 import shapely
 from shapely.geometry import LineString, Polygon
 
 from deck import courtkit as K
 from deck.motifs import core as C
 from art import _jh_parts as JP
+
+
+def keep_long(f, min_len, roles):
+    """Drop sub-paths of ``roles`` shorter than ``min_len``: the stubs and crumbs clipping leaves."""
+    out = []
+    for m in f.marks:
+        if m.role not in roles or m.kind != "stroke":
+            out.append(m)
+            continue
+        runs = [(p, c) for p, c in K.G.flatten(m.d, K.FLAT_TOL)
+                if len(p) > 1 and K.G.Curve(np.asarray(p), closed=c).length >= min_len]
+        if runs:
+            out.append(replace(m, d="".join(C.polyline_d(np.asarray(p), closed=c) for p, c in runs)))
+    return C.Frag(out, f.meta)
 
 
 def merge(parts):
@@ -117,7 +134,21 @@ def garments(front, clasp, *, sleeves, sleeve_grain, cuff_bands):
                            keep=tunic.buffer(-8).difference(sash.buffer(8)))
     piping = K.c2(piping)
     gold = K.U(*[K.R(m.d) for m in piping.marks if m.kind == "fill"])
-    fills = K.fill(jade_fill, K.JADE) + K.fill(red_fill.difference(gold), K.RED)
+    red_fill = red_fill.difference(gold)
+    # Where two edges part at a shallow angle the plate between them starts as a
+    # hairline wedge; ink its tip so the two lines meet in one tapering join.
+    ink = K.clip_out(K.outline(shape) + K.outline(tunic) + K.outline(sash),
+                     blockers, eps=0, trap=0).shape()
+    motifs = K.U(slashes.shape(), bubbles.shape(), piping.shape()).buffer(0.5)
+    tips = []
+    for plate in (jade_fill, red_fill):
+        thin = plate.difference(plate.buffer(-2.35).buffer(2.35))
+        # the whole thin tip, under the strokes too, so it is no hairline fill itself
+        tips += [g for g in K._polys_of(thin) if g.difference(ink).area > 0.05
+                 and g.area < 40 and not g.intersects(motifs)]
+    tips = K.U(*tips).buffer(0.05) if tips else Polygon()
+    jade_fill, red_fill = jade_fill.difference(tips), red_fill.difference(tips)
+    fills = K.fill(jade_fill, K.JADE) + K.fill(red_fill, K.RED) + K.fill(tips, K.INK)
     fills += piping.select(lambda m: m.kind == "fill")
     lines = K.outline(shape) + K.outline(tunic) + K.outline(sash)
     lines = K.clip_out(lines, blockers, eps=0, trap=0)
@@ -155,6 +186,10 @@ def fiddle(fd, cuff):
     gold = K.U(*[K.R(m.d) for m in instrument.fills.marks if m.color == K.GOLD])
     engraving = gold.buffer(-7).difference(instrument.lines.shape().buffer(5.5))
     instrument.lines += K.hatch_in(engraving, angle=-35, origin=(530, 400))
+    # merge drops interior lines within 1.6 px of the outline, which breaks each
+    # fingerboard edge where the bout meets it; run the edge on through the joint.
+    instrument.lines += K.clip_in(K.outline(neck.meta["fingerboard"]),
+                                  K.box(fd.x - 20, fd.bt - 4, fd.x + 20, fd.bt + 4))
     return held(instrument, cuff)
 
 
@@ -162,7 +197,7 @@ def held(attribute, cuff):
     """One held-object/grip outline, with no paper channel."""
     shape = K.U(attribute.shape, cuff.shape)
     fills = K.clip_out(attribute.fills, cuff.shape, eps=0, trap=0) + cuff.fills
-    lines = K.clip_out(attribute.lines, cuff.shape, eps=0.2, trap=0)
+    lines = K.clip_out(attribute.lines, cuff.shape, eps=0.6, trap=0)
     lines += cuff.lines.select(lambda m: m.role != "outline")
     lines += K.clip_in(K.outline(cuff.shape, role="grip-edge"),
                        attribute.shape.buffer(0.2))
