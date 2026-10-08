@@ -103,8 +103,19 @@ def test_cuffs_are_short_mantle_sleeves_not_stubs(composition):
         # hand region begins exactly where the sleeve's mouth ends.
         if i == 0:
             # The stem hand's sleeve lies on the mantle and enters through its
-            # edge: only its tip beyond that edge is not jade.
-            assert sleeve.intersection(jade).area > 0.6 * sleeve.area
+            # edge: only its tip beyond that edge is not jade. Jade covers all of
+            # it that lies on the gown, the hand meets it on jade, and the jade
+            # run reaches well back from the mouth before the edge cuts it.
+            assert sleeve.intersection(gown.shape).difference(jade).area < 1.0
+            assert cuff.shape.buffer(1.0).intersection(sleeve).difference(jade).area < 0.5
+            mouth = K.P(hand.wrist) - hand.wrist_dir * kwargs["reach"]
+
+            def run(region):
+                return [float(np.dot(np.asarray(p) - mouth, hand.wrist_dir))
+                        for poly in K._polys_of(region) for p in poly.exterior.coords]
+
+            assert max(run(sleeve.intersection(jade))) >= 30.0
+            assert min(run(sleeve.difference(jade))) >= 10.0
         else:
             assert sleeve.difference(jade).area < 1.0
         assert cuff.shape.intersection(sleeve).area < 1.0

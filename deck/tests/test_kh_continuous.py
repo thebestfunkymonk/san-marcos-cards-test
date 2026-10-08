@@ -122,10 +122,19 @@ def test_sleeves_are_red_cloak_sleeves_from_the_outer_edge(composition):
         assert far <= 90.0
         # The sleeve end is on the outer side of the hand, away from the figure's axis.
         assert abs(sleeve.centroid.x - KH.AX) > abs(hand.wrist[0] - KH.AX)
-        # The hand ends at the cuff mouth: its region is the hand minus the sleeve.
+        # The hand ends at the cuff mouth: its region is the hand minus the sleeve, less only the
+        # thin heel lens hand5 leaves beside the sleeve's long edge, which is opened away so the
+        # outline does not double into a lump at the cuff corner.
         assert not cuff.fills.marks
         assert cuff.shape.intersection(sleeve).area < 0.01
-        assert cuff.shape.symmetric_difference(hand.shape.difference(sleeve)).area < 1.0
+        region = hand.shape.difference(sleeve)
+        assert cuff.shape.difference(region).area < 0.01
+        lens = region.difference(cuff.shape)
+        assert lens.area < 0.02 * region.area
+        assert lens.difference(sleeve.buffer(4.0)).area < 0.01
+        assert lens.buffer(-1.6).is_empty
+        # The hand still meets the sleeve across its whole wrist.
+        assert cuff.shape.boundary.intersection(sleeve.buffer(0.05)).length >= 0.9 * hand.wrist_w
         filleted = K.U(attribute.shape, cuff.shape).buffer(1.6).buffer(-1.6).simplify(0.02)
         assert held.shape.symmetric_difference(filleted).area < 0.01
         assert any(mark.role == "grip-edge" for mark in held.lines.marks)
