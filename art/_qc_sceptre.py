@@ -36,6 +36,7 @@ from art import _qc_parts as Q
 P, R, U = K.P, K.R, K.U
 FINE, MEDIUM, HAIR = K.FINE, K.MEDIUM, K.HAIR_W
 GOLD = K.GOLD
+TIP_SINK = 8.0    # how far a tip floret's point reaches back up a 6 px arm: there it is the arm's width
 
 
 def _u(deg):
@@ -82,7 +83,10 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
     p1, p2 = P(x, rachis_top + 2.0), P(x, rachis_top + 2.0 - L)
     ves = C.vesica_d(p1, p2, W)
     els.append(R(ves))
-    lines += C.stroke(Q.ring_mid(ves), MEDIUM, style="point", role="spikelet")
+    # the rachis's outline runs on into the spikelet's flanks: the spikelet's own tip inside the
+    # rachis would stand as an ink wedge in the rachis's 2.9 px gold core, between two capped ends
+    lines += K.clip_out(C.stroke(Q.ring_mid(ves), MEDIUM, style="point", role="spikelet"),
+                        K.box(x - rachis_hw, rachis_top, x + rachis_hw, knop_y), eps=0.0, trap=0.0)
     top = p2[1]
     if aw:
         awns += C.stroke(C.polyline_d([p2, p2 + P(0, -aw)]), HAIR, role="awn")
@@ -97,10 +101,13 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
         tip = q + u * L
         ves = C.vesica_d(q - u * 1.0, tip, W)
         els.append(R(ves))
-        lines += C.stroke(Q.ring_mid(ves), MEDIUM, style="point", role="spikelet")
+        # the outline opens at the base, under the pedicel's round cap: the pedicel meets the axis
+        # at ~50°, and the base's miter spike stood out past it as an ink spur
+        lines += K.clip_out(C.stroke(Q.ring_mid(ves), MEDIUM, style="point", role="spikelet"),
+                            R(K.circle(tuple(q - u * 1.0), 0.4)), eps=0.0, trap=0.0)
         # (from the rachis's outline centre line: its round cap stays inside that outline — started
         # 1.5 px further in, it stood as a round nub in the rachis's 2.9 px gold core)
-        peds.append((p0 + P(sd * 0.3, 0), q + u * 1.0))
+        peds.append((p0 + P(sd * 0.3, 0), q - u * 1.0))
         if aw:
             awns += C.stroke(C.polyline_d([tip, tip + u * aw]), HAIR, role="awn")
 
@@ -113,8 +120,13 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
             _, pts, t = FM.arc_path(x + sd * (rachis_hw - 1.0), ay, heading, turns)
             pts = np.asarray(pts, float)
             cv = G.Curve(pts)
-            rg = LineString(pts).buffer(aw_ / 2, cap_style=1, quad_segs=12)
-            arm_regs.append(rg)
+            if tipf:
+                # a flat end, with the tip floret sunk to where it is as wide as the arm: a round
+                # cap stood out past the floret's narrow top as a knob on one side
+                rg = U(LineString(pts).buffer(aw_ / 2, cap_style=2, quad_segs=12),
+                       R(K.circle(tuple(pts[0]), aw_ / 2)))
+            else:
+                rg = LineString(pts).buffer(aw_ / 2, cap_style=1, quad_segs=12)
             for (fr, ped, L, W, hang) in florets:
                 b = cv.at_s(cv.length * fr)
                 u = _u(90.0 - sd * hang)
@@ -122,7 +134,7 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
                 q = b0 + u * ped
                 ves = C.vesica_d(q - u * 1.0, q + u * L, W)
                 els.append(R(ves))
-                lines += C.stroke(ves, MEDIUM, style="point", role="floret")
+                lines += C.stroke(Q.ring_mid(ves), MEDIUM, style="point", role="floret")
                 if ped > 0.5:
                     # (from the arm's outline centre line — a nub in the arm's gold core otherwise)
                     peds.append((b + u * (aw_ / 2 + 0.3), q + u * 1.0))
@@ -132,9 +144,12 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
                 tg = cv.tangent_s(cv.length)
                 ang = math.degrees(math.atan2(tg[1], tg[0]))
                 u = _u(ang)
-                ves = C.vesica_d(e - u * (aw_ / 2 + 1.0), e + u * L, W)
-                els.append(R(ves))
-                lines += C.stroke(ves, MEDIUM, style="point", role="floret")
+                # one outline round arm + tip floret, filleted 6 px: two outlines meeting at the arm's
+                # end, each with its own round cap, stood as knobs on both shoulders of the joint, and
+                # unfilleted the arm's edges met the floret's flanks at a notch
+                rg = U(rg, R(C.vesica_d(e - u * TIP_SINK, e + u * L, W))).buffer(
+                    6.0, quad_segs=16, join_style=2, mitre_limit=10.0).buffer(-6.0, quad_segs=16)
+            arm_regs.append(rg)
     arms_reg = U(*arm_regs) if arm_regs else None
     stone = U(*els)
     body = U(culm, rachis, knop, *collars)
@@ -165,8 +180,9 @@ def rice_sceptre(x=545.0, *, bottom=560.0, hw=8.5, knop_y=292.0, knop_hw=15.0, k
         # 2.9 px apart, into an upper and a lower piece, and heal cut one of them away.)
         # (likewise 0.3 px short of the florets they carry: cut 0.5 px inside a floret, the caps stood
         # as two round nubs in its gold where the arm's end enters the tip floret)
-        bl += K.clip_out(K.outline(arms_reg), U(knop, rachis, stone).buffer(0.3, quad_segs=8), eps=0.0,
-                         trap=0.0)
+        # (mitred: the tip florets' points are in this ring)
+        bl += K.clip_out(C.stroke(K.D(arms_reg), MEDIUM, style="point", role="outline"),
+                         U(knop, rachis, stone).buffer(0.3, quad_segs=8), eps=0.0, trap=0.0)
     if striae:
         ys = [knop_y] + list(nodes) + [bottom]
         st = C.Frag()

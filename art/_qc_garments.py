@@ -36,15 +36,19 @@ CLOAK = dict(neck=(375.0, 264.0), top=(322.0, 270.0), shoulder=(168.0, 286.0), s
 GOWN = dict(neck_c=(375.0, 332.0), neck=(338.0, 300.0), neck_sag=-9.0, shoulder=(226.0, 338.0),
             shoulder_sag=5.0, corner_r=34.0, side_x=200.0)
 EDGE = 18.0                  # the cloak's jade turned-back edge
-BEAD = dict(d=6.3, pitch=15.0)
+BEAD = dict(d=6.3, pitch=15.0, clear=3.2)   # clear: from anything drawn over the edge
+POCKET_AREA = 600.0
 GOWN_BORDER = 24.0
 STREAM = dict(heading=50.0, ratio=9.0, bend=(12.0, -12.0), gap=7.0, grid=2.0, min_w=13.8,
               lengths=(125.0, 110.0, 100.0, 88.0, 76.0))
 DRIFT = dict(heading=50.0, length=22.0, width=5.4, along=30.0, across=13.0)
 LANE = dict(lengths=(110.0, 96.0, 84.0, 70.0), w=11.4, tip_gap=14.0)
 SOFT_CLEAR = 8.0
+HATCH_MIN = 24.0             # shortest border hatch piece kept
+RUN_IN = 1.5                 # seam and hatch run this far under a front object (inside its MEDIUM outline)
 DOTS = dict(d=4.4, px=20.0, py=22.0, clear=6.5)
-LACE = dict(top=352.0, hw=(21.0, 15.0), rail=7.5, rung=7.0, pitch=24.0, node_every=4, node_over=4.0, node_h=10.0)
+# rung: its gold core (rung − MEDIUM) must be ≥ 4.2 px, or heal cuts one rule and opens the cell
+LACE = dict(top=352.0, hw=(21.0, 15.0), rail=7.5, rung=7.4, pitch=24.0, node_every=4, node_over=4.0, node_h=10.0)
 
 
 def rot(g):
@@ -77,6 +81,31 @@ def drop_short(f: C.Frag, min_len: float = 9.0) -> C.Frag:
                     if G.Curve(np.asarray(pts), closed=cl).length >= min_len)
         if d:
             out.append(replace(m, d=d))
+    return C.Frag(out, f.meta)
+
+
+def drop_glancing(f: C.Frag, front, back: float = 8.0, near: float = 5.0) -> C.Frag:
+    """Drop open stroke pieces that end under ``front`` after a glancing approach (still within
+    ``near`` of it ``back`` px before the end): heal cuts such an end back to a free end in the open."""
+    fz = prep(front.buffer(0.1))
+    out = []
+    for m in f.marks:
+        if m.kind == "fill" or not m.d:
+            out.append(m)
+            continue
+        keep = []
+        for pts, cl in G.flatten(m.d, 0.05):
+            pts = np.asarray(pts)
+            ln = LineString(pts)
+            bad = False
+            if not cl and ln.length > back:
+                for end, ref in ((pts[0], ln.interpolate(back)), (pts[-1], ln.interpolate(ln.length - back))):
+                    if fz.contains(Point(*end)) and ref.distance(front) < near:
+                        bad = True
+            if not bad:
+                keep.append(C.polyline_d(pts, closed=cl))
+        if keep:
+            out.append(replace(m, d="".join(keep)))
     return C.Frag(out, f.meta)
 
 
@@ -343,27 +372,38 @@ def cloak(front, *, sleeves, seam=None):
     edge = ring.difference(K.box(300.0, -100.0, 450.0, 2000.0)).buffer(0)
     lining = shape.difference(edge)
     blockers = K.c2(front)
+    # the small pockets of cloak left between the fan's plumes read as jade edge only: their
+    # hem stubs are too short to keep, and without the hem the lining's tip stood as a red wedge
+    pockets = [g for g in K._polys_of(shape.difference(blockers)) if g.area < POCKET_AREA and g.intersects(edge)]
+    pk = U(*pockets).buffer(1.0, quad_segs=8).intersection(shape) if pockets else None
+    if pk is not None:
+        edge = U(edge, pk).buffer(0)
+        lining = lining.difference(pk)
     panel = lining.difference(gown.buffer(1.0)).difference(K.c2(sleeves).buffer(2.0))
     ok = panel.difference(blockers.buffer(5.0)).buffer(-3.8)
     ko = drift(panel, keep=lambda unit: ok.contains(unit.shape()) and (
         seam is None or unit.shape().distance(seam) > 3.4), **DRIFT)
     red_d = C.knockout(K.D(lining), ko)
     # paper beads down the middle of the jade edge on rows that are C2 partners
-    beads = bead_row(edge.difference(K.c2(sleeves).buffer(4.0)), shape, seam)
+    beads = bead_row(edge.difference(K.c2(sleeves).buffer(4.0)), shape, seam, U(blockers, K.c2(sleeves)))
     jade_d = C.knockout(K.D(edge), beads) if beads.marks else K.D(edge)
     hem = C.stroke(K.D(shape.buffer(-EDGE, quad_segs=16)), MEDIUM, role="hem")
     hem_line = shape.buffer(-EDGE, quad_segs=16).boundary.intersection(edge.buffer(0.8)).difference(blockers)
     stubs = U(*[g.buffer(1.5) for g in K._lines_of(shapely.line_merge(hem_line) if hem_line.geom_type == "MultiLineString"
                                                    else hem_line) if g.length < 16.0])
-    hem = K.clip_out(K.clip_in(hem, edge.buffer(0.8)), U(K.c2(sleeves), stubs), eps=0.0, trap=0.0)
+    cut = U(K.c2(sleeves), stubs) if pk is None else U(K.c2(sleeves), stubs, pk.buffer(1.0))
+    hem = K.clip_out(K.clip_in(hem, edge.buffer(0.8)), cut, eps=0.0, trap=0.0)
     lines = K.outline(shape) + hem
     return K.Part(shape, K.fill(red_d, K.RED) + K.fill(jade_d, K.JADE), lines,
                   {"edge": edge, "lining": lining, "panel": panel})
 
 
-def bead_row(edge, shape, seam):
+def bead_row(edge, shape, seam, blockers=None):
     """Paper beads along the middle of the jade edge: placed on the top-left quarter of the outline
-    (from the centre line up to the shoulder) at half-pitch offsets, then mirrored and rotated."""
+    (from the centre line up to the shoulder) at half-pitch offsets from the centre line, so the
+    rows above and below it meet at one pitch; then mirrored and rotated. A bead closer than
+    ``BEAD["clear"]`` to ``blockers`` (C2 already; the mirror image is checked too, the front is
+    not bilateral) is dropped, not left as a crescent."""
     mid = shape.buffer(-EDGE / 2, quad_segs=16).boundary
     pts = []
     for g in K._lines_of(mid):
@@ -372,19 +412,26 @@ def bead_row(edge, shape, seam):
     cv = G.Curve(ring)
     L = cv.length
     d, pitch = BEAD["d"], BEAD["pitch"]
+    left = np.where(ring[:, 0] < AX)[0]
+    i_c = left[np.argmin(np.abs(ring[left, 1] - CY))]
+    s_c = float(np.sum(np.hypot(*np.diff(ring[:i_c + 1], axis=0).T)))
     out = C.Frag()
     n = int(L // pitch)
     inner = edge.buffer(-(max(K.CONTOUR, MEDIUM) / 2 + 2.0))
-    for i in range(n):
-        p = cv.at_s(i * pitch + pitch / 2)
-        if p[1] > CY - 4.0 or p[0] > AX:
-            continue
-        dot = Point(*p).buffer(d / 2, quad_segs=12)
-        if not inner.contains(dot) or (seam is not None and dot.distance(seam) < 3.4):
-            continue
-        out += K.atomic(K.dot(tuple(p), d, role="bead"), f"bd{i}")
-    out = out + K.mirror(out, AX)
-    return c2_frag(out)
+    for sgn in (-1, 1):
+        for i in range(n // 2):
+            p = cv.at_s((s_c + sgn * (i + 0.5) * pitch) % L)
+            if p[1] > CY or p[0] > AX:
+                continue
+            dot = Point(*p).buffer(d / 2, quad_segs=12)
+            if not inner.contains(dot) or (seam is not None and dot.distance(seam) < 3.4):
+                continue
+            out += K.atomic(K.dot(tuple(p), d, role="bead"), f"bd{'ab'[sgn > 0]}{i}")
+    out = c2_frag(out + K.mirror(out, AX))
+    if blockers is None:
+        return out
+    near = prep(blockers.buffer(BEAD["clear"]))
+    return C.Frag([m for m in out.marks if not near.intersects(C.Frag([m]).shape())], out.meta)
 
 
 # ---- the gown --------------------------------------------------------------------------------
@@ -399,14 +446,19 @@ def gown(exclude, *, soft, seam=None, extra=None):
     tz = inner.buffer(-(3.0 + FINE / 2 + 0.3)).difference(hard.buffer(5.0 - 1.2))
     placed, leaves = leaf_pack_c2(allowed, tz, seam=seam, lane=LANE, **STREAM)
     border = shape.difference(inner)
-    border_hatch = drop_short(K.hatch_in(border.buffer(0.25).difference(hard.buffer(2.0)).difference(K.c2(soft).buffer(3.0)), angle=45.0,
-                                         origin=(AX, CY)), 24.0)
+    # the hatch and the seam run on under what is drawn over the gown: stopped on a halo round
+    # it, they stood as free ends in open jade beside the sceptre's butt and the hands
+    border_hatch = drop_short(K.clip_out(K.hatch_in(border.buffer(0.25).difference(K.c2(exclude).buffer(2.0)), angle=45.0,
+                                                    origin=(AX, CY)), K.c2(soft), eps=-RUN_IN), HATCH_MIN)
     if seam is not None:
         border_hatch = seam_guard(border_hatch, seam)
+    border_hatch = drop_glancing(border_hatch, K.c2(soft))
     leaf_union = U(*[pg for *_, pg in placed], *[rot(pg) for *_, pg in placed])
     dots = paper_dots(inner.buffer(-(FINE / 2 + DOTS["clear"])).difference(leaf_union.buffer(DOTS["clear"]))
                       .difference(hard.buffer(DOTS["clear"] + 1.0)), seam)
-    seam_line = K.clip_out(K.outline(inner, FINE, role="seam"), K.c2(soft).buffer(5.0), eps=0.0, trap=0.0)
+    # (clipped by everything in front, so its pieces are the runs that show: a short run between
+    # the gown's top edge and a hand closes on the culm at a glancing angle, and heal left its end free)
+    seam_line = drop_short(K.clip_out(K.outline(inner, FINE, role="seam"), hard, eps=-RUN_IN), 45.0)
     lines = K.outline(shape) + seam_line + border_hatch + leaves
     return K.Part(shape, K.fill(C.knockout(K.D(shape), dots) if dots.marks else K.D(shape), K.JADE), lines,
                   {"inner": inner, "leaves": placed})

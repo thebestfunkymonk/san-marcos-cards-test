@@ -73,12 +73,14 @@ SCEPTRE_X = 524.0
 SCEPTRE_HW = 9.5
 GRIP_S = (SCEPTRE_X, 420.0)
 SCEPTRE_BOTTOM = 486.0
+# the hanging florets keep ≥ 7.5 px from the rachis and from each other (closer, heal cuts their
+# outlines and leaves bare gold), so the outer one hangs from the branch's down-turned tip
 SCEPTRE = dict(hw=SCEPTRE_HW, knop_y=286.0, knop_hw=13.0, knop_h=12.0, nodes=(344.0, 462.0), node_hw=13.0,
                node_h=9.0, striae=False, rachis_hw=3.0, rachis_top=132.0, terminal=(28.0, 8.4, 16.0),
                female=((206.0, -1, 13.0, 62.0, 27.0, 8.6, 13.0, 15.0), (190.0, 1, 13.0, 62.0, 27.0, 8.6, 13.0, 15.0),
                        (174.0, -1, 11.0, 60.0, 26.0, 8.4, 9.0, 15.0), (158.0, 1, 11.0, 60.0, 26.0, 8.4, 9.0, 15.0)),
                arms=((245.0, 66.0, ((12.0, 50.0), (19.0, 62.0), (6.0, 36.0)), 6.0,
-                      ((0.33, 7.0, 22.0, 7.6, 0.0), (0.60, 7.0, 22.0, 7.6, 0.0)), None),),
+                      ((0.46, 7.0, 22.0, 7.6, 0.0),), (22.0, 7.6)),),
                knop_ink=K.CONTOUR / 2)
 SCEPTRE_RUN, SCEPTRE_REACH = 130.0, 8.0
 

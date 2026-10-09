@@ -38,7 +38,7 @@ def ring_mid(d):
     10 × w/2 long. Seated mid-side, the seam is smooth, both tips are true
     miter joins, and render, heal and QA agree. → d (closed polylines)."""
     out = ""
-    for pts, closed in G.as_polys(d, 0.05):
+    for pts, closed in G.as_polys(d, K.FLAT_TOL):
         pts = np.asarray(pts, float)
         shut = len(pts) > 3 and np.allclose(pts[0], pts[-1])
         if closed or shut:
@@ -116,20 +116,24 @@ def pearls(line_pts, *, d_end=6.3, d_mid=10.5, gap=5.0, margin=10.0):
     cv = G.Curve(np.asarray(line_pts, float))
     L = cv.length
     f = C.Frag()
-    s = margin
-    items = []
-    while s < L - margin:
-        t = abs(s / L - 0.5) * 2
-        d = d_mid + (d_end - d_mid) * t
-        items.append((s, d))
-        s += d + gap
-    # centre the run
-    shift = (L - margin - (items[-1][0] + items[-1][1] / 2)) / 2 if items else 0.0
+
+    def dia(s):
+        return d_mid + (d_end - d_mid) * abs(s / L - 0.5) * 2
+
+    # laid out from a gap at the middle and mirrored, so the run is centred exactly
+    half = [L / 2 + (dia(L / 2) + gap) / 2]
+    while True:
+        s, d = half[-1], dia(half[-1])
+        nxt = s + d / 2 + gap + dia(s + d) / 2
+        if nxt + dia(nxt) / 2 > L - margin:
+            break
+        half.append(nxt)
+    items = sorted([(L - s, dia(L - s)) for s in half] + [(s, dia(s)) for s in half])
     # where the line turns sharply (the neck point) two pearls can crowd into
     # one blob: working out from the middle, a pearl less than ``gap`` from
     # one already kept is dropped (symmetric for a symmetric line)
-    placed = [(cv.at_s(s + shift), d) for s, d in items]
-    order = sorted(range(len(placed)), key=lambda i: abs(items[i][0] + shift - L / 2))
+    placed = [(cv.at_s(s), d) for s, d in items]
+    order = sorted(range(len(placed)), key=lambda i: abs(items[i][0] - L / 2))
     keep = []
     for i in order:
         p, d = placed[i]
