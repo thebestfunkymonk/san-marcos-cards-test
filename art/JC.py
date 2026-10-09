@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import numpy as np
 import shapely
-from shapely.geometry import LineString
+from shapely.geometry import LineString, Point, Polygon
 
 from deck import courtkit as K
 from deck.motifs import core as C
@@ -31,6 +31,7 @@ SEAM = -8.0
 AX = K.AX
 HEAD = (385.0, 207.0)
 HAND_SCALE = 0.82
+SIL_CLOSE = 2.5
 FACE_KW = dict(lids="raised", pupil_dx=-3.0, pupil_tuck=-0.4)
 HAIR_ENDS = [168.0, 152.0, 118.0, 98.0]
 
@@ -42,7 +43,7 @@ CLASP = (370.0, 340.0)
 BUTTONS = ((363.5, 372.0), (361.2, 396.0))
 
 CAP = dict(roll_c=(388.0, 174.0), roll_r=(50.0, 7.0), roll_h=14.0, crown_c=(398.0, 147.0), crown_r=(68.0, 19.0),
-           crown_rot=-2.0)
+           crown_rot=-2.0, round_r=3.0)
 BROOCH = (448.0, 164.0)
 BROOCH_KW = dict(r=12.5, u=12.0, dy=0.0)
 PLUME = [(448, 164), (457, 140), (462, 116), (474, 98), (492, 88), (510, 82)]
@@ -53,9 +54,11 @@ COLLAR = dict(top=((344.0, 289.0), (414.0, 286.0)), top_sag=-7.0, foot=((338.0, 
               foot_sag=-7.0)
 
 # the doublet (jade bust, under the jerkin) down to the belt's centre line
-TORSO = ([(342, 301), (300, 310), (284, 318), (262, 330), (244, 340)], [(244, 340), (246, 400), (244, BELT_Y + 12)],
-         ("L", [(244, BELT_Y + 12), (524, BELT_Y + 12)]), [(524, BELT_Y + 12), (526, 400), (524, 340)],
-         [(524, 340), (510, 328), (494, 314), (466, 306), (418, 300)], ("L", [(418, 300), (342, 301)]))
+# the doublet's lower corners sit on the puffs' inner bottom corners: a corner below the puff's sloping hem
+# showed as a step in the silhouette under the belt hand
+TORSO = ([(342, 301), (300, 310), (284, 318), (262, 330), (244, 340)], [(244, 340), (248, 400), (262, BELT_Y + 12)],
+         ("L", [(262, BELT_Y + 12), (506, BELT_Y + 12)]), [(506, BELT_Y + 12), (522, 400), (524, 340)],
+         [(524, 340), (510, 329.5), (494, 315.8), (466, 307.5), (418, 300)], ("L", [(418, 300), (342, 301)]))
 E_L = [(334, 302), (338, 350), (358, BELT_Y - 4.0)]
 E_R = [(410, 300), (390, 360), (358, BELT_Y - 4.0)]
 
@@ -82,8 +85,9 @@ PUFF_SPRAYS_R = [B.spl([(528, 328), (562, 342), (580, 376), (582, 424)]),
 
 PUFF_L = B.region([(284, 318), (250, 321), (228, 322), (196, 338), (176, 372), (173, 412), (184, 440)],
                   ("L", [(184, 440), (262, BELT_Y + 12)]), [(262, BELT_Y + 12), (262, 400), (262, 340), (284, 318)])
+# the hem leaves the belt's lower edge along its tangent (a straight hem met it in a 6° kink)
 PUFF_R = B.region([(496, 316), (530, 317), (552, 318), (584, 342), (598, 384), (599, 430), (590, 456)],
-                  ("L", [(590, 456), (506, BELT_Y + 12)]), [(506, BELT_Y + 12), (506, 400), (506, 340), (496, 316)])
+                  ("S", [(590, 456), (506, BELT_Y + 12)], 186.0, 176.6), [(506, BELT_Y + 12), (506, 400), (506, 340), (496, 316)])
 
 
 def sleeve_bell(hand, *, run, reach=0.0, cuff=3.0, flare=10.0, curl=-5.0, elbow=0.0):
@@ -163,6 +167,36 @@ def held_attribute(attribute, hand_cuff):
         + K.outline(shape, role="contour"), hand_cuff.meta)
 
 
+def plume_over_cap_tip(vane, cap, quill, brooch):
+    """The vane run down over the cap's tip beyond the quill: left showing, the tip was a jade crescent
+    a few px wide between the vane, quill and brooch outlines."""
+    front = K.U(quill, brooch)
+    rest = cap.difference(K.U(vane.shape, front))
+    tips = [g for g in K._polys_of(rest) if g.area < 150.0 and g.centroid.x > BROOCH[0] + 4.0]
+    if not tips:
+        return vane
+    tip = K.U(*tips).buffer(0.8).intersection(cap)
+    shape = K.U(vane.shape, tip).buffer(1.5).buffer(-1.5)
+    # the vane's edge met the cap's rim in a notch: round it where the two join
+    near = tip.buffer(6.0).difference(front)
+    # beside the quill the vane narrowed to a paper slot under 4.2 between the two outlines: hold its edge
+    # a clear gap off the quill there
+    qx = np.asarray(quill.exterior.coords)
+    top = qx[np.argmin(qx[:, 1])]
+    c = np.array(quill.centroid.coords[0])
+    u = (top - c) / np.hypot(*(top - c))
+    a, b = top + u * 20.0, c - u * 40.0
+    right = Polygon([a, a + (30.0, 0.0), b + (30.0, 0.0), b]).intersection(K.box(0.0, 0.0, 1000.0, 150.0))
+    slot = quill.buffer(7.6).intersection(right).intersection(shape.buffer(6.0))
+    shape = K.U(shape, slot.difference(brooch))
+    loc = slot.buffer(4.0).difference(front)
+    shape = K.U(shape.difference(loc), shape.buffer(-3.0, quad_segs=16).buffer(3.0, quad_segs=16).intersection(loc))
+    near = near.union(loc)
+    shape = K.U(shape, shape.buffer(5.0, quad_segs=16).buffer(-5.0, quad_segs=16).intersection(near)).buffer(0.05).buffer(-0.05)
+    return K.Part(shape, vane.fills, vane.lines.select(lambda m: m.role != "outline") + K.outline(shape),
+                  vane.meta)
+
+
 def with_lines(part, extra):
     return K.Part(part.shape, part.fills, part.lines + extra, part.meta)
 
@@ -210,9 +244,18 @@ def figure():
     sc.part("belt", belt)
 
     # ---- head --------------------------------------------------------------------------------------------
-    sc.part("hair", H.pageboy(outer=[(446, 170), (472, 192), (480, 228), (478, 266), (470, 298), (454, 318)],
-                              inner=[(420, 320), (396, 300), (392, 262), (398, 226), (412, 190), (430, 172),
-                                     (446, 170)], n=4, ends=HAIR_ENDS, curl_deg=120.0))
+    # the inner edge leaves the collar's corner flatter than the trellis bar that runs out under it from
+    # there (near parallel, the bar showed a long paper taper along the contour)
+    hair = H.pageboy(outer=[(446, 170), (472, 192), (480, 228), (478, 266), (470, 298), (454, 318)],
+                     inner=[(430, 317), (406, 300), (392, 262), (398, 226), (412, 190), (432, 178), (446, 170)],
+                     n=4, ends=HAIR_ENDS, curl_deg=120.0)
+    # the first lock line came out from under the brooch hugging its ring under 3 px off, and heal cut the
+    # ring open there instead; it stops a clear gap short of the ring
+    ring_gap = BROOCH_KW["r"] + K.MEDIUM / 2 + K.GAP_MARK + K.FINE / 2 + 1.0
+    sc.part("hair", K.Part(hair.shape, hair.fills,
+                           K.clip_out(hair.lines.select(lambda m: m.role == "current"),
+                                      Point(*BROOCH).buffer(ring_gap, quad_segs=32))
+                           + hair.lines.select(lambda m: m.role != "current"), hair.meta))
     sc.part("lockF", H.far_lock(outer=[(334.0, 181.0), (315.0, 200.0), (310.0, 226.0), (318.0, 250.0),
                                        (340.0, 266.0)],
                                 inner=[(364.0, 268.0), (358.0, 232.0), (354.0, 190.0), (334.0, 181.0)],
@@ -222,13 +265,15 @@ def figure():
     sc.part("collar", J.standing_collar(**COLLAR))
     sc.part("ear", J.ear(fc))
     cap = J.bonnet(**CAP)
+    vane, quill = H.heron_plume3(PLUME, **PLUME_KW)
+    brooch = J.club_brooch(BROOCH, **BROOCH_KW)
+    vane = plume_over_cap_tip(vane, cap.shape, quill.shape, brooch.shape)
     sc.part("cap", with_lines(cap, B.comb_ink(
         cap.shape, [B.spl([(356, 152), (390, 144), (426, 144), (452, 152)]), B.spl([(366, 136), (398, 131), (428, 133)])],
         avoid=K.U(cap.lines.shape(), K.box(440.0, 120.0, 480.0, 190.0)), pitch=9.0, tick=9.0, angle=52.0)))
-    vane, quill = H.heron_plume3(PLUME, **PLUME_KW)
     sc.part("plume", vane)
     sc.part("quill", quill)
-    sc.part("brooch", J.club_brooch(BROOCH, **BROOCH_KW))
+    sc.part("brooch", brooch)
     sc.part("clasp", K.lion_clasp(CLASP, 40.0))
     sc.part("buckle", husk)
 
@@ -245,4 +290,8 @@ def figure():
 
 def build():
     sc, _ = figure()
+    # Where two silhouette edges meet in a notch (shoulder corners, chin, belt-hand cuff) the heavy contour
+    # piles into a lump; closing the silhouette rounds the notch.
+    sil = sc.silhouette().buffer(SIL_CLOSE, quad_segs=16).buffer(-SIL_CLOSE, quad_segs=16)
+    sc.silhouette = lambda: sil
     return sc.layers()

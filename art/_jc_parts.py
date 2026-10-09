@@ -7,6 +7,7 @@ Every builder returns a courtkit Part (shape, fills, lines, meta).
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 
 import numpy as np
 import shapely
@@ -189,7 +190,7 @@ def _ell_arc(c, rx, ry, a0, a1, n=120, rot=0.0):
 
 
 def bonnet(*, roll_c=(388.0, 176.0), roll_r=(50.0, 7.0), roll_h=14.0, roll_span=(10.0, 170.0),
-           crown_c=(398.0, 148.0), crown_r=(68.0, 19.0), crown_rot=5.0, rim_span=0.86, split=True):
+           crown_c=(398.0, 148.0), crown_r=(68.0, 19.0), crown_rot=5.0, rim_span=0.86, split=True, round_r=0.8):
     """§H.9 'a jade brimmed cap' as the Tudor squire's FLAT CAP (no peak):
     a narrow ROLLED BRIM round the brow — a band ``roll_h`` px deep along
     the front arc of the ellipse ``roll_r`` about ``roll_c`` (angles
@@ -213,7 +214,8 @@ def bonnet(*, roll_c=(388.0, 176.0), roll_r=(50.0, 7.0), roll_h=14.0, roll_span=
     rim = _ell_arc(cc, crown_r[0], crown_r[1], a, 180.0 - a, rot=crown_rot)       # right → front → left
     te = top_edge if top_edge[0][0] < top_edge[-1][0] else top_edge[::-1]          # left → right
     under = Polygon(np.vstack([rim, te])).buffer(0)                                   # rim runs right → left
-    shape = K.U(disc, under, roll).buffer(0.8, join_style=1).buffer(-0.8, join_style=1)
+    tight = K.U(disc, under, roll).buffer(0.8, join_style=1).buffer(-0.8, join_style=1)
+    shape = K.U(disc, under, roll).buffer(round_r, join_style=1).buffer(-round_r, join_style=1)
     lines = K.outline(shape)
     inner = shape.buffer(-0.6)
     # the rim's edge over the underside; the roll's top edge against it
@@ -224,8 +226,17 @@ def bonnet(*, roll_c=(388.0, 176.0), roll_r=(50.0, 7.0), roll_h=14.0, roll_span=
     if split:
         # the crown split by its rim: the gathered underside (in shade) is
         # the hatched half (§B.2), the flat top plain
-        uh = shape.difference(disc).difference(roll)
-        hatch = K.hatch_in(uh, angle=-45.0)
+        # the band as drawn before any corner rounding: hatch run into a rounded-off notch ends against the
+        # silhouette in a stub
+        uh = tight.difference(disc).difference(roll)
+        # where the band pinches out at the brim's end a hatch piece shows only as a stub between the rim
+        # and roll lines: keep the pieces with a clear run between them
+        seen = uh.buffer(-MEDIUM / 2)
+        hatch = C.Frag()
+        for m in K.hatch_in(uh, angle=-45.0).marks:
+            keep = [pts for pts, _cl in C.sample_d(m.d, 0.3) if LineString(pts).intersection(seen).length >= 5.0]
+            if keep:
+                hatch += C.Frag([replace(m, d="".join(C.polyline_d(np.asarray(q)) for q in keep))])
     fills = K.fill(shape, JADE)
     return K.Part(shape, fills, lines + hatch, {"roll": roll, "crown": disc, "rim": rim})
 

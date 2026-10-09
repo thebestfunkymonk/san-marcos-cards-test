@@ -11,6 +11,7 @@ import math
 
 import numpy as np
 import shapely
+import shapely.ops
 
 from deck import courtkit as K
 from deck.motifs import core as C
@@ -18,6 +19,9 @@ from art import _jc_body as B
 
 AX, CY = K.AX, 525.0
 FINE, MEDIUM, CONTOUR = K.FINE, K.MEDIUM, K.CONTOUR
+# a nut's FINE contour keeps 3 px of red from a CONTOUR edge
+NUT_EDGE = CONTOUR / 2 + K.GAP_MARK + FINE / 2 + 0.3
+NUT_NUDGE = 2.5
 
 
 def rot(g):
@@ -31,12 +35,13 @@ def c2_frag(f):
 # the jerkin's top half: neckline, the far (viewer's-left) armhole edge down to the waist, the peplum that
 # flares from under the belt to a vertical tangent on the centre row, and the near armhole edge back up.
 # x_left(525) + x_right(525) = 750, so the 180° copy continues both edges.
-JERK_NECK = [(342, 301), (304, 306), (276, 316)]
-JERK_L = [(276, 316), (268, 346), (272, 390), (278, 428)]
+# the shoulder points sit on the puffs' top line: set above it they stood up as a step in the silhouette
+JERK_NECK = [(342, 301), (304, 306), (276, 319.0)]
+JERK_L = [(276, 319.0), (268, 346), (272, 390), (278, 428)]
 JERK_L_LOW = ("S", [(278, 428), (268, 466), (256, 525)], 108.0, 90.0)
 JERK_R_LOW = ("S", [(494, 525), (486, 480), (476, 432)], -90.0, -122.0)
-JERK_R_HIGH = [(476, 432), (480, 408), (489, 385), (498, 362), (504, 340), (500, 314)]
-JERK_SHOULDER_R = [(500, 314), (464, 305), (418, 300)]
+JERK_R_HIGH = [(476, 432), (480, 408), (489, 385), (498, 362), (504, 340), (500, 316.3)]
+JERK_SHOULDER_R = [(500, 316.3), (464, 305), (418, 300)]
 
 
 def jerkin_half():
@@ -75,6 +80,7 @@ def trellis_sprigs(allowed, *, hx, hy, heading, leaf_kw, nut, nut_spread, line_w
     centre row are built here, the rest are their rot180. → (leaf Frag, nut Frag, nut hulls) for the whole card."""
     L = leaf_kw.get("length", 60.0)
     inner = K.R(allowed).buffer(-margin)
+    edge = K.R(allowed).boundary
     lines = trellis_lines(inner.buffer(40.0), hx, hy, line_w, min_len=0.0).shape().buffer(clear)
     leaves, nuts, zone = C.Frag(), C.Frag(), []
     for i2 in range(-60, 1):
@@ -95,6 +101,13 @@ def trellis_sprigs(allowed, *, hx, hy, heading, leaf_kw, nut, nut_spread, line_w
             else:
                 base = K.P(cx, cy) - K.unit(heading) * 0.3 * 9.0 - K.P(0, 13.0)
                 _, nf, nr = B.pecan_sprig(base, heading, leaf_kw=leaf_kw, nut=nut, nut_spread=nut_spread)
+                gap = nr.distance(edge)
+                if NUT_EDGE - NUT_NUDGE < gap < NUT_EDGE:
+                    # a nut this near the jerkin edge loses a bite of its contour to heal: move the pair clear
+                    a, b = shapely.ops.nearest_points(nr, edge)
+                    v = K.P(a.x - b.x, a.y - b.y)
+                    base = base + v / np.hypot(*v) * (NUT_EDGE - gap + 0.05)
+                    _, nf, nr = B.pecan_sprig(base, heading, leaf_kw=leaf_kw, nut=nut, nut_spread=nut_spread)
                 if inner.contains(nr.buffer(FINE)) and inner.contains(rot(nr.buffer(FINE))):
                     nuts += K.atomic(nf, f"nt{j2}_{i2}")
                     zone.append(nr.convex_hull)

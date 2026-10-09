@@ -62,13 +62,15 @@ def paddle3(x=548.0, *, tip=100.0, hw=31.0, widest=158.0, shoulder=236.0, throat
     lines = C.Frag()
     lines += K.outline(shape)
     lines += K.clip_out(K.outline(blade), fer, eps=-0.5, trap=0.0)
-    lines += K.outline(fer)
-    lines += K.clip_in(K.outline(bandr), blade.buffer(-0.5))
-    s_top = t + 14.0
-    lines += K.seg(P(x, s_top), P(x, band[0]), MEDIUM, role="spine")
+    # its own role, like the band's: a held paddle keeps the collar's edge across the throat
+    lines += K.outline(fer, role="ferrule")
+    # the band's edges are its own role: a held paddle keeps them (hatch then ends on a line, not on bare gold)
+    lines += K.clip_in(K.outline(bandr, role="band"), blade.buffer(-0.5))
+    # the spine runs from the tip outline: the painted half's edge is never bare
+    lines += K.seg(P(x, t), P(x, band[0]), MEDIUM, role="spine")
     lines += K.seg(P(x, band[1]), P(x, fy0), MEDIUM, role="spine")
     half = blade.intersection(K.box(x, 0, 2000, band[0]) if hatch_side > 0 else K.box(0, 0, x, band[0]))
-    lines += K.hatch_in(half.intersection(K.box(0, s_top - 6.0, 2000, 2000)), angle=-45.0)
+    lines += K.hatch_in(half, angle=-45.0)
     gold = [loom.difference(blade).difference(fer), bandr, fer]
     if tip_guard:
         tg = blade.intersection(K.box(0, 0, 2000, t + tip_guard))

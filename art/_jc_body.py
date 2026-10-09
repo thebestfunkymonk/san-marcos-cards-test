@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import math
 import re
+from dataclasses import replace
 
 import numpy as np
 from shapely.geometry import LineString, Point, Polygon
@@ -72,13 +73,22 @@ def comb_ink(field, paths, *, w=FINE, pitch=9.0, tick=11.0, angle=52.0, inset=No
     out = C.Frag()
     for p in paths:
         f = MG.comb_spray(p, pitch=pitch, tick=tick, angle=angle, w=w, cone=cone)
+        ticks, spines = C.Frag(), C.Frag()
         for m in f.marks:
             one = C.Frag([m])
             if m.role == "tick":
                 if zone.contains(one.shape()):
-                    out += one
+                    ticks += one
             else:
-                out += K.clip_in(one, zone)
+                spines += K.clip_in(one, zone)
+        # a stretch of rachis with no tick on it reads as a stray dash
+        hold = ticks.shape().buffer(0.5) if ticks.marks else None
+        for m in spines.marks:
+            for pts, _closed in C.sample_d(m.d, 0.3):
+                ln = LineString(pts)
+                if ln.length >= pitch or (hold is not None and ln.intersects(hold)):
+                    out += C.Frag([replace(m, d=C.polyline_d(np.asarray(pts)))])
+        out += ticks
     return out
 
 
@@ -235,8 +245,11 @@ def reed_belt(clip, *, y=440.0, h=24.0, sag=4.0, x0=200.0, x1=570.0, front=358.0
     dd = np.hypot(mid[:, 0] - front, mid[:, 1] - (y + sag))
     s_front = float(K.G.Curve(mid[: int(np.argmin(dd)) + 1]).length) if np.argmin(dd) > 0 else 0.0
     L = cv.length
+    zone = reg.buffer(-(MEDIUM / 2 + 3.0 + MEDIUM / 2))
+    if skip is not None:
+        zone = zone.difference(K.R(skip).buffer(6.0))
     ko = C.Frag()
-    holes = []
+    holes, ghosts = [], []
     for k in range(-12, 13):
         s = s_front + node_phase + k * node_every
         if s < 12.0 or s > L - 12.0:
@@ -245,6 +258,11 @@ def reed_belt(clip, *, y=440.0, h=24.0, sag=4.0, x0=200.0, x1=570.0, front=358.0
         t = cv.tangent_s(s)
         a = math.degrees(math.atan2(t[1], t[0]))
         e = K.G.ellipse_d(p[0], p[1], node[0], node[1], a)
+        ring = K.R(e).buffer(MEDIUM / 2)
+        if ring.difference(zone).area > 0.25 * ring.area:
+            # a node is whole or absent: one cut far into reads as a forked stub; the stalk's run to it stays
+            ghosts.append(K.R(e))
+            continue
         if avoid is not None and K.R(e).buffer(MEDIUM / 2 + K.GAP_MARK).intersects(K.R(avoid)) \
                 and not K.R(avoid).buffer(-MEDIUM).contains(K.R(e)):
             continue
@@ -253,10 +271,7 @@ def reed_belt(clip, *, y=440.0, h=24.0, sag=4.0, x0=200.0, x1=570.0, front=358.0
     stalk = C.stroke(mid, MEDIUM, role="stalk")
     if holes:
         stalk = K.clip_out(stalk, K.U(*holes), eps=0.0, trap=0.0)
-    zone = reg.buffer(-(MEDIUM / 2 + 3.0 + MEDIUM / 2))
-    if skip is not None:
-        zone = zone.difference(K.R(skip).buffer(6.0))
-    stalk = _drop_short_runs(K.clip_in(stalk, zone), cover, min_run, holes)
+    stalk = _drop_short_runs(K.clip_in(stalk, zone), cover, min_run, holes + ghosts)
     ko += stalk
     ko = K.clip_in(ko, zone)
     fill = K.fill(C.knockout(K.D(reg), ko), color)
