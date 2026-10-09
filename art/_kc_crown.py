@@ -96,6 +96,48 @@ def _side_half(reg, b, u, sd):
     return reg.intersection(poly)
 
 
+def _drop_short_hatch(f, min_len):
+    from dataclasses import replace
+    from inkkit import geom as G
+    out = []
+    for m in f.marks:
+        if m.kind == "fill" or not m.d or m.role != "hatch":
+            out.append(m)
+            continue
+        d = "".join(C.polyline_d(pts, closed=cl) for pts, cl in G.flatten(m.d, 0.05)
+                    if G.Curve(np.asarray(pts), closed=cl).length >= min_len)
+        if d:
+            out.append(replace(m, d=d))
+    return C.Frag(out, f.meta)
+
+
+def _drop_pocket_hatch(shape, f, *, also=None, max_area=6.0, open_r=0.9):
+    """Remove the hatch sub-paths that cut a gold pocket too small to print off a knee's corner (the
+    acute corner where an outer knee stands on the band): without the line the pocket joins the gold
+    beside it instead of showing as a paper fleck. ``also``: other ink that bounds the pockets."""
+    from dataclasses import replace
+    from inkkit import geom as G
+    marks = list(f.marks) + (list(also.marks) if also is not None else [])
+    ink = shapely.union_all([K.R(K.G.from_skia(m.skia())) for m in marks if m.kind != "fill"]
+                            + [K.R(shape).boundary.buffer(CONTOUR / 2, quad_segs=8)])
+    vis = K.R(shape).difference(ink)
+    pockets = [g for g in K._polys_of(vis)
+               if g.area < max_area and g.buffer(-open_r, quad_segs=6).is_empty]
+    if not pockets:
+        return f
+    pk = shapely.union_all(pockets)
+    out = []
+    for m in f.marks:
+        if m.kind == "fill" or not m.d or m.role != "hatch":
+            out.append(m)
+            continue
+        subs = [C.polyline_d(pts, closed=cl) for pts, cl in G.flatten(m.d, 0.05)
+                if LineString(np.asarray(pts)).distance(pk) > m.w / 2 + 0.3]
+        if subs:
+            out.append(replace(m, d="".join(subs)))
+    return C.Frag(out, f.meta)
+
+
 def _rot(p, c, deg):
     a = math.radians(deg)
     v = np.asarray(p, float) - np.asarray(c, float)
@@ -109,10 +151,11 @@ def knee_crown(cx=AX, *, band_top=152.0, band_h=30.0, band_hw=74.0, bow=4.0, van
                flutes=2, centre_off=7.0, ripple=(2, 22.0, 1.8), studs=0, flute_mode="axis", form="cone", side_k=1.5,
                order="front", side_gap=0.0, wave_top=None, bed_k=0.46,
                half_joint=True, centre_mode="chevron", half_gap=0.0, lean_hatch=0.0,
-               hatch_phase=(0.0, 0.0)) -> K.Part:
+               hatch_phase=(0.0, 0.0), min_hatch=0.0, ripple_offs=None) -> K.Part:
     """The Knee Crown. Knees lean out on rays from ``vanish`` (the crown
     flares like the K♠'s) and the band's ends are rays from the same point.
-    Exactly mirror-symmetric."""
+    Exactly mirror-symmetric. ``min_hatch`` drops hatch pieces shorter than
+    it; ``ripple_offs`` sets each ripple line's depth below the band top."""
     v = P(vanish)
     edge = math.degrees(math.atan2(band_hw, v[1] - band_top))
     band, band_d = K.crown_band(cx, band_top, band_h, band_hw, bow, v=v, edge_deg=edge)
@@ -253,13 +296,18 @@ def knee_crown(cx=AX, *, band_top=152.0, band_h=30.0, band_hw=74.0, bow=4.0, van
                     if g.length > 6:
                         lines += K.clip_out(K.line(np.asarray(g.coords), FINE, style="hatch", role="flute"),
                                             cover, eps=-0.5, trap=0.0)
+    if min_hatch:
+        # a hatch end in a knee's tip or in the acute corner over the band leaves a stub, and the gold
+        # crumb it cuts off is too small for visible_fill, so it shows as a paper fleck
+        lines = _drop_short_hatch(lines, min_hatch)
+        lines = _drop_pocket_hatch(shape, lines, also=K.outline(band_d))
     lines += K.outline(band_d)
     from art._kc_util import visible_fill
     fills = K.fill(visible_fill(shape, lines, shape), GOLD)
     n_rip, lam, amp = ripple
     inner_band = band.buffer(-(MEDIUM / 2 + GAP + FINE / 2))
     for jj in range(n_rip):
-        off = band_h * (jj + 1) / (n_rip + 1)
+        off = ripple_offs[jj] if ripple_offs else band_h * (jj + 1) / (n_rip + 1)
         xs_ = np.linspace(cx - band_hw - 10, cx + band_hw + 10, 900)
         ys_ = np.array([top_y(xx) + off + amp * math.cos(2 * math.pi * (xx - cx) / lam) for xx in xs_])
         ln = LineString(np.column_stack([xs_, ys_])).intersection(inner_band)

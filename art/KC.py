@@ -24,9 +24,11 @@ Head, crown, beard, collar and finial are the K♣ parts of art/_kc_*.py (unchan
 """
 from __future__ import annotations
 
+from dataclasses import replace
+
 import numpy as np
 import shapely
-from shapely.geometry import LineString, Polygon
+from shapely.geometry import LineString, Point, Polygon
 
 from deck import courtkit as K
 from deck import frames as F
@@ -61,11 +63,11 @@ HAIR = dict(top=(-54.0, -30.0), bulge=(-66.0, 40.0), bottom=(-55.0, 110.0), ribb
 BEARD = dict(n=2, pitch=15.0, tick=6.0, tick_angle=40.0)
 CROWN = dict(H=64.0, widths=(34.0, 38.0, 44.0, 38.0, 34.0), xs=(-60.0, -31.0, 0.0, 31.0, 60.0), knob=0.24,
              side_k=1.8, order="front", flute_mode="half", half_joint=False, centre_mode="one", hatch_phase=(2.0, 3.0), band_hw=78.0,
-             wave_top=(26.0, 2.6), ripple=(2, 26.0, 2.2))
+             wave_top=(26.0, 2.6), ripple=(2, 26.0, 2.2), ripple_offs=(10.0, 18.8), min_hatch=2.0)
 BIRD = dict(wing=((10.0, -46.0), (-2.0, -39.0), (-5.0, -25.0), (0.0, -10.0), (22.0, 9.0), (22.5, -14.0),
                   (19.5, -34.0), (15.0, -45.0)),
             tail=((9.0, -8.0), (20.0, -14.0), (30.0, 10.0), (20.0, 15.0)), collar=(-62.0, -51.0), belt_y=(-47.5, -37.0),
-            vent=((-2.0, -6.0), (12.0, -12.0), (24.0, 8.0), (14.0, 8.0), (6.0, 3.0)))
+            vent=((-2.0, -6.0), (12.0, -12.0), (24.0, 8.0), (14.0, 8.0), (6.0, 3.0)), ink_pockets=True)
 ORB = dict(rings=RG.CONE_WHORLS, jitter=5.0, spin=0.0, tilt=-38.0, roll=0.0, crinkle=1.2, bulge=3.0, umbo_d=3.4,
            wrinkles=3, hatch_side=1, term_lon=25.0, stem=None)
 
@@ -104,21 +106,64 @@ def cuff_band(hand, sleeve, *, reach, offset=9.0, curl=-5.0, cuff=3.0):
     return out
 
 
-def sleeve_edges(sleeve, keep):
+def sleeve_edges(sleeve, keep, spare=None):
     """The sleeve's long folds: its edges inside the robe (the robe outline carries the rest)."""
     out = K.C.Frag()
     edge = K.R(sleeve).boundary.intersection(keep)
     for g in K._lines_of(shapely.line_merge(edge) if edge.geom_type == "MultiLineString" else edge):
         if g.length > 6.0:
             out += K.line(K.C.polyline_d(np.asarray(g.coords)), K.MEDIUM, role="cuffline")
-    return out
+    # where a fold runs into the robe contour at a slant it stops clear, not in a jade taper
+    # (``spare``: the cuff, where the folds meet the turn-back line and the hand instead)
+    edge = KG.barrel().boundary if spare is None else KG.barrel().boundary.difference(spare)
+    return KG.ungraze(out, edge, K.CONTOUR / 2 + K.GAP_MARK + K.MEDIUM / 2, k=2.0)
 
 
-def sleeve_grain(hand, sleeve, *, inset=9.0):
-    """Hatch along the forearm axis, so the sleeve grain differs from the robe's."""
+def clear_folds(band, edges, tol=2.0, reach=16.0):
+    """The turn-back line stopped a clean gap short of the sleeve fold it ends beside. They meet at
+    a sharp angle, and heal would split one corner of the two into two caps side by side."""
+    tips, geo = [], []
+    for m in edges.marks:
+        for p, cl in K.G.flatten(m.d, 0.05):
+            if len(p) >= 2 and not cl:
+                tips += [np.asarray(p[0], float), np.asarray(p[-1], float)]
+                geo.append(LineString(p))
+    if not tips:
+        return band
+    folds = shapely.union_all(geo)
+    out = K.C.Frag(meta=band.meta)
+    for m in band.marks:
+        for p, cl in K.G.flatten(m.d, 0.05):
+            piece = K.C.Frag([replace(m, d=K.C.polyline_d(np.asarray(p, float), closed=cl))])
+            for e in (p[0], p[-1]):
+                for t in tips:
+                    if np.hypot(*(t - np.asarray(e, float))) < tol:
+                        zone = folds.buffer(K.MEDIUM + K.GAP_MARK + 0.3).intersection(Point(*t).buffer(reach))
+                        piece = K.clip_out(piece, zone, eps=0.0, trap=0.0)
+            out += piece
+    return KG.drop_short(out, 6.0)
+
+
+def cuff_zone(hand, *, reach, offset=9.0, curl=-5.0, cuff=3.0):
+    """The hand's side of the turn-back line (``cuff_band``'s curve, run on past the sleeve)."""
+    u = hand.wrist_dir
+    n = np.array([u[1], -u[0]])
+    mouth = K.P(hand.wrist) - u * reach + u * offset
+    half = hand.wrist_w / 2 + cuff + 8.0
+    path = K.Path(mouth + n * half).sag(mouth - n * half, curl)
+    pts = np.asarray(K.C.sample_d(path.d, 0.3)[0][0])
+    pts = np.vstack([pts[0] + n * 40.0, pts, pts[-1] - n * 40.0])
+    return Polygon(np.vstack([pts, pts[::-1] - u * 80.0])).buffer(0)
+
+
+def sleeve_grain(hand, sleeve, *, inset=9.0, reach=0.0, min_len=14.0):
+    """Hatch along the forearm axis, so the sleeve grain differs from the robe's; it starts beyond
+    the turn-back line (inside it the cuff is plain)."""
     u = hand.wrist_dir
     ang = float(np.degrees(np.arctan2(u[1], u[0])))
-    return K.hatch_in(sleeve.buffer(-inset), angle=ang, origin=tuple(hand.wrist))
+    cuff = cuff_zone(hand, reach=reach).buffer(K.MEDIUM / 2 + K.GAP_MARK + K.FINE / 2)
+    grain = K.hatch_in(sleeve.buffer(-inset).difference(cuff), angle=ang, origin=tuple(hand.wrist))
+    return KG.drop_short(grain, min_len)
 
 
 def sleeved_hand(hand, sleeve):
@@ -151,7 +196,12 @@ def staff_part():
                .line((SX - 4.5, STAFF_BOTTOM + 26.0)).close().d).buffer(-1.5).buffer(1.5)
     collar = K.R(K.rrect(SX - 16.0, STAFF_BOTTOM - 3.7, SX + 16.0, STAFF_BOTTOM + 3.7, 3.2))
     shape = K.U(st.shape, foot)
-    lines = K.clip_in(st.lines, shape.buffer(1.0)) + K.clip_out(K.outline(foot), collar, eps=-0.5, trap=0.0)
+    # the flutes run on into the ferrule only while a clear band of gold stays beside them: where
+    # the taper closes in they would leave a hairline of gold against its outline
+    flute_room = K.U(st.shape.buffer(1.0), foot.buffer(-(K.MEDIUM / 2 + 2.5 + K.FINE / 2)))
+    flutes = KG.drop_short(K.clip_in(st.lines.select(lambda m: m.role == "flute"), flute_room), 8.0)
+    lines = (K.clip_in(st.lines.select(lambda m: m.role != "flute"), shape.buffer(1.0)) + flutes
+             + K.clip_out(K.outline(foot), collar, eps=-0.5, trap=0.0))
     return K.Part(shape, K.fill(shape, K.GOLD), lines, st.meta)
 
 
@@ -167,6 +217,33 @@ def orb_part():
     lines = cone.lines + K.clip_out(K.outline(rod), K.U(cone.shape, c2), eps=-0.5, trap=0.0)
     lines += K.outline(c2)
     return K.Part(shape, K.fill(shape, K.GOLD), lines, cone.meta)
+
+
+def tuck_collar(collar, front, r=4.0, max_area=40.0):
+    """The collar with the narrow notches between it and ``front`` (the staff) filled with gold, so
+    a link runs on behind the staff instead of leaving a jade wedge too thin to print beside it."""
+    notch = K.U(collar.shape, front).buffer(r).buffer(-r).difference(K.U(collar.shape, front))
+    notch = notch.intersection(KG.barrel().buffer(-0.5))
+    near = [g for g in K._polys_of(notch) if g.area < max_area
+            and g.distance(collar.shape) < 0.1 and g.distance(front) < 0.1]
+    if not near:
+        return collar
+    shape = K.U(collar.shape, *[g.buffer(0.2) for g in near])
+    # the fill meets the link at its corner: round that corner off so the robe contour runs on clean
+    loc = K.U(*near).buffer(3.0)
+    smooth = shape.buffer(1.0).buffer(-1.0).buffer(-1.0).buffer(1.0)
+    shape = K.U(shape.difference(loc), smooth.intersection(loc)).buffer(0.01).buffer(-0.01)
+    lines = K.outline(shape, K.MEDIUM) + collar.lines.select(lambda m: m.role != "outline")
+    return K.Part(shape, K.fill(shape, K.GOLD), lines, collar.meta)
+
+
+def clear_umbo(collar, over, clear=5.5):
+    """The collar without the umbo of a bead the clasp (``over``) half hides: no spot of the
+    visible bead keeps a dot 3 px clear of both the bead and the clasp contours, and heal would
+    bite it to a crescent."""
+    keep = [m for m in collar.lines.marks
+            if m.role != "umbo" or K.R(K.G.from_skia(m.skia())).distance(over) >= clear]
+    return K.Part(collar.shape, collar.fills, K.C.Frag(keep, collar.lines.meta), collar.meta)
 
 
 def figure(opts=None):
@@ -193,18 +270,25 @@ def figure(opts=None):
     beard = KB.spray_lines_beard(fc, mo, **BEARD)
     crown = CR.knee_crown(**CROWN)
     clasp = K.lion_clasp((AX, 372.0), 40.0)
-    collar = KP.spray_collar(within=KG.barrel(), **COLLAR)
+    collar = clear_umbo(tuck_collar(KP.spray_collar(within=KG.barrel(), **COLLAR), held_st.shape), clasp.shape)
     finial = BD.kingfisher3((SX, 176.0), **BIRD)
 
     sleeves = K.U(sl_st, sl_orb)
     keep = KG.barrel().buffer(-0.4)
+    edges_st = sleeve_edges(sl_st, keep, cuff_zone(h_st, reach=STAFF_REACH).buffer(4.0))
+    edges_orb = sleeve_edges(sl_orb, keep, cuff_zone(h_orb, reach=ORB_REACH).buffer(4.0))
+    band_st = clear_folds(cuff_band(h_st, sl_st, reach=STAFF_REACH), edges_st)
+    band_orb = clear_folds(cuff_band(h_orb, sl_orb, reach=ORB_REACH), edges_orb)
+    grain = (sleeve_grain(h_st, sl_st, reach=STAFF_REACH, inset=6.0, min_len=9.0)
+             + sleeve_grain(h_orb, sl_orb, reach=ORB_REACH))
     robes = KG.garments(K.U(held_st.shape, held_orb.shape, finial.shape, collar.shape, clasp.shape,
                             *[p.shape for p in hair], beard.shape, crown.shape),
                         near=K.U(held_st.shape, held_orb.shape),
+                        rule_hug=held_st.shape,
                         sleeves=sleeves,
-                        cuff_bands=cuff_band(h_st, sl_st, reach=STAFF_REACH) + cuff_band(h_orb, sl_orb, reach=ORB_REACH),
-                        sleeve_grain=sleeve_grain(h_st, sl_st) + sleeve_grain(h_orb, sl_orb),
-                        sleeve_edges=sleeve_edges(sl_st, keep) + sleeve_edges(sl_orb, keep),
+                        cuff_bands=band_st + band_orb,
+                        sleeve_grain=grain,
+                        sleeve_edges=edges_st + edges_orb,
                         seam=LineString(F.seam_spec(SEAM)["points"]))
 
     sc.part("robes", robes)
@@ -222,5 +306,27 @@ def figure(opts=None):
     return sc
 
 
+SPECK = 4.0
+
+
+def final(sc):
+    """The composed and healed frag of ``figure()``, with every speck of paper under ``SPECK`` px²
+    walled in by ink lines inked (where heal dropped a gold sliver between two lines of the
+    kingfisher's throat and tail)."""
+    frag = sc.compose()
+    shapes = [(m.layer, K.G.to_shape(m.d, tol=K.FLAT_TOL) if m.kind == "fill" else K.R(K.G.from_skia(m.skia())))
+              for m in frag.marks if m.d]
+    drawn = shapely.union_all([g for _, g in shapes])
+    ink = shapely.union_all([g for layer, g in shapes if layer == "ink"])
+    # only specks walled in by ink: one beside a colour fill would leave an ink tooth on it
+    specks = [Polygon(r) for pg in K._polys_of(drawn) for r in pg.interiors if Polygon(r).area < SPECK
+              and Polygon(r).buffer(0.3).difference(ink).area <= Polygon(r).area + 0.05]
+    if specks:
+        # grown into the ink around it, so the fill is no hairline of its own
+        sp = K.U(*specks)
+        frag += K.fill(sp.buffer(1.5, quad_segs=6).intersection(ink.union(sp.buffer(0.3, quad_segs=6))), K.INK)
+    return frag
+
+
 def build():
-    return figure().layers()
+    return K.layers(final(figure()))

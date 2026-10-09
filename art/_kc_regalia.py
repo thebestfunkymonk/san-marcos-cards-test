@@ -564,13 +564,32 @@ def cone_orb6(c, r=40.0, *, rings=CONE_WHORLS, jitter=5.0, jitter_seed=7, spin=0
             chord = 2 * r * math.sin(span / 2)
             sag_c = r * (1 - math.cos(span / 2))          # the circle's own sagitta
             d += K.arc_sag(pa, pb, -(sag_c + bulge * min(1.0, chord / 22.0)), move=False)
-        body = K.R(d + "Z").union(K.R(K.circle(c, r - 0.5)))
+        disc = K.R(K.circle(c, r - 0.5))
+        body = K.R(d + "Z").union(disc)
+        # where an arc falls inside the r-0.5 circle only its seam-end vertex pokes out, a
+        # sub-pixel spike the outline's round join turns into a knob outside the contour
+        body = body.buffer(-0.8, quad_segs=16).buffer(0.8, quad_segs=16)
+        # and what that leaves bulging past the circle by only a few tenths would still print as a
+        # knob on the rim, not a lump of the limb
+        lumps = [g for g in K._polys_of(body.difference(disc)) if not K.R(K.circle(c, r - 0.1)).contains(g)]
+        body = K.U(disc, *lumps)
     else:
         body = K.R(K.circle(c, r))
     seam_f = C.Frag()
     inner = body.buffer(-0.2)
+    rim_band = body.boundary.buffer(w / 2)
     for run in runs:
-        seam_f += K.clip_in(K.line(run, w, role="seam"), inner)
+        piece = K.clip_in(K.line(run, w, role="seam"), inner)
+        # a seam wandering along the limb leaves crumbs inside the limb's own stroke whose round
+        # caps print as knobs on its inner edge
+        for m in piece.marks:
+            all_ = K._stroke_lines(m.d)
+            ls = [ln for ln in all_ if not rim_band.contains(ln)]
+            if len(ls) == len(all_):
+                seam_f += C.Frag([m], piece.meta)
+            elif ls:
+                seam_f += C.Frag([replace(m, d="".join(C.polyline_d(np.asarray(ln.coords)) for ln in ls))],
+                                 piece.meta)
     seam_ink = shapely.union_all([K.R(K.G.from_skia(m.skia())) for m in seam_f.marks]) if seam_f.marks else Polygon()
     free = body.difference(seam_ink).difference(body.boundary.buffer(CONTOUR / 2))
     lines = K.outline(body) + seam_f
@@ -585,8 +604,20 @@ def cone_orb6(c, r=40.0, *, rings=CONE_WHORLS, jitter=5.0, jitter_seed=7, spin=0
     hz = [g.buffer(MEDIUM / 2 + 0.2, join_style=2).intersection(body) for g in K._polys_of(free)
           if g.area >= 8.0 and _seen(g).intersection(beyond).area > hatch_frac * _seen(g).area]
     shade = K.U(*hz) if hz else Polygon()
+    # the hatch runs on through the scale's own gold up into the limb's stroke (``free`` stops
+    # CONTOUR/2 short of the limb, so its butt ends poked out of the limb's inner edge), and stops
+    # far enough short of an unhatched neighbour that no butt corner shows past the seam between
+    gold = body.difference(seam_ink).difference(rim_band)
+    picked = [g.representative_point() for g in K._polys_of(free)
+              if g.area >= 8.0 and _seen(g).intersection(beyond).area > hatch_frac * _seen(g).area]
+    cells_ = K._polys_of(gold)
+    sel = [g for g in cells_ if any(g.contains(p) for p in picked)]
+    rest = [g for g in cells_ if not any(g.contains(p) for p in picked)]
+    shade_h = K.U(*[g.buffer(MEDIUM / 2 + 0.2, join_style=2) for g in sel]).intersection(body) if sel else Polygon()
+    if rest and not shade_h.is_empty:
+        shade_h = shade_h.difference(K.U(*rest).buffer(FINE / 2 + 0.05))
     if not shade.is_empty:
-        h = K.hatch_in(shade, angle=-45.0 if hatch_side > 0 else -135.0, origin=tuple(c))
+        h = K.hatch_in(shade_h, angle=-45.0 if hatch_side > 0 else -135.0, origin=tuple(c))
         if hatch_limb:
             # a hatch line running ALONG the limb (where the limb turns parallel to the
             # 45° hatch) prints as a hairline band of gold beside it: it goes

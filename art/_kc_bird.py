@@ -238,7 +238,7 @@ def kingfisher3(feet=(540.0, 176.0), *, knop_r=10.5, plate=None, knop_band=True,
                 gape_from=18.0, toes=((-9.0, -4.0), (-10.0, 2.5), (-3.0, 4.0), (4.0, 2.5), (5.0, -4.0)),
                 covert_rows=(-36.5, -28.0), covert_w=8.5, covert_sag=-2.4, covert_rise=3.0,
                 primaries=(((-1.0, -19.0), 0.86), ((6.0, -20.5), 0.82), ((13.0, -22.0), 0.76)), prim_tip=(22.0, 8.0),
-                bands=(-29.0, -22.0, -15.0, -8.0), band_sag=-1.2, covert_front=5.8) -> K.Part:
+                bands=(-29.0, -22.0, -15.0, -8.0), band_sag=-1.2, covert_front=5.8, ink_pockets=False) -> K.Part:
     """The wrought-gold belted kingfisher, finished as a goldsmith's piece
     (director's note: the smooth cut-out read as a toy):
 
@@ -343,6 +343,16 @@ def kingfisher3(feet=(540.0, 176.0), *, knop_r=10.5, plate=None, knop_band=True,
         lines += K.clip_out(eq, sil, eps=-0.5, trap=0.0)
     mount = K.U(plate_g, knop).difference(sil.buffer(-0.3))
     fills = K.fill(gold, GOLD) + K.fill(belt_g, belt) + K.fill(mount, GOLD)
+    if ink_pockets:
+        # where the bird is too thin for gold (the dagger bill's tip either side of the gape, the
+        # notch between wing tip and tail) the ground showed through inside the contour: ink it
+        ink = shapely.union_all([K.G.to_shape(m.d, tol=K.FLAT_TOL) if m.kind == "fill" else K.R(K.G.from_skia(m.skia()))
+                                 for m in lines.marks if m.d]
+                                + [sil.boundary.buffer(CONTOUR / 2, quad_segs=8)])
+        bare = sil.difference(ink).difference(gold).difference(belt_g).difference(ring.buffer(1.0))
+        bare = [g for g in K._polys_of(bare) if g.area > 0.05]
+        if bare:
+            fills += K.fill(K.U(*bare).buffer(1.0, quad_segs=6).intersection(sil), K.INK)
     part = K.Part(shape, fills, lines, {"head": hc, "knop": kc, "knop_r": knop_r, "sil": sil,
                                         "mount_bottom": float(kc[1] + knop_r)})
     return part.mirrored(fx) if facing > 0 else part
