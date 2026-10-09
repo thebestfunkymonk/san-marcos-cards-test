@@ -59,7 +59,8 @@ class HoodGeo:
                  rim=((440.0, 298.0), (418.0, 290.0), (392.0, 281.0), (370.0, 262.0), (360.0, 236.0),
                       (362.0, 208.0), (372.0, 186.0), (392.0, 173.0), (412.0, 168.0), (424.0, 171.0)),
                  hem_sag=16.0, dags=9, dag_depth=22.0, dag_concave=3.0, lining=9.0,
-                 crest=((404.0, 139.0), (386.0, 129.0), (366.0, 119.0), (346.0, 119.0)), crest_land=-152.0):
+                 crest=((404.0, 139.0), (386.0, 129.0), (366.0, 119.0), (346.0, 119.0)), crest_land=-152.0,
+                 dag_depths=None, simplify=0.08):
         self.fc = fc
         self.O, self.Ro = P(O), Ro
         _, out_pts = U.open_spline(list(outer))
@@ -75,7 +76,8 @@ class HoodGeo:
         a1 = K.unwrap(a0, K.ang(hc, hr), cw=False)
         self.hem_c, self.hem_R, self.hem_a = hc, hR, (a0, a1)
         roots = [K.polar(hc, hR, a0 + (a1 - a0) * k / dags) for k in range(dags + 1)] if dags else [hl, hr]
-        tips = [K.polar(hc, hR + dag_depth, a0 + (a1 - a0) * (k + 0.5) / dags) for k in range(dags)]
+        depths = list(dag_depths) if dag_depths is not None else [dag_depth] * dags
+        tips = [K.polar(hc, hR + depths[k], a0 + (a1 - a0) * (k + 0.5) / dags) for k in range(dags)]
         if dags:
             hem_pts = [roots[0]]
             for k in range(dags):
@@ -94,7 +96,7 @@ class HoodGeo:
         if tips:
             tip_zone = shapely.union_all([Point(*t).buffer(dag_depth * 0.5) for t in tips])
             soft = soft.difference(tip_zone).union(body.intersection(tip_zone))
-        self.body = U.largest(soft).simplify(0.08)
+        self.body = U.largest(soft).simplify(simplify)
         # ---- the face opening: everything in front of the rim
         far = [(self.brim[0], 60.0), (self.gorget[0] + 160.0, 60.0), (self.gorget[0] + 160.0, self.gorget[1])]
         self.opening = Polygon(np.vstack([rim_pts, far])).buffer(0)

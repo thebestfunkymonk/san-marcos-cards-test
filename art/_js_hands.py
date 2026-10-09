@@ -18,9 +18,11 @@ def _n(hand):
     return np.array([u[1], -u[0]])
 
 
-def sleeve_end(hand, *, run, zone, reach=0.0, cuff=3.0, flare=12.0, curl=-5.0, elbow_r=9.0):
+def sleeve_end(hand, *, run, zone, reach=0.0, cuff=3.0, flare=12.0, curl=-5.0, elbow_r=9.0, grow=1.0):
     """A bell that opens from the cuff mouth toward the elbow (``run`` px along the forearm axis), cut
-    to ``zone`` (the garment it grows from: the garment's outline is the sleeve's far end)."""
+    to ``zone`` grown by ``grow`` (the garment it grows from: the garment's outline is the sleeve's far
+    end). A sleeve that is united into its garment's silhouette needs ``grow=0``, or the garment's
+    contour steps out by ``grow`` along the sleeve's root."""
     u = hand.wrist_dir
     w = K.P(hand.wrist) - u * reach
     n = _n(hand)
@@ -33,7 +35,7 @@ def sleeve_end(hand, *, run, zone, reach=0.0, cuff=3.0, flare=12.0, curl=-5.0, e
     elbow = shape.buffer(-elbow_r).buffer(elbow_r)
     mouth = shape.intersection(Polygon([w - n * 60 - u * 4, w + n * 60 - u * 4,
                                         w + n * 60 + u * 16, w - n * 60 + u * 16]))
-    return K.U(elbow, mouth).intersection(zone.buffer(1.0))
+    return K.U(elbow, mouth).intersection(zone.buffer(grow) if grow else zone)
 
 
 def _arc(hand, reach, offset, half, curl):

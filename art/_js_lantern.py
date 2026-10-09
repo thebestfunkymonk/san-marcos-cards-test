@@ -138,8 +138,9 @@ def lantern(s: LanternSpec):
     ribL1, ribR1 = P(x - ch * 5.0 / 9.0, c1), P(x + ch * 5.0 / 9.0, c1)
     lines += K.seg(ribL0, ribL1, MEDIUM, role="rib") + K.seg(ribR0, ribR1, MEDIUM, role="rib")
     shade = Polygon([tuple(ribL1), tuple(ribL0), (x - R - 5.0, s.eave), (x - ch - 3.0, c1)]).intersection(roof)
-    # hatched across the rib (never near-parallel to it: no long ink wedge where they meet)
-    lines += K.hatch_in(shade.buffer(-(MEDIUM / 2)), angle=ROOF_HATCH)
+    # hatched across the rib (never near-parallel to it: no long ink wedge where they meet); the dashes
+    # run to the facet's edge lines' centres (ended at their inner edge, the heal cut them to stubs)
+    lines += K.hatch_in(shade, angle=ROOF_HATCH)
     # drip: split on its axis, the left half hatched (a stalactite point)
     dl = Polygon([(x - dw, d0 - 0.5), (x, d0 - 0.5), (x, d1)])
     lines += K.seg((x, d0), (x, d1 - 3.2), MEDIUM, role="drip")
