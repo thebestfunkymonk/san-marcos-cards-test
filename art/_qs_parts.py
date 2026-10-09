@@ -17,6 +17,7 @@ each docstring.
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 
 import numpy as np
 import shapely
@@ -713,7 +714,9 @@ def stalactite_circlet(far_end, mid, near_end, *, h=9.0, xs, lengths, widths, he
     if fringe:
         lines = K.outline(shape)
     else:
-        lines = K.clip_out(K.outline(stone), band, eps=-0.8, trap=0.0) + K.outline(band)
+        # the point outlines end just outside the band's edge: their round caps stay inside the band
+        # outline's ink (ending deeper left a bead on the band edge at every point)
+        lines = K.clip_out(K.outline(stone), band, eps=0.3, trap=0.0) + K.outline(band)
     lines += K.clip_out(axes, band.buffer(K.GAP_MARK + MEDIUM / 2), eps=0.0, trap=0.0)
     fills = K.fill(shape, GOLD)
     if jewel is not None:
@@ -864,6 +867,18 @@ def plume(root, tip, *, width=34.0, sag=8.0, n=5, side=+1, t_scallop=(0.22, 0.97
             ko += C.stroke(C.polyline_d([c_in, c_in + (target - c_in) * barb_reach]), kw, role="ko-barb")
     safe = shape.buffer(-(K.GAP_MARK + kw / 2 + CONTOUR / 2 + 0.2))
     ko = K.clip_in(ko, safe)
+    # a barb clipped to a stub near the plume edge would only leave a paper crumb
+    kept = []
+    for m in ko.marks:
+        if m.role == "ko-barb" and m.d:
+            subs = [pts for pts, _ in G.flatten(m.d, 0.02) if len(pts) > 1]
+            long_ = [pts for pts in subs if LineString(pts).length >= 5.0]
+            if not long_:
+                continue
+            if len(long_) < len(subs):
+                m = replace(m, d="".join(C.polyline_d(np.asarray(pts)) for pts in long_))
+        kept.append(m)
+    ko = C.Frag(kept)
     fills = K.fill(C.knockout(K.D(shape), ko) if ko else K.D(shape), color, role="plume")
     return K.Part(shape, fills, K.outline(shape), {"spine": sp, "notches": notch})
 
@@ -959,7 +974,9 @@ def laurel_posy(mouth, axis_deg, *, holder_len=40.0, holder_w=(13.0, 6.0), leave
         if not front.is_empty:
             # the leaves overlap in LAYERS (a later leaf in front): where a front leaflet
             # crosses one behind, the one behind stops under its outline (no crossed outlines)
-            f_i = K.clip_out(f_i, front)
+            # eps > 0 ends the clipped outline inside the front leaf's outline ink, so its round
+            # cap never shows as a bead on that outline
+            f_i = K.clip_out(f_i, front, eps=0.3)
             gl = K.clip_out(gl, front.buffer(MEDIUM / 2 + K.GAP_MARK + KO / 2, quad_segs=8), eps=0.0, trap=0.0)
             gl = C.Frag([m for m in gl.marks if m.d and LineString(
                 np.asarray(G.as_polys(m.d, 0.1)[0][0])).length > 4.5]) if gl.marks else gl

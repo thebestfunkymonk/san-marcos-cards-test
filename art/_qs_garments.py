@@ -12,6 +12,7 @@ from dataclasses import replace
 
 import numpy as np
 import shapely
+import shapely.ops
 from scipy.interpolate import PchipInterpolator
 from shapely.geometry import LineString, Point, Polygon
 
@@ -53,7 +54,11 @@ def c2_frag(f: C.Frag) -> C.Frag:
 
 
 def mantle():
-    top = K.R(B.cspline(MANTLE_PTS)).buffer(0)
+    # the sides are pinned plumb where they cross the centre row, so the top half and its 180° copy
+    # meet there with one tangent (no corner in the outline or in the border's inner seam line)
+    i_l, i_r = MANTLE_PTS.index((146, 525)), MANTLE_PTS.index((604, 525))
+    top = K.R(B.cspline(MANTLE_PTS, headings={i_l: 90.0, i_r: -90.0})).buffer(0)
+    top = top.intersection(K.box(0, 0, 750, CY + 0.5))
     return K.U(top, rot(top))
 
 
@@ -96,23 +101,40 @@ def drop_short(f: C.Frag, min_len: float = 9.0) -> C.Frag:
     return C.Frag(out, f.meta)
 
 
-def seam_guard(f: C.Frag, seam, margin: float = 4.8) -> C.Frag:
-    """Drop stroke pieces with an end within ``margin`` of the seam: the half's clip would cut them
-    a hair short of their junction."""
-    if seam is None:
-        return f
+def ease_shallow(f: C.Frag, edge, band: float = 5.6, max_run: float = 11.0) -> C.Frag:
+    """End short of ``edge`` any stroke end that meets it at a shallow angle: an end running more
+    than ``max_run`` inside ``band`` of the edge would leave a tapering colour sliver against the
+    edge's line, so that run is cut off and the stroke stops a clean gap away."""
+    zone = edge.buffer(band, quad_segs=8)
     out = []
     for m in f.marks:
         if m.kind == "fill" or not m.d:
             out.append(m)
             continue
-        keep = []
+        keep, changed = [], False
         for pts, cl in G.flatten(m.d, 0.05):
-            pts = np.asarray(pts)
-            if not cl and (Point(*pts[0]).distance(seam) < margin or Point(*pts[-1]).distance(seam) < margin):
+            ls = LineString(pts)
+            if cl or len(pts) < 2:
+                keep.append(C.polyline_d(pts, closed=cl))
                 continue
-            keep.append(C.polyline_d(pts, closed=cl))
-        if keep:
+            s0, s1 = 0.0, ls.length
+            for g in K._lines_of(ls.intersection(zone)):
+                if g.length <= max_run:
+                    continue
+                a, b = sorted((ls.project(Point(g.coords[0])), ls.project(Point(g.coords[-1]))))
+                if a < 1e-6:
+                    s0 = max(s0, b)
+                elif b > ls.length - 1e-6:
+                    s1 = min(s1, a)
+            if s0 > 0 or s1 < ls.length:
+                changed = True
+                if s1 - s0 > 1.0:
+                    keep.append(C.polyline_d(np.asarray(shapely.ops.substring(ls, s0, s1).coords)))
+            else:
+                keep.append(C.polyline_d(pts))
+        if not changed:
+            out.append(m)
+        elif keep:
             out.append(replace(m, d="".join(keep)))
     return C.Frag(out, f.meta)
 
@@ -162,7 +184,8 @@ def lining_columns(*, r=(2.8, 4.4), fracs=(0.34, 0.68), y0=332.0):
                 x0 = float(axis_x(y))
                 w = GOWN_W[1] - (GOWN_W[1] - GOWN_W[0]) * min(abs((CY - y) / (CY - 296.0)), 1.0) ** 2
                 pts.append((x0 + side * (w + fr * (float(h(y)) - w)), y))
-            holes.append(GB.drop_column(band, pts, r=r, gap=3.0))
+            # heal fills a knockout closer than 3.1 px to another one, so the drops keep 3.6
+            holes.append(GB.drop_column(band, pts, r=r, gap=3.6))
     return K.U(*[g for g in holes if not g.is_empty])
 
 
@@ -175,14 +198,21 @@ def gown_marks():
     return f
 
 
-def seam_dots(y_top=364.0, step=10.0, off=9.0):
-    """Dots down the gown: offset from the axis by ``off`` at the neck, crossing it at the centre."""
+def seam_dots(y_top=365.0, step=10.0, off=9.0, clear=7.6):
+    """Dots down the gown: offset from the axis by ``off`` at the neck, crossing it at the centre.
+
+    The rows are C2 partners (one dot exactly on the centre), so the rotated half lands on the same
+    dots. A dot whose paper gap to the FINE fold would be under 3 px is bitten by heal, and one the
+    fold runs through off-centre shows a nub or reads as grazing it, so a dot is either ``clear``
+    of the fold (>= 3 px of paper) or centred on it."""
     f = C.Frag()
-    y = y_top
-    while y <= 686.0:
-        d = off * (CY - y) / (CY - y_top)
-        f += K.dot((float(axis_x(y)) + d, y), K.TD, role="seam-dot")
-        y += step
+    n = int(round((CY - y_top) / step))
+    for k in range(-n, n + 1):
+        y = CY + k * step
+        d = off * abs(k) / n
+        if d < clear:
+            d = clear if d >= 4.0 else 0.0
+        f += K.dot((float(axis_x(y)) - math.copysign(d, k), y), K.TD, role="seam-dot")
     return f
 
 
@@ -206,7 +236,15 @@ def garments(front, *, sleeves, bands, band_lines, drips, sleeve_grain, sleeve_e
     border = jade.difference(inner_shape).difference(sleeve_zone)
     seam_line = K.outline(inner_shape, K.FINE, role="seam")
     seam_line = K.clip_in(seam_line, jade.buffer(-0.2).difference(sleeve_zone.buffer(0.4)))
-    border_hatch = drop_short(K.hatch_in(border.buffer(0.25), angle=45.0, origin=(AX, CY)), 24.0)
+    # the bits of seam that would show only in the narrow gaps between the held attributes' parts
+    # are left out: heal would trim the leaf fills beside them back to paper
+    shown = K.clip_out(seam_line, blockers, eps=0.0, trap=0.0)
+    stubs = [g for m in shown.marks if m.d for pts, _ in G.flatten(m.d, 0.05) if len(pts) > 1
+             for g in [LineString(pts)] if g.length < 12.0 and g.distance(blockers) < 3.0]
+    if stubs:
+        seam_line = K.clip_out(seam_line, K.U(*[g.buffer(1.0) for g in stubs]), eps=0.0, trap=0.0)
+    border_hatch = K.hatch_in(border.buffer(0.25), angle=45.0, origin=(AX, CY))
+    border_hatch = drop_short(ease_shallow(border_hatch, border.boundary), 24.0)
     field = jade.intersection(inner_shape).difference(sleeve_zone.buffer(5.0)).difference(red.buffer(3.0))
     voids = karst(field, pitch=KARST_PITCH)
     drip_marks = drip_field(field)
@@ -218,6 +256,13 @@ def garments(front, *, sleeves, bands, band_lines, drips, sleeve_grain, sleeve_e
     cols = lining_columns()
     cols = K.U(cols, rot(cols))
     cols = cols.intersection(red.buffer(-1.0)) if not cols.is_empty else cols
+    # a drop the hair or a held attribute would half cover is left out whole (no paper crescents)
+    # and a drop near the seam is left out with its partner: the halves' clip edge would leave a
+    # sub-3 px bridge between them
+    near = blockers.buffer(K.MEDIUM / 2 + 3.0)
+    if seam is not None:
+        near = near.union(seam.buffer(3.2))
+    cols = K.U(*[g for g in K._polys_of(cols) if not g.intersects(near) and not rot(g).intersects(near)])
     red_hatch = K.hatch_in(red, angle=-45.0, origin=(AX, CY))
     red_hatch = drop_short(K.clip_out(red_hatch, K.U(cols.buffer(3.4), blockers.buffer(4.0)) if not cols.is_empty
                                       else blockers.buffer(4.0), eps=0.0, trap=0.0), 12.0)

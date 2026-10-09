@@ -14,10 +14,12 @@ turn-back band with the §H.2 drip fringe hanging from it.
 from __future__ import annotations
 
 import math
+from dataclasses import replace
 
 import numpy as np
 import shapely
 from shapely.geometry import LineString, Point, Polygon
+from shapely.prepared import prep
 
 from inkkit import geom as G
 
@@ -98,7 +100,8 @@ def sleeve_end(hand, *, run, reach=0.0, cuff=3.0, flare=12.0, curl=-5.0, elbow_r
     elbow = shape.buffer(-elbow_r).buffer(elbow_r)
     mouth = shape.intersection(Polygon([w - n * 60 - u * 4, w + n * 60 - u * 4,
                                         w + n * 60 + u * 16, w - n * 60 + u * 16]))
-    return K.U(elbow, mouth).intersection(QG.mantle().buffer(1.0))
+    # clipped to the mantle exactly: any grow leaves a bump in the silhouette at the sleeve's far end
+    return K.U(elbow, mouth).intersection(QG.mantle())
 
 
 def _arc(hand, reach, offset, half, curl):
@@ -124,10 +127,13 @@ def cuff_band(hand, sleeve, *, reach, width=11.0, curl=-5.0, cuff=3.0):
     return band, line, edge
 
 
-def drip_fringe(hand, sleeve, edge, *, width, reach, n=3, pitch=7.8, l_min=3.0, l_max=14.0):
+def drip_fringe(hand, sleeve, edge, *, width, reach, n=3, pitch=8.4, l_min=3.0, l_max=14.0):
     """§G.14 drip fringe: paper strokes with Ø6.3 terminals hanging from the band's back line down
     the sleeve (KNOCKED out of the jade). A drip that would not keep paper clear of the outline
-    is dropped whole. Returns their shapes."""
+    is dropped whole. Returns their shapes.
+
+    Each drip starts under the back line, so it is a notch open to the band, not a hole: heal
+    fills a knockout hole within 3 px of its fill's edge."""
     u = hand.wrist_dir
     nn = np.array([u[1], -u[0]])
     inner = sleeve.buffer(-(K.MEDIUM / 2 + K.GAP_MARK), quad_segs=12)
@@ -142,8 +148,15 @@ def drip_fringe(hand, sleeve, edge, *, width, reach, n=3, pitch=7.8, l_min=3.0, 
         off = (i - (n - 1) / 2) * pitch
         t = (i + 0.5) / n
         Lk = l_min + (l_max - l_min) * math.sin(math.pi * t)
-        p0 = c0 + nn * off + u * 1.0
-        p1 = p0 + u * (Lk + 2.0)
+        q = c0 + nn * off
+        hit = LineString([tuple(q - u * 20.0), tuple(q + u * 20.0)]).intersection(edge)
+        pts = [g for g in getattr(hit, "geoms", [hit]) if g.geom_type == "Point" and not g.is_empty]
+        if not pts:
+            continue
+        pe = min(pts, key=lambda g: g.distance(Point(*q)))
+        p_edge = np.array([pe.x, pe.y])
+        p0 = p_edge - u * 1.0
+        p1 = p_edge + u * (Lk + 2.0)
         body = LineString([tuple(p0), tuple(p1)]).buffer(K.MEDIUM / 2).union(
             Point(*p1).buffer(K.TD / 2, quad_segs=12))
         if inner.contains(body):
@@ -213,6 +226,30 @@ def posy_part():
     return merged([("raceme", po["raceme"]), ("laurel", po["leaves"]), ("holder", po["holder"])])
 
 
+def seated_clasp(clasp, seat):
+    """The Lion Mark set into the gown opening: its wing tips run under the gown's edge lines (the
+    gold traps under them and its contour ends inside their ink) instead of their points landing
+    on those lines, which made heal break both outlines."""
+    sil = clasp.meta["silhouette"].intersection(seat)
+    # a wing notch cut through by the seat edge would leave an ink bump on that edge and a gold
+    # strip under 3 px beside it: close the notches next to the edge
+    near = seat.boundary.buffer(4.0, quad_segs=8)
+    sil = K.U(sil, sil.buffer(3.0, quad_segs=8).buffer(-3.0, quad_segs=8).intersection(near)).intersection(seat)
+    contour = [m for m in clasp.lines.marks if m.role == "clasp-contour"]
+    partings = K.clip_in(C.Frag(contour), sil.buffer(-1.2))
+    # a parting whose notch went under the seat edge would only leave a stub beside that line
+    edge = seat.boundary.buffer(3.5)
+    part_d = "".join(C.polyline_d(np.asarray(pts)) for m in partings.marks if m.d
+                     for pts, _ in G.flatten(m.d, 0.02)
+                     if len(pts) > 1 and LineString(pts).length >= 5.0 and not LineString(pts).intersects(edge))
+    # one contour mark round the seated silhouette: its run along the seat edge lies inside the
+    # gown line's ink, so heal sees one piece touching that line rather than stubs beside it
+    lines = K.line(K.D(sil) + part_d, K.FINE, role="clasp-contour")
+    lines += clasp.lines.select(lambda m: m.role != "clasp-contour")
+    fills = K.fill(sil.difference(clasp.meta["face"]), K.GOLD, role="clasp")
+    return K.Part(clasp.shape.intersection(seat), fills, lines, {**clasp.meta, "silhouette": sil})
+
+
 def region(pts):
     return K.R(B.cspline(pts)).buffer(0)
 
@@ -243,8 +280,21 @@ def head_group():
                 hair_low=hair_low)
 
 
+class Scene(K.Scene):
+    """The kit Scene, but slits between items smaller than SLIT_AREA are closed in the silhouette:
+    stroked at CONTOUR, a slit's tiny ring prints as an ink blob."""
+
+    def silhouette(self):
+        sil = super().silhouette()
+        return K.U(*[Polygon(g.exterior.coords, [r.coords for r in g.interiors if Polygon(r).area >= SLIT_AREA])
+                     for g in K._polys_of(sil)])
+
+
+SLIT_AREA = 60.0
+
+
 def figure():
-    sc = K.Scene()
+    sc = Scene()
     hg = head_group()
     fc = hg["fc"]
     size = K.hand_size(fc) * HAND_SCALE
@@ -277,7 +327,14 @@ def figure():
 
     seam = LineString(F.seam_spec(SEAM)["points"])
     neckline = K.U(lf.shape, ln.shape, head.shape, neck.shape, veil)
-    brooch = K.lion_clasp((388.0, 322.0), 40.0)
+    # on the far side the seat reaches over the hairline strip between the gown's edge and the lock,
+    # so the wing tips end on the lock line rather than leaving that strip beside it (on the near
+    # side the gap to the lock widens under the wing, and closing it would step the edge)
+    locks = K.U(lf.shape, ln.shape)
+    gown_ = QG.gown()
+    seat = K.U(gown_, K.U(gown_, lf.shape).buffer(2.5, quad_segs=8).buffer(-2.5, quad_segs=8))
+    seat = K.U(*K._polys_of(seat.difference(locks)))
+    brooch = seated_clasp(K.lion_clasp((388.0, 322.0), 40.0), seat)
     robes = QG.garments(K.U(held_m.shape, held_p.shape, neckline, brooch.shape),
                         sleeves=sleeves, bands=K.U(*bands), band_lines=band_lines, drips=K.U(*drips),
                         sleeve_grain=grains, sleeve_edges=sleeve_edges(sl_m, keep) + sleeve_edges(sl_p, keep),
@@ -318,11 +375,42 @@ def figure():
     sc.part("brooch", brooch)
     sc.part("mirror+hand+sleeve", held_m)
     sc.part("posy+hand+sleeve", held_p)
+    sc.tidy_zone = diad.shape.buffer(3.0)
     return sc
 
 
+TIDY_ROLES = ("outline", "contour", "clasp-contour")
+
+
+def tidy(f: C.Frag, zone) -> C.Frag:
+    """Outline crumbs the compose leaves: pieces shorter than 2.5 px anywhere (they print as ink
+    beads on the line they sit on), and the face contour's bits that show between the circlet's
+    points (``zone``) below 8 px."""
+    zp = prep(zone)
+    out = []
+    for m in f.marks:
+        if m.kind == "fill" or not m.d or m.role.split("@")[0] not in TIDY_ROLES:
+            out.append(m)
+            continue
+        keep, dropped = [], False
+        for pts, cl in G.flatten(m.d, 0.02):
+            pts = np.asarray(pts)
+            ln_ = LineString(pts) if len(pts) > 1 else None
+            short = ln_ is None or ln_.length < 2.5 or (not cl and ln_.length < 8.0 and zp.contains(ln_))
+            if short:
+                dropped = True
+                continue
+            keep.append(C.polyline_d(pts, closed=cl))
+        if not dropped:
+            out.append(m)
+        elif keep:
+            out.append(replace(m, d="".join(keep)))
+    return C.Frag(out, f.meta)
+
+
 def build():
-    f = figure().compose()
+    sc = figure()
+    f = tidy(sc.compose(), sc.tidy_zone)
     # red tucked under a thick ink junction (two plume contours meeting the silhouette) is
     # invisible; QA 4c reads it as art hidden under a plate, so cut it
     r_ = T.CONTOUR / 2 + 0.3
